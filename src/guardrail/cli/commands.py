@@ -159,17 +159,50 @@ def init():
     db.init_db()
     console.print(f"   Database initialized at: [cyan]{config.database.path}[/cyan]")
 
-    # Copy guardrail files (if they don't exist)
+    # Copy guardrail files from package to user directory
     guardrails_path = Path(config.guardrails.base_path)
     console.print(f"📋 Guardrails directory: [cyan]{guardrails_path}[/cyan]")
 
-    if not guardrails_path.exists():
+    # Find package guardrails directory
+    import guardrail
+    package_dir = Path(guardrail.__file__).parent.parent
+    source_guardrails = package_dir / "guardrails"
+
+    if source_guardrails.exists():
+        import shutil
+
+        # Copy guardrail files if they don't exist
+        if not guardrails_path.exists() or not list(guardrails_path.glob("*.md")):
+            guardrails_path.mkdir(parents=True, exist_ok=True)
+
+            # Copy all .md files
+            for md_file in source_guardrails.glob("*.md"):
+                dest_file = guardrails_path / md_file.name
+                if not dest_file.exists():
+                    shutil.copy2(md_file, dest_file)
+                    console.print(f"   ✅ Copied: {md_file.name}")
+
+            # Copy agents directory
+            source_agents = source_guardrails / "agents"
+            if source_agents.exists():
+                dest_agents = guardrails_path / "agents"
+                dest_agents.mkdir(parents=True, exist_ok=True)
+
+                for agent_file in source_agents.glob("*.md"):
+                    dest_file = dest_agents / agent_file.name
+                    if not dest_file.exists():
+                        shutil.copy2(agent_file, dest_file)
+                        console.print(f"   ✅ Copied agent: {agent_file.name}")
+        else:
+            console.print("   ℹ️  Guardrail files already exist")
+    else:
         guardrails_path.mkdir(parents=True, exist_ok=True)
+        console.print("   ⚠️  No template guardrails found in package")
         console.print("   Note: Place your guardrail files in this directory")
 
     console.print("\n✅ [green bold]Initialization complete![/green bold]\n")
     console.print("Next steps:")
-    console.print("  1. Add guardrail files to: [cyan]~/.guardrail/guardrails/[/cyan]")
+    console.print("  1. Review guardrails: [cyan]~/.guardrail/guardrails/[/cyan]")
     console.print("  2. Configure: [cyan]guardrail config[/cyan]")
     console.print("  3. Test: [cyan]guardrail run claude 'Hello, world!'[/cyan]")
 
