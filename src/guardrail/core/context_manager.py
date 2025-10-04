@@ -82,12 +82,13 @@ class ContextManager:
             cache_ttl=cache_ttl,
         )
 
-    def load_guardrails(self, agent: Optional[str] = None, mode: str = "standard") -> str:
-        """Load all relevant guardrails based on agent and mode
+    def load_guardrails(self, agent: Optional[str] = None, mode: str = "standard", prompt: str = "") -> str:
+        """Load relevant guardrails based on agent, mode, and prompt content
 
         Args:
             agent: Optional agent name (orchestrator, architect, etc.)
             mode: Operating mode (standard or strict)
+            prompt: User prompt to analyze for relevance
 
         Returns:
             Combined guardrail content as string
@@ -104,16 +105,23 @@ class ContextManager:
 
         guardrails_content = []
 
-        # Load core guardrail files
-        for filename in self.config.guardrails.files:
-            content = self._load_file(self.guardrails_path / filename)
-            if content:
-                guardrails_content.append(f"# {filename}\n\n{content}")
+        # Smart selection: Only load relevant guardrails based on prompt keywords
+        relevant_files = self._select_relevant_guardrails(prompt)
+
+        # Load only relevant core guardrail files
+        for filename in relevant_files:
+            if filename in self.config.guardrails.files:
+                content = self._load_file(self.guardrails_path / filename)
+                if content:
+                    # Extract only key points (summaries/rules) to reduce size
+                    summarized = self._extract_key_points(content, filename)
+                    guardrails_content.append(f"# {filename}\n\n{summarized}")
 
         # Load agent-specific instructions
         if agent and agent in self.AGENTS:
             agent_content = self._load_agent_instructions(agent)
             if agent_content:
+                # Agents are typically smaller, include full content
                 guardrails_content.append(
                     f"# Agent-Specific Instructions: {agent.upper()}\n\n{agent_content}"
                 )
@@ -144,7 +152,7 @@ class ContextManager:
         """
         logger.info("Building context", agent=agent, mode=mode, prompt_length=len(prompt))
 
-        guardrails = self.load_guardrails(agent=agent, mode=mode)
+        guardrails = self.load_guardrails(agent=agent, mode=mode, prompt=prompt)
 
         # Build structured context
         context_parts = [
@@ -171,6 +179,107 @@ class ContextManager:
         )
 
         return full_context
+
+    def _select_relevant_guardrails(self, prompt: str) -> List[str]:
+        """Select relevant guardrail files based on prompt content
+
+        Args:
+            prompt: User prompt to analyze
+
+        Returns:
+            List of relevant guardrail filenames
+        """
+        prompt_lower = prompt.lower()
+
+        # Keywords for each guardrail type
+        guardrail_keywords = {
+            "BPSBS.md": [
+                "authentication", "security", "mfa", "azure", "rbac", "login",
+                "auth", "user", "permission", "access", "token", "session"
+            ],
+            "AI_Guardrails.md": [
+                "ai", "llm", "prompt", "model", "claude", "gemini", "openai",
+                "training", "inference", "embedding", "vector", "ml", "machine learning"
+            ],
+            "UX_UI_Guardrails.md": [
+                "ui", "ux", "interface", "component", "design", "responsive",
+                "accessibility", "frontend", "react", "vue", "css", "button", "form"
+            ],
+        }
+
+        relevant = []
+
+        # Check each guardrail file for keyword matches
+        for filename, keywords in guardrail_keywords.items():
+            if any(keyword in prompt_lower for keyword in keywords):
+                relevant.append(filename)
+
+        # If no specific match, include BPSBS (core standards) only
+        if not relevant:
+            relevant.append("BPSBS.md")
+
+        logger.debug("Selected relevant guardrails", files=relevant, prompt_preview=prompt[:100])
+        return relevant
+
+    def _extract_key_points(self, content: str, filename: str) -> str:
+        """Extract key points/rules from guardrail content to reduce size
+
+        Args:
+            content: Full guardrail content
+            filename: Guardrail filename for context
+
+        Returns:
+            Summarized key points
+        """
+        lines = content.split('\n')
+        key_points = []
+        in_rule_section = False
+
+        for line in lines:
+            line_stripped = line.strip()
+
+            # Keep headers
+            if line_stripped.startswith('#'):
+                key_points.append(line)
+                in_rule_section = True
+                continue
+
+            # Keep bullet points (rules/requirements)
+            if line_stripped.startswith(('-', '*', '•')):
+                key_points.append(line)
+                continue
+
+            # Keep numbered lists
+            if line_stripped and line_stripped[0].isdigit() and '.' in line_stripped[:3]:
+                key_points.append(line)
+                continue
+
+            # Keep "MUST", "REQUIRED", "CRITICAL" lines
+            if any(keyword in line_stripped.upper() for keyword in ['MUST', 'REQUIRED', 'CRITICAL', 'MANDATORY']):
+                key_points.append(line)
+                continue
+
+            # Add blank lines for readability (but limit consecutive blanks)
+            if not line_stripped and key_points and key_points[-1].strip():
+                key_points.append('')
+
+        # Join and clean up
+        summarized = '\n'.join(key_points)
+
+        # Remove excessive blank lines
+        while '\n\n\n' in summarized:
+            summarized = summarized.replace('\n\n\n', '\n\n')
+
+        reduction = (1 - len(summarized) / len(content)) * 100
+        logger.debug(
+            "Extracted key points",
+            filename=filename,
+            original_size=len(content),
+            summarized_size=len(summarized),
+            reduction_percent=f"{reduction:.1f}%"
+        )
+
+        return summarized.strip()
 
     def _load_file(self, file_path: Path) -> Optional[str]:
         """Load content from a file with error handling
