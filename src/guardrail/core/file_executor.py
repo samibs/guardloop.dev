@@ -153,6 +153,26 @@ class FileExecutor:
                     )
                 )
 
+        # Pattern 4: Created file statement
+        # "Created `/path/to/file.py`" or "Created /path/to/file.py"
+        pattern4 = r"(?:Created|Saved|Wrote)\s+[`'\"]?([/\w\-_.]+\.[\w]+)[`'\"]?"
+        for match in re.finditer(pattern4, llm_output, re.IGNORECASE):
+            file_path = match.group(1).strip()
+            # Look for code block near this statement (before or after)
+            code_match = re.search(
+                r"```(?:\w+)?\n(.*?)```",
+                llm_output[max(0, match.start() - 5000):match.end() + 1000],
+                re.DOTALL
+            )
+            if code_match:
+                operations.append(
+                    FileOperation(
+                        operation_type="create",
+                        file_path=file_path,
+                        content=code_match.group(1).strip(),
+                    )
+                )
+
         logger.info("Extracted file operations", count=len(operations))
         return operations
 

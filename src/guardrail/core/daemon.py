@@ -422,8 +422,26 @@ class GuardrailDaemon:
                 "execution_time_ms": execution_time,
             }
 
-            # Store in database (would use actual DB insert)
-            logger.debug("Session logged", session_id=request.session_id)
+            # Store in database
+            from guardrail.utils.db import SessionModel
+
+            with self.db.get_session() as db_session:
+                session = SessionModel(
+                    session_id=session_data["session_id"],
+                    timestamp=session_data["timestamp"],
+                    tool=session_data["tool"],
+                    agent=session_data["agent"],
+                    mode=session_data["mode"],
+                    prompt=session_data["prompt"],
+                    raw_output=session_data["raw_output"],
+                    parsed_output=session_data["parsed_output"],
+                    violations={"count": session_data["violations_count"]},
+                    approved=session_data["approved"],
+                    execution_time_ms=session_data["execution_time_ms"],
+                )
+                db_session.add(session)
+                db_session.commit()
+                logger.debug("Session logged to database", session_id=request.session_id)
 
             # Store violations
             for violation in violations:
