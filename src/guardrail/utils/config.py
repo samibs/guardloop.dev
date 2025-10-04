@@ -102,7 +102,7 @@ class TeamConfig(BaseModel):
 class Config(BaseModel):
     """Main configuration model"""
 
-    version: str = "1.0"
+    version: str = "2.0"
     mode: str = "standard"
     default_agent: str = "auto"
 
@@ -215,7 +215,7 @@ class ConfigManager:
     def _create_default_config(self) -> Config:
         """Create default configuration"""
         return Config(
-            version="1.0",
+            version="2.0",
             mode=self.settings.guardrail_mode,
             default_agent="auto",
             tools={

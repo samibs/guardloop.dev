@@ -25,9 +25,9 @@ console = Console()
 
 
 @click.group()
-@click.version_option(version="1.0.0")
+@click.version_option(version="2.0.0")
 def cli():
-    """🛡️  Guardrail - Guardrails for AI Development
+    """🛡️  Guardrail v2 - Self-Learning AI Governance System
 
     \b
     Commands:
