@@ -239,7 +239,7 @@ class LearnedPatternModel(Base):
     last_seen = Column(DateTime, nullable=False, default=datetime.utcnow, index=True)
     confidence_score = Column(Float, default=0.0, index=True)
     example_sessions = Column(JSON)
-    metadata = Column(JSON)
+    pattern_metadata = Column(JSON)  # Renamed from 'metadata' (SQLAlchemy reserved name)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -272,7 +272,7 @@ class DynamicGuardrailModel(Base):
     activated_at = Column(DateTime, index=True)
     deactivated_at = Column(DateTime, index=True)
     created_by = Column(String(50), default="system")
-    metadata = Column(JSON)
+    rule_metadata = Column(JSON)  # Renamed from 'metadata' (SQLAlchemy reserved name)
 
     # Relationships
     pattern = relationship("LearnedPatternModel", back_populates="dynamic_guardrails")
@@ -329,7 +329,7 @@ class ConversationHistoryModel(Base):
     content = Column(Text, nullable=False)
     timestamp = Column(DateTime, nullable=False, default=datetime.utcnow, index=True)
     tokens_used = Column(Integer, default=0)
-    metadata = Column(JSON)
+    message_metadata = Column(JSON)  # Renamed from 'metadata' (SQLAlchemy reserved name)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     __table_args__ = (

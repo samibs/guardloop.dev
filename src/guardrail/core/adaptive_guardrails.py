@@ -188,7 +188,7 @@ class AdaptiveGuardrailGenerator:
             lines.append(f"\n## {category.replace('_', ' ').title()}\n")
 
             for rule in rules:
-                severity_icon = self._get_severity_icon(rule.metadata.get("severity", "medium"))
+                severity_icon = self._get_severity_icon(rule.rule_metadata.get("severity", "medium") if rule.rule_metadata else "medium")
                 lines.append(f"- {severity_icon} **{rule.rule_text}**")
 
                 if rule.enforcement_mode == "block":
@@ -259,7 +259,9 @@ class AdaptiveGuardrailGenerator:
 
         rule.status = "deprecated"
         rule.deactivated_at = datetime.utcnow()
-        rule.metadata["deprecation_reason"] = reason
+        if rule.rule_metadata is None:
+            rule.rule_metadata = {}
+        rule.rule_metadata["deprecation_reason"] = reason
         self.session.commit()
 
         logger.info("Rule deprecated", rule_id=rule_id, reason=reason)
