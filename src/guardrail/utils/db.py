@@ -238,18 +238,8 @@ class DatabaseManager:
         """Initialize database with schema"""
         Base.metadata.create_all(bind=self.engine)
 
-        # Load SQL schema for views and triggers
-        schema_path = Path(__file__).parent.parent.parent.parent / "data" / "schema.sql"
-        if schema_path.exists():
-            with open(schema_path) as f:
-                schema_sql = f.read()
-                # Split by statements and execute
-                statements = [s.strip() for s in schema_sql.split(";") if s.strip()]
-                with self.engine.connect() as conn:
-                    for statement in statements:
-                        if statement:
-                            conn.execute(text(statement))
-                    conn.commit()
+        # Note: Views and triggers from schema.sql are optional
+        # SQLAlchemy models provide the core schema
 
     def get_session(self) -> Session:
         """Get database session"""
