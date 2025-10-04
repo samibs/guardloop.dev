@@ -41,61 +41,61 @@ def configure_logging(
         log_path = Path(log_file).expanduser()
         log_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # Build processor chain
-    processors: list[Processor] = [
+    # Build shared processor chain (no renderer at the end)
+    shared_processors: list[Processor] = [
         structlog.contextvars.merge_contextvars,
         structlog.stdlib.add_log_level,
         structlog.stdlib.add_logger_name,
         structlog.processors.TimeStamper(fmt="iso"),
         add_app_context,
         structlog.processors.StackInfoRenderer(),
+        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
     ]
 
-    # Add appropriate renderer
-    if json_logs:
-        processors.append(structlog.processors.JSONRenderer())
-    else:
-        processors.append(
-            structlog.dev.ConsoleRenderer(
+    # Configure Python's logging first
+    import logging
+    from logging.handlers import RotatingFileHandler
+
+    # Setup root logger
+    root_logger = logging.getLogger()
+    root_logger.setLevel(getattr(logging, log_level.upper()))
+
+    # Console handler with colored output
+    console_handler = logging.StreamHandler(sys.stderr)
+    console_handler.setLevel(getattr(logging, log_level.upper()))
+    console_handler.setFormatter(
+        structlog.stdlib.ProcessorFormatter(
+            processor=structlog.dev.ConsoleRenderer(
                 colors=True,
                 exception_formatter=structlog.dev.plain_traceback,
-            )
+            ),
         )
-
-    # Configure structlog
-    structlog.configure(
-        processors=processors,
-        wrapper_class=structlog.make_filtering_bound_logger(
-            getattr(structlog.stdlib.logging, log_level.upper())
-        ),
-        context_class=dict,
-        logger_factory=structlog.PrintLoggerFactory(file=sys.stderr),
-        cache_logger_on_first_use=True,
     )
+    root_logger.addHandler(console_handler)
 
-    # Also configure file logging if specified
+    # File handler if specified (JSON format)
     if log_file:
-        import logging
-        from logging.handlers import RotatingFileHandler
-
         file_handler = RotatingFileHandler(
             log_file,
             maxBytes=config.logging.max_size_mb * 1024 * 1024,
             backupCount=config.logging.backup_count,
         )
         file_handler.setLevel(getattr(logging, log_level.upper()))
-
-        # JSON format for file logs
-        file_formatter = structlog.stdlib.ProcessorFormatter(
-            processor=structlog.processors.JSONRenderer(),
-            foreign_pre_chain=processors,
+        file_handler.setFormatter(
+            structlog.stdlib.ProcessorFormatter(
+                processor=structlog.processors.JSONRenderer(),
+            )
         )
-        file_handler.setFormatter(file_formatter)
-
-        # Add to root logger
-        root_logger = logging.getLogger()
         root_logger.addHandler(file_handler)
-        root_logger.setLevel(getattr(logging, log_level.upper()))
+
+    # Configure structlog to use stdlib logging
+    structlog.configure(
+        processors=shared_processors,
+        wrapper_class=structlog.stdlib.BoundLogger,
+        context_class=dict,
+        logger_factory=structlog.stdlib.LoggerFactory(),
+        cache_logger_on_first_use=True,
+    )
 
 
 def get_logger(name: str) -> structlog.BoundLogger:

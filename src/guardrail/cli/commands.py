@@ -17,6 +17,7 @@ from rich.table import Table
 from rich.tree import Tree
 
 from guardrail.core.daemon import AIRequest, GuardrailDaemon
+from guardrail.core.logger import configure_logging
 from guardrail.core.workers import WorkerManager
 from guardrail.utils.config import Config, ConfigManager, get_config
 from guardrail.utils.db import DatabaseManager
@@ -46,7 +47,8 @@ def cli():
       guardrail interactive                      # Start conversation
       guardrail status                           # Check system
     """
-    pass
+    # Initialize logging on CLI startup
+    configure_logging()
 
 
 @cli.command()
