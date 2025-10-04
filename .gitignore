@@ -139,3 +139,11 @@ config.yaml
 .hive-mind
 .swarm
 claude-flow
+
+# Local testing (do not share)
+test_local.py
+
+# Project summary files (internal documentation)
+FINAL_PROJECT_SUMMARY.md
+PHASE_2_SUMMARY.md
+PROJECT_SUMMARY.md
