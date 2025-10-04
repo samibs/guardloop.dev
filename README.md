@@ -2,8 +2,8 @@
 
 **Enterprise-Grade Governance for AI-Assisted Development**
 
-[![Tests](https://img.shields.io/badge/tests-173%20passing-brightgreen)](https://github.com/yourusername/guardrail)
-[![Coverage](https://img.shields.io/badge/coverage-75%25-yellow)](https://github.com/yourusername/guardrail)
+[![Tests](https://img.shields.io/badge/tests-173%20passing-brightgreen)](https://github.com/samibs/guardrail.dev)
+[![Coverage](https://img.shields.io/badge/coverage-75%25-yellow)](https://github.com/samibs/guardrail.dev)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -24,12 +24,12 @@ Guardrail is an intelligent governance system that automatically enforces coding
 ### Installation
 
 ```bash
-# Install from PyPI
+# Install from PyPI (when published)
 pip install guardrail
 
 # Or install from source
-git clone https://github.com/yourusername/guardrail.git
-cd guardrail
+git clone https://github.com/samibs/guardrail.dev.git
+cd guardrail.dev
 pip install -e .
 ```
 
