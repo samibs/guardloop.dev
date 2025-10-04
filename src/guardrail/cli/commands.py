@@ -538,7 +538,7 @@ def interactive():
                     # Show top 3 violations
                     for v in result.violations[:3]:
                         console.print(
-                            f"   [{v.severity}] {v.guardrail_type}: {v.rule_violated}"
+                            f"   [{v.severity}] {v.guardrail_type}: {v.description}"
                         )
                     if len(result.violations) > 3:
                         console.print(f"   [dim]... and {len(result.violations) - 3} more[/dim]")
