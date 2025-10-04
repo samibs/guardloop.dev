@@ -18,6 +18,7 @@ from sqlalchemy import (
     Text,
     create_engine,
     event,
+    text,
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, relationship, sessionmaker
@@ -247,7 +248,7 @@ class DatabaseManager:
                 with self.engine.connect() as conn:
                     for statement in statements:
                         if statement:
-                            conn.execute(statement)
+                            conn.execute(text(statement))
                     conn.commit()
 
     def get_session(self) -> Session:
