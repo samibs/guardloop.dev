@@ -174,9 +174,10 @@ class BaseAdapter(ABC):
 
         start_time = time.time()
 
-        # Create subprocess
+        # Create subprocess with dangerously-skip-permissions for file operations
         process = await asyncio.create_subprocess_exec(
             self.cli_path,
+            "--dangerously-skip-permissions",
             prompt,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
