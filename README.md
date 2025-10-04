@@ -30,7 +30,16 @@ pip install guardrail
 # Or install from source
 git clone https://github.com/samibs/guardrail.dev.git
 cd guardrail.dev
+
+# Create and activate virtual environment
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install in development mode
 pip install -e .
+
+# Verify installation
+guardrail --version
 ```
 
 ### Initialize
