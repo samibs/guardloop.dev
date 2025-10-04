@@ -62,14 +62,23 @@ guardrail init
 ### Use with Any AI Tool
 
 ```bash
-# Guardrail automatically wraps AI tool commands
-claude "create a login function with JWT authentication"
-
-# Or use explicitly
+# Single request (one-shot)
 guardrail run claude "implement user authentication"
+
+# Interactive session (for conversations)
+guardrail interactive
 
 # Check system status
 guardrail status
+
+# View configuration
+guardrail config
+
+# Analyze violations and failures
+guardrail analyze --days 7
+
+# Export failure reports
+guardrail export --output failures.md
 ```
 
 ## 📖 Documentation
@@ -92,6 +101,42 @@ Guardrail uses 13 specialized agents in orchestrated chains:
 7. **And 7 more specialized agents...**
 
 ## 💡 Usage Examples
+
+### Interactive vs One-Shot Mode
+
+**Interactive Mode** - For conversations with Claude:
+```bash
+$ guardrail interactive
+
+Select AI tool:
+  1. Claude
+  2. Gemini
+  3. Codex
+
+Tool (1-3): 1
+
+Select mode:
+  1. Standard (warn only)
+  2. Strict (block violations)
+
+Mode (1-2): 1
+
+✨ Session started: claude in standard mode
+
+>>> implement user authentication
+[Claude responds with questions...]
+
+>>> option 2 - create a web application
+[Conversation continues...]
+
+>>> exit
+```
+
+**One-Shot Mode** - For single requests:
+```bash
+$ guardrail run claude "create a REST API with FastAPI"
+[Response displayed and exits]
+```
 
 ### Standard Mode (Suggestions)
 

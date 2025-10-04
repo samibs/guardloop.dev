@@ -27,7 +27,25 @@ console = Console()
 @click.group()
 @click.version_option(version="1.0.0")
 def cli():
-    """🛡️  Guardrail - Guardrails for AI Development"""
+    """🛡️  Guardrail - Guardrails for AI Development
+
+    \b
+    Commands:
+      run         Execute single AI request with guardrails
+      interactive Start interactive session (for conversations)
+      init        Initialize guardrail configuration
+      status      Show system status
+      config      View configuration
+      analyze     Analyze violations and failures
+      export      Export failures to markdown
+      daemon      Start background daemon
+
+    \b
+    Examples:
+      guardrail run claude "implement auth"      # One-shot request
+      guardrail interactive                      # Start conversation
+      guardrail status                           # Check system
+    """
     pass
 
 
