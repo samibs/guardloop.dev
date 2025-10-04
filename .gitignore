@@ -142,6 +142,11 @@ claude-flow
 
 # Local testing (do not share)
 test_local.py
+TESTING_GUIDE.md
+HOW_TO_TEST.md
+
+# SQLite temp files
+:memory:
 
 # Project summary files (internal documentation)
 FINAL_PROJECT_SUMMARY.md

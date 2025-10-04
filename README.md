@@ -66,10 +66,10 @@ guardrail init
 claude "create a login function with JWT authentication"
 
 # Or use explicitly
-guardrail execute --tool claude --prompt "implement user authentication"
+guardrail run claude "implement user authentication"
 
-# Validate existing code
-guardrail validate --file auth.py --agent secops
+# Check system status
+guardrail status
 ```
 
 ## 📖 Documentation
@@ -109,7 +109,7 @@ $ claude "create login API endpoint"
 ### Strict Mode (Enforcement)
 
 ```bash
-$ guardrail execute --mode strict --tool claude --prompt "create auth system"
+$ guardrail run claude "create auth system" --mode strict
 
 ❌ Blocked by SecOps Agent
    Reason: Missing MFA implementation
