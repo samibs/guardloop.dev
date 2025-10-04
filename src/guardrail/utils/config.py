@@ -14,7 +14,7 @@ class ToolConfig(BaseModel):
 
     cli_path: str
     enabled: bool = True
-    timeout: int = 30
+    timeout: int = 120  # 2 minutes - guardrails add significant context
 
 
 class GuardrailsConfig(BaseModel):
@@ -97,9 +97,9 @@ class Config(BaseModel):
 
     tools: Dict[str, ToolConfig] = Field(
         default_factory=lambda: {
-            "claude": ToolConfig(cli_path="claude", enabled=True, timeout=30),
-            "gemini": ToolConfig(cli_path="gemini", enabled=True, timeout=30),
-            "codex": ToolConfig(cli_path="codex", enabled=True, timeout=30),
+            "claude": ToolConfig(cli_path="claude", enabled=True, timeout=120),
+            "gemini": ToolConfig(cli_path="gemini", enabled=True, timeout=120),
+            "codex": ToolConfig(cli_path="codex", enabled=True, timeout=120),
         }
     )
 
@@ -159,7 +159,7 @@ class Settings(BaseSettings):
     guardrail_team_branch: str = "main"
 
     # Performance
-    guardrail_timeout_seconds: int = 30
+    guardrail_timeout_seconds: int = 120  # 2 minutes for AI tools with guardrails
     guardrail_max_retries: int = 3
     guardrail_cache_size_mb: int = 100
 
