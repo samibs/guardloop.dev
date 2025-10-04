@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guardrails for AI Development - Keep your AI coding on track with automated governance, security, and compliance">
+    <title>Guardrail - Guardrails for AI Development</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Hero Section -->
+    <header class="hero">
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo">
+                    <h1>🛡️ Guardrail</h1>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#quick-start">Quick Start</a></li>
+                    <li><a href="https://docs.guardrail.dev">Docs</a></li>
+                    <li><a href="https://github.com/guardrail-dev/guardrail" class="github-link">GitHub</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="hero-content container">
+            <h1 class="hero-title">Guardrails for AI Development</h1>
+            <p class="hero-subtitle">Keep your AI coding on track with automated governance, security, and compliance</p>
+            <div class="hero-cta">
+                <a href="#quick-start" class="btn btn-primary">Get Started Free</a>
+                <a href="#demo" class="btn btn-secondary">Watch Demo</a>
+            </div>
+
+            <!-- Demo Terminal -->
+            <div class="demo-terminal">
+                <div class="terminal-header">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> pip install guardrail
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> guardrail init
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> claude "create a login function with JWT auth"
+                    </div>
+                    <div class="terminal-line success">
+                        <span class="icon">✅</span> Implementation validated
+                    </div>
+                    <div class="terminal-line warning">
+                        <span class="icon">⚠️</span> Suggestions from SecOps:
+                    </div>
+                    <div class="terminal-line indent">
+                        - Add input sanitization
+                    </div>
+                    <div class="terminal-line indent">
+                        - Implement rate limiting
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Enterprise-Grade AI Governance</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Automatic Guardrail Injection</h3>
+                    <p>Every AI prompt includes your organization's standards automatically</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Real-time Violation Detection</h3>
+                    <p>Catch security issues, bad patterns, and failures before they reach code</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>AI Failure Analytics</h3>
+                    <p>ML-powered failure pattern detection with actionable insights</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Multi-Agent Orchestration</h3>
+                    <p>13 specialized agents ensure comprehensive quality validation</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3>Security-First Design</h3>
+                    <p>MFA, Azure AD, RBAC enforced by default</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>Compliance Tracking</h3>
+                    <p>Built-in support for ISO 27001, GDPR, SOC 2</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+
+            <div class="workflow-diagram">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <h3>Request Interception</h3>
+                    <p>Guardrail wraps AI CLI tools (Claude, Gemini, Codex)</p>
+                </div>
+
+                <div class="workflow-arrow">→</div>
+
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <h3>Guardrail Injection</h3>
+                    <p>Your organization's standards are automatically injected</p>
+                </div>
+
+                <div class="workflow-arrow">→</div>
+
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <h3>Agent Validation</h3>
+                    <p>13 specialized agents review the AI output</p>
+                </div>
+
+                <div class="workflow-arrow">→</div>
+
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <h3>Enforcement</h3>
+                    <p>Violations are flagged or blocked based on your policy</p>
+                </div>
+            </div>
+
+            <div class="architecture-diagram">
+                <h3>Multi-Agent Architecture</h3>
+                <div class="agents-grid">
+                    <div class="agent">Orchestrator</div>
+                    <div class="agent">Architect</div>
+                    <div class="agent">Coder</div>
+                    <div class="agent">Tester</div>
+                    <div class="agent">SecOps</div>
+                    <div class="agent">SRE</div>
+                    <div class="agent">DBA</div>
+                    <div class="agent">UX Designer</div>
+                    <div class="agent">Business Analyst</div>
+                    <div class="agent">Debug Hunter</div>
+                    <div class="agent">Documentation</div>
+                    <div class="agent">Evaluator</div>
+                    <div class="agent">Standards Oracle</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start Section -->
+    <section id="quick-start" class="quick-start">
+        <div class="container">
+            <h2 class="section-title">Get Started in 60 Seconds</h2>
+
+            <div class="quick-start-steps">
+                <div class="step">
+                    <h3>1. Install</h3>
+                    <div class="code-block">
+                        <code>pip install guardrail</code>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3>2. Initialize</h3>
+                    <div class="code-block">
+                        <code>guardrail init</code>
+                    </div>
+                    <p class="step-description">Creates ~/.guardrail/ with your organization's guardrails</p>
+                </div>
+
+                <div class="step">
+                    <h3>3. Use with Any AI Tool</h3>
+                    <div class="code-block">
+                        <code>claude "create a login function with JWT authentication"</code>
+                    </div>
+                    <p class="step-description">Guardrails are automatically applied and enforced</p>
+                </div>
+            </div>
+
+            <div class="modes">
+                <h3>Two Operating Modes</h3>
+                <div class="modes-grid">
+                    <div class="mode-card">
+                        <h4>Standard Mode</h4>
+                        <p>AI suggestions with guardrail recommendations</p>
+                        <div class="code-block">
+                            <code>✅ Implementation validated<br>
+⚠️ Suggestions from SecOps:<br>
+  - Add input sanitization<br>
+  - Implement rate limiting</code>
+                        </div>
+                    </div>
+
+                    <div class="mode-card">
+                        <h4>Strict Mode</h4>
+                        <p>Enforcement with automatic blocking of violations</p>
+                        <div class="code-block">
+                            <code>❌ Blocked by SecOps Agent<br>
+Reason: Missing MFA implementation<br>
+Required: MFA + Azure AD + RBAC</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Video Section -->
+    <section id="demo" class="demo-section">
+        <div class="container">
+            <h2 class="section-title">See Guardrail in Action</h2>
+            <div class="demo-video">
+                <div class="video-placeholder">
+                    <p>📹 Demo Video Coming Soon</p>
+                    <p class="demo-description">Watch how Guardrail catches AI mistakes in real-time</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-number">173</div>
+                    <div class="stat-label">Tests Passing</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">75%</div>
+                    <div class="stat-label">Code Coverage</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">13</div>
+                    <div class="stat-label">Specialized Agents</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">3+</div>
+                    <div class="stat-label">Built-in Guardrails</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Add Guardrails to Your AI Development?</h2>
+            <p>Start enforcing your organization's standards automatically</p>
+            <div class="cta-buttons">
+                <a href="https://github.com/guardrail-dev/guardrail" class="btn btn-primary">Get Started on GitHub</a>
+                <a href="https://docs.guardrail.dev" class="btn btn-secondary">Read Documentation</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Product</h3>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="https://docs.guardrail.dev">Documentation</a></li>
+                        <li><a href="https://github.com/guardrail-dev/guardrail">GitHub</a></li>
+                        <li><a href="https://pypi.org/project/guardrail/">PyPI</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="https://docs.guardrail.dev/getting-started">Getting Started</a></li>
+                        <li><a href="https://docs.guardrail.dev/configuration">Configuration</a></li>
+                        <li><a href="https://docs.guardrail.dev/api">API Reference</a></li>
+                        <li><a href="https://github.com/guardrail-dev/guardrail/issues">Support</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Community</h3>
+                    <ul>
+                        <li><a href="https://github.com/guardrail-dev/guardrail">GitHub</a></li>
+                        <li><a href="https://twitter.com/guardraildev">Twitter</a></li>
+                        <li><a href="https://discord.gg/guardrail">Discord</a></li>
+                        <li><a href="https://github.com/guardrail-dev/guardrail/blob/main/CONTRIBUTING.md">Contributing</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="https://github.com/guardrail-dev/guardrail/blob/main/LICENSE">MIT License</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 guardrail.dev. Made with ❤️ by developers, for developers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
