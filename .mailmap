@@ -1,0 +1,5 @@
+# Git mailmap to exclude automated co-authors from contributor lists
+# This prevents Claude Code automation from appearing in GitHub contributors
+
+# Map Claude Code co-author to be excluded
+<noreply@anthropic.com> <noreply@anthropic.com>

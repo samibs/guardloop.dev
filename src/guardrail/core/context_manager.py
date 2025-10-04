@@ -82,18 +82,27 @@ class ContextManager:
             cache_ttl=cache_ttl,
         )
 
-    def load_guardrails(self, agent: Optional[str] = None, mode: str = "standard", prompt: str = "") -> str:
+    def load_guardrails(
+        self,
+        agent: Optional[str] = None,
+        mode: str = "standard",
+        prompt: str = "",
+        task_type: Optional[str] = None,
+        db_session: Optional[any] = None,
+    ) -> str:
         """Load relevant guardrails based on agent, mode, and prompt content
 
         Args:
             agent: Optional agent name (orchestrator, architect, etc.)
             mode: Operating mode (standard or strict)
             prompt: User prompt to analyze for relevance
+            task_type: Task type from classifier (v2)
+            db_session: Database session for loading dynamic guardrails (v2)
 
         Returns:
             Combined guardrail content as string
         """
-        cache_key = f"guardrails_{agent}_{mode}"
+        cache_key = f"guardrails_{agent}_{mode}_{task_type or 'none'}"
 
         # Check cache first
         cached = self.cache.get(cache_key)
@@ -101,7 +110,7 @@ class ContextManager:
             logger.debug("Guardrails loaded from cache", cache_key=cache_key)
             return cached
 
-        logger.info("Loading guardrails", agent=agent, mode=mode)
+        logger.info("Loading guardrails", agent=agent, mode=mode, task_type=task_type)
 
         guardrails_content = []
 
@@ -116,6 +125,28 @@ class ContextManager:
                     # Extract only key points (summaries/rules) to reduce size
                     summarized = self._extract_key_points(content, filename)
                     guardrails_content.append(f"# {filename}\n\n{summarized}")
+
+        # v2: Load dynamic (learned) guardrails from DB
+        if db_session and task_type:
+            try:
+                from guardrail.core.adaptive_guardrails import AdaptiveGuardrailGenerator
+
+                adaptive_gen = AdaptiveGuardrailGenerator(db_session)
+                dynamic_guardrails = adaptive_gen.get_active_guardrails(
+                    task_type=task_type, min_confidence=0.7
+                )
+
+                if dynamic_guardrails:
+                    dynamic_text = adaptive_gen.format_for_context(dynamic_guardrails)
+                    guardrails_content.append(dynamic_text)
+
+                    logger.info(
+                        "Dynamic guardrails loaded",
+                        count=len(dynamic_guardrails),
+                        task_type=task_type,
+                    )
+            except Exception as e:
+                logger.warning("Failed to load dynamic guardrails", error=str(e))
 
         # Load agent-specific instructions
         if agent and agent in self.AGENTS:
@@ -138,7 +169,12 @@ class ContextManager:
         return combined
 
     def build_context(
-        self, prompt: str, agent: Optional[str] = None, mode: str = "standard"
+        self,
+        prompt: str,
+        agent: Optional[str] = None,
+        mode: str = "standard",
+        task_type: Optional[str] = None,
+        db_session: Optional[any] = None,
     ) -> str:
         """Build complete context with guardrails and user prompt
 
@@ -146,13 +182,23 @@ class ContextManager:
             prompt: User's original prompt
             agent: Optional agent name
             mode: Operating mode (standard or strict)
+            task_type: Task type from classifier (v2)
+            db_session: Database session for dynamic guardrails (v2)
 
         Returns:
             Complete enhanced prompt with guardrails
         """
-        logger.info("Building context", agent=agent, mode=mode, prompt_length=len(prompt))
+        logger.info(
+            "Building context",
+            agent=agent,
+            mode=mode,
+            task_type=task_type,
+            prompt_length=len(prompt),
+        )
 
-        guardrails = self.load_guardrails(agent=agent, mode=mode, prompt=prompt)
+        guardrails = self.load_guardrails(
+            agent=agent, mode=mode, prompt=prompt, task_type=task_type, db_session=db_session
+        )
 
         # Build structured context
         context_parts = [

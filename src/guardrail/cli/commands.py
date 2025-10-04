@@ -449,9 +449,17 @@ def interactive():
 
     console.print(f"\n✨ Session started: [cyan]{tool}[/cyan] in [cyan]{mode}[/cyan] mode\n")
 
-    # REPL loop
+    # REPL loop with conversation history (v2)
     async def repl():
+        import uuid
+        import os
+
         daemon = GuardrailDaemon(config)
+        conversation_id = str(uuid.uuid4())  # v2: conversation tracking
+        project_root = os.getcwd()  # v2: for file execution
+
+        # Start conversation in daemon
+        daemon.conversation_manager.start_conversation(conversation_id)
 
         while True:
             try:
@@ -464,8 +472,15 @@ def interactive():
                 if not prompt.strip():
                     continue
 
-                # Execute request
-                request = AIRequest(tool=tool, prompt=prompt, agent=agent, mode=mode)
+                # v2: Execute request with conversation history
+                request = AIRequest(
+                    tool=tool,
+                    prompt=prompt,
+                    agent=agent,
+                    mode=mode,
+                    conversation_id=conversation_id,
+                    project_root=project_root,
+                )
 
                 with Progress(
                     SpinnerColumn(),
@@ -479,7 +494,23 @@ def interactive():
                 status = "✅" if result.approved else "❌"
                 console.print(f"\n{status} {result.raw_output}\n")
 
-                if result.violations:
+                # v2: Show task classification if available
+                if result.task_classification and result.task_classification.task_type != "code":
+                    console.print(
+                        f"[dim]📋 Task: {result.task_classification.task_type} "
+                        f"({result.task_classification.confidence:.0%} confidence)[/dim]"
+                    )
+
+                # v2: Show file operations if any
+                if result.file_operations:
+                    console.print(
+                        f"[green]💾 Created {len(result.file_operations)} file(s)[/green]"
+                    )
+                    for file_path in result.file_operations:
+                        console.print(f"   ✅ {file_path}")
+
+                # Show violations only if guardrails were applied
+                if result.guardrails_applied and result.violations:
                     console.print(
                         f"[yellow]⚠️  {len(result.violations)} violation(s) detected[/yellow]"
                     )

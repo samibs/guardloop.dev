@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import yaml
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -26,7 +26,8 @@ class GuardrailsConfig(BaseModel):
     )
     agents_path: str = "~/.guardrail/guardrails/agents"
 
-    @validator("base_path", "agents_path")
+    @field_validator("base_path", "agents_path")
+    @classmethod
     def expand_path(cls, v: str) -> str:
         return str(Path(v).expanduser().resolve())
 
@@ -38,7 +39,8 @@ class DatabaseConfig(BaseModel):
     backup_enabled: bool = True
     backup_interval_hours: int = 24
 
-    @validator("path")
+    @field_validator("path")
+    @classmethod
     def expand_path(cls, v: str) -> str:
         return str(Path(v).expanduser().resolve())
 
@@ -51,7 +53,8 @@ class LoggingConfig(BaseModel):
     max_size_mb: int = 100
     backup_count: int = 5
 
-    @validator("level")
+    @field_validator("level")
+    @classmethod
     def validate_level(cls, v: str) -> str:
         valid_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         v_upper = v.upper()
@@ -59,7 +62,8 @@ class LoggingConfig(BaseModel):
             raise ValueError(f"Invalid log level. Must be one of: {valid_levels}")
         return v_upper
 
-    @validator("file")
+    @field_validator("file")
+    @classmethod
     def expand_path(cls, v: str) -> str:
         return str(Path(v).expanduser().resolve())
 
@@ -77,6 +81,13 @@ class FeaturesConfig(BaseModel):
     metrics_worker: bool = True
     markdown_export: bool = True
     cleanup_worker: bool = True
+
+    # Version 2 features
+    v2_adaptive_learning: bool = True  # Enable adaptive guardrail learning
+    v2_task_classification: bool = True  # Enable task type classification
+    v2_auto_save_files: bool = True  # Enable automatic file saving
+    v2_conversation_history: bool = True  # Enable conversation tracking
+    v2_dynamic_guardrails: bool = True  # Load learned guardrails from DB
 
 
 class TeamConfig(BaseModel):
@@ -109,7 +120,8 @@ class Config(BaseModel):
     features: FeaturesConfig = Field(default_factory=FeaturesConfig)
     team: TeamConfig = Field(default_factory=TeamConfig)
 
-    @validator("mode")
+    @field_validator("mode")
+    @classmethod
     def validate_mode(cls, v: str) -> str:
         valid_modes = ["standard", "strict"]
         if v not in valid_modes:

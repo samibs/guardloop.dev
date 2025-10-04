@@ -11,10 +11,15 @@ from typing import List, Optional, Dict, Any
 import structlog
 
 from guardrail.adapters import AdapterFactory, AIResponse
+from guardrail.core.adaptive_guardrails import AdaptiveGuardrailGenerator
 from guardrail.core.context_manager import ContextManager
+from guardrail.core.conversation_manager import ConversationManager
 from guardrail.core.failure_detector import FailureDetector, DetectedFailure
+from guardrail.core.file_executor import FileExecutor
 from guardrail.core.logger import get_logger
 from guardrail.core.parser import ParsedResponse, ResponseParser
+from guardrail.core.pattern_analyzer import PatternAnalyzer
+from guardrail.core.task_classifier import TaskClassifier
 from guardrail.core.validator import GuardrailValidator, Violation
 from guardrail.utils.config import Config
 from guardrail.utils.db import DatabaseManager
@@ -37,6 +42,8 @@ class AIRequest:
     agent: Optional[str] = None
     mode: str = "standard"
     session_id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    conversation_id: Optional[str] = None  # v2: For interactive sessions
+    project_root: Optional[str] = None  # v2: For file execution
 
 
 @dataclass
@@ -50,6 +57,9 @@ class AIResult:
     approved: bool
     execution_time_ms: int
     session_id: str
+    task_classification: Optional[any] = None  # v2: Task classification result
+    file_operations: Optional[List[any]] = None  # v2: Executed file operations
+    guardrails_applied: bool = True  # v2: Whether guardrails were applied
 
 
 class GuardrailDaemon:
@@ -71,10 +81,24 @@ class GuardrailDaemon:
         # Initialize database
         self.db.init_db()
 
+        # v2 components
+        db_session = self.db.get_session()
+        self.task_classifier = TaskClassifier()
+        self.pattern_analyzer = PatternAnalyzer(db_session)
+        self.adaptive_guardrails = AdaptiveGuardrailGenerator(db_session)
+        self.conversation_manager = ConversationManager(db_session)
+        self.file_executor = None  # Initialized per request with project_root
+
+        # Check if v2 features enabled (will add to config later)
+        self.v2_enabled = getattr(config.features, 'v2_adaptive_learning', True)
+        self.v2_auto_save = getattr(config.features, 'v2_auto_save_files', True)
+        self.v2_task_classification = getattr(config.features, 'v2_task_classification', True)
+
         logger.info(
             "GuardrailDaemon initialized",
             mode=config.mode,
             enabled_tools=list(config.tools.keys()),
+            v2_enabled=self.v2_enabled,
         )
 
     def get_adapter(self, tool: str) -> Any:
@@ -97,7 +121,7 @@ class GuardrailDaemon:
         )
 
     async def process_request(self, request: AIRequest) -> AIResult:
-        """Main orchestration flow
+        """Main orchestration flow with v2 enhancements
 
         Args:
             request: AI request to process
@@ -116,18 +140,53 @@ class GuardrailDaemon:
             tool=request.tool,
             agent=request.agent,
             mode=request.mode,
+            v2_enabled=self.v2_enabled,
         )
 
         try:
-            # 1. Load and inject guardrails
-            context = self.context_manager.build_context(
-                prompt=request.prompt, agent=request.agent, mode=request.mode
-            )
+            # v2 STEP 0: Task Classification
+            task_classification = None
+            guardrails_required = True
+
+            if self.v2_enabled and self.v2_task_classification:
+                task_classification = self.task_classifier.classify(request.prompt)
+                guardrails_required = task_classification.requires_guardrails
+
+                logger.info(
+                    "Task classified",
+                    session_id=request.session_id,
+                    task_type=task_classification.task_type,
+                    confidence=task_classification.confidence,
+                    guardrails_required=guardrails_required,
+                )
+
+            # v2: Build context with conversation history if interactive
+            if request.conversation_id and self.v2_enabled:
+                context_prompt = self.conversation_manager.build_context(
+                    request.conversation_id, request.prompt
+                )
+            else:
+                context_prompt = request.prompt
+
+            # 1. Load and inject guardrails (skip if not required)
+            if guardrails_required:
+                db_session = self.db.get_session()
+                context = self.context_manager.build_context(
+                    prompt=context_prompt,
+                    agent=request.agent,
+                    mode=request.mode,
+                    task_type=task_classification.task_type if task_classification else None,
+                    db_session=db_session,
+                )
+            else:
+                # Skip guardrails for creative/content tasks
+                context = context_prompt
 
             logger.debug(
                 "Context built",
                 session_id=request.session_id,
                 context_length=len(context),
+                guardrails_applied=guardrails_required,
             )
 
             # 2. Execute AI CLI
@@ -197,7 +256,48 @@ class GuardrailDaemon:
                 mode=request.mode,
             )
 
-            # 7. Log session (async, non-blocking)
+            # v2 STEP 7: File Execution (if enabled and safe)
+            file_operations = []
+            if self.v2_enabled and self.v2_auto_save and request.project_root:
+                self.file_executor = FileExecutor(
+                    request.project_root, auto_save_enabled=True
+                )
+                operations = self.file_executor.extract_operations(ai_response.raw_output)
+
+                if operations:
+                    exec_results = self.file_executor.execute_all(
+                        operations, confirm_all=False  # Auto-save safe files
+                    )
+                    file_operations = exec_results.get("created_files", [])
+
+                    logger.info(
+                        "File operations executed",
+                        session_id=request.session_id,
+                        succeeded=exec_results["succeeded"],
+                        failed=exec_results["failed"],
+                    )
+
+            # v2 STEP 8: Update conversation history (if interactive)
+            if request.conversation_id and self.v2_enabled:
+                # Add user message
+                self.conversation_manager.add_message(
+                    request.conversation_id,
+                    "user",
+                    request.prompt,
+                    tokens_used=self.conversation_manager.estimate_tokens(request.prompt),
+                )
+
+                # Add assistant response
+                self.conversation_manager.add_message(
+                    request.conversation_id,
+                    "assistant",
+                    ai_response.raw_output,
+                    tokens_used=self.conversation_manager.estimate_tokens(
+                        ai_response.raw_output
+                    ),
+                )
+
+            # 9. Log session (async, non-blocking)
             execution_time = int((time.time() - start_time) * 1000)
             asyncio.create_task(
                 self._log_session(
@@ -208,18 +308,22 @@ class GuardrailDaemon:
                     failures,
                     approved,
                     execution_time,
+                    task_classification,
                 )
             )
 
-            # 8. Return result
+            # 10. Return result
             return AIResult(
                 raw_output=ai_response.raw_output,
                 parsed=parsed,
-                violations=violations,
+                violations=violations if guardrails_required else [],
                 failures=failures,
                 approved=approved,
                 execution_time_ms=execution_time,
                 session_id=request.session_id,
+                task_classification=task_classification,
+                file_operations=file_operations,
+                guardrails_applied=guardrails_required,
             )
 
         except Exception as e:
@@ -282,6 +386,7 @@ class GuardrailDaemon:
         failures: List[DetectedFailure],
         approved: bool,
         execution_time: int,
+        task_classification: Optional[any] = None,
     ) -> None:
         """Log session to database
 
@@ -293,6 +398,7 @@ class GuardrailDaemon:
             failures: Detected failures
             approved: Approval decision
             execution_time: Execution time in milliseconds
+            task_classification: Task classification result (v2)
         """
         try:
             # Store session

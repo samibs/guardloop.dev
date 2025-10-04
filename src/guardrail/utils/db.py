@@ -218,6 +218,153 @@ class ContextTrackingModel(Base):
     )
 
 
+# ============================================================================
+# Version 2 Models - Adaptive Learning System
+# ============================================================================
+
+
+class LearnedPatternModel(Base):
+    """Learned failure patterns from LLM interactions"""
+
+    __tablename__ = "learned_patterns"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    pattern_hash = Column(String(64), unique=True, nullable=False, index=True)
+    category = Column(String(100), nullable=False, index=True)
+    signature = Column(Text, nullable=False)
+    description = Column(Text)
+    frequency = Column(Integer, default=1, index=True)
+    severity = Column(String(20), nullable=False, index=True)
+    first_seen = Column(DateTime, nullable=False, default=datetime.utcnow, index=True)
+    last_seen = Column(DateTime, nullable=False, default=datetime.utcnow, index=True)
+    confidence_score = Column(Float, default=0.0, index=True)
+    example_sessions = Column(JSON)
+    metadata = Column(JSON)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    dynamic_guardrails = relationship("DynamicGuardrailModel", back_populates="pattern")
+
+    __table_args__ = (
+        CheckConstraint(
+            severity.in_(["low", "medium", "high", "critical"]), name="check_pattern_severity"
+        ),
+        Index("idx_pattern_category_severity", "category", "severity"),
+        Index("idx_pattern_frequency", "frequency"),
+    )
+
+
+class DynamicGuardrailModel(Base):
+    """Auto-generated guardrails from learned patterns"""
+
+    __tablename__ = "dynamic_guardrails"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    pattern_id = Column(Integer, ForeignKey("learned_patterns.id"), nullable=False, index=True)
+    rule_text = Column(Text, nullable=False)
+    rule_category = Column(String(100), nullable=False, index=True)
+    confidence = Column(Float, nullable=False, index=True)
+    status = Column(String(20), nullable=False, default="trial", index=True)
+    enforcement_mode = Column(String(20), nullable=False, default="warn", index=True)
+    task_types = Column(JSON)  # Which task types this applies to
+    created_at = Column(DateTime, default=datetime.utcnow)
+    activated_at = Column(DateTime, index=True)
+    deactivated_at = Column(DateTime, index=True)
+    created_by = Column(String(50), default="system")
+    metadata = Column(JSON)
+
+    # Relationships
+    pattern = relationship("LearnedPatternModel", back_populates="dynamic_guardrails")
+    effectiveness = relationship("RuleEffectivenessModel", back_populates="rule")
+
+    __table_args__ = (
+        CheckConstraint(
+            status.in_(["trial", "validated", "enforced", "deprecated"]),
+            name="check_rule_status",
+        ),
+        CheckConstraint(
+            enforcement_mode.in_(["warn", "block", "auto_fix"]),
+            name="check_enforcement_mode",
+        ),
+        Index("idx_guardrail_status_confidence", "status", "confidence"),
+    )
+
+
+class RuleEffectivenessModel(Base):
+    """Track effectiveness of dynamic guardrails"""
+
+    __tablename__ = "rule_effectiveness"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    rule_id = Column(Integer, ForeignKey("dynamic_guardrails.id"), nullable=False, index=True)
+    date = Column(DateTime, nullable=False, default=datetime.utcnow, index=True)
+    prevented_failures = Column(Integer, default=0)
+    false_positives = Column(Integer, default=0)
+    true_positives = Column(Integer, default=0)
+    times_triggered = Column(Integer, default=0)
+    avg_confidence = Column(Float, default=0.0)
+    user_feedback = Column(JSON)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    rule = relationship("DynamicGuardrailModel", back_populates="effectiveness")
+
+    __table_args__ = (
+        Index("idx_effectiveness_date", "date"),
+        Index("idx_effectiveness_rule_date", "rule_id", "date"),
+    )
+
+
+class ConversationHistoryModel(Base):
+    """Conversation history for interactive sessions"""
+
+    __tablename__ = "conversation_history"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    session_id = Column(GUID, nullable=False, index=True)
+    turn_number = Column(Integer, nullable=False)
+    role = Column(String(20), nullable=False)
+    content = Column(Text, nullable=False)
+    timestamp = Column(DateTime, nullable=False, default=datetime.utcnow, index=True)
+    tokens_used = Column(Integer, default=0)
+    metadata = Column(JSON)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    __table_args__ = (
+        CheckConstraint(
+            role.in_(["user", "assistant", "system"]),
+            name="check_message_role",
+        ),
+        Index("idx_conversation_session_turn", "session_id", "turn_number"),
+        Index("idx_conversation_timestamp", "timestamp"),
+    )
+
+
+class TaskClassificationModel(Base):
+    """Task classification results for prompts"""
+
+    __tablename__ = "task_classifications"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    session_id = Column(GUID, ForeignKey("sessions.id"), nullable=False, index=True)
+    timestamp = Column(DateTime, nullable=False, default=datetime.utcnow, index=True)
+    task_type = Column(String(50), nullable=False, index=True)
+    confidence = Column(Float, nullable=False)
+    requires_guardrails = Column(Boolean, default=True, index=True)
+    classification_metadata = Column(JSON)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    __table_args__ = (
+        CheckConstraint(
+            task_type.in_(["code", "content", "creative", "mixed", "unknown"]),
+            name="check_task_type",
+        ),
+        Index("idx_classification_type_confidence", "task_type", "confidence"),
+    )
+
+
 class DatabaseManager:
     """Database management utilities"""
 

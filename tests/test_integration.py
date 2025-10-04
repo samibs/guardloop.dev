@@ -4,9 +4,9 @@ import pytest
 from unittest.mock import patch, MagicMock, AsyncMock
 from pathlib import Path
 
-from guardrail.core.daemon import GuardrailDaemon, AIRequest, AIResponse
+from guardrail.core.daemon import GuardrailDaemon, AIRequest
 from guardrail.core.parser import ParsedResponse, CodeBlock
-from guardrail.adapters.base import AdapterResponse
+from guardrail.adapters.base import AIResponse
 from guardrail.utils.config import Config, DatabaseConfig
 
 
@@ -24,7 +24,7 @@ async def test_full_flow_standard_mode(config, sample_ai_response):
 
     # Mock AI CLI execution
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
-        mock_execute.return_value = AdapterResponse(
+        mock_execute.return_value = AIResponse(
             raw_output=sample_ai_response,
             execution_time_ms=1000,
             success=True
@@ -66,7 +66,7 @@ No tests provided.
 """
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
-        mock_execute.return_value = AdapterResponse(
+        mock_execute.return_value = AIResponse(
             raw_output=bad_response,
             execution_time_ms=800,
             success=True
@@ -132,7 +132,7 @@ Monitoring: Prometheus metrics configured
 """
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
-        mock_execute.return_value = AdapterResponse(
+        mock_execute.return_value = AIResponse(
             raw_output=response_text,
             execution_time_ms=1500,
             success=True
@@ -167,7 +167,7 @@ Database query failed: Connection timeout
 """
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
-        mock_execute.return_value = AdapterResponse(
+        mock_execute.return_value = AIResponse(
             raw_output=response_with_failures,
             execution_time_ms=900,
             success=True
@@ -213,7 +213,7 @@ async def test_guardrail_injection(config, tmp_path):
     )
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
-        mock_execute.return_value = AdapterResponse(
+        mock_execute.return_value = AIResponse(
             raw_output="def func(): pass",
             execution_time_ms=500,
             success=True
@@ -240,7 +240,7 @@ async def test_context_preservation(config):
     )
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
-        mock_execute.return_value = AdapterResponse(
+        mock_execute.return_value = AIResponse(
             raw_output="class User: pass",
             execution_time_ms=500,
             success=True
@@ -258,7 +258,7 @@ async def test_context_preservation(config):
     )
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
-        mock_execute.return_value = AdapterResponse(
+        mock_execute.return_value = AIResponse(
             raw_output="# Updated User model with auth",
             execution_time_ms=600,
             success=True
@@ -289,7 +289,7 @@ async def test_multi_tool_support(config):
         adapter_class = f"guardrail.adapters.{tool}.{tool.capitalize()}Adapter"
 
         with patch(f"{adapter_class}.execute") as mock_execute:
-            mock_execute.return_value = AdapterResponse(
+            mock_execute.return_value = AIResponse(
                 raw_output="def func(): pass",
                 execution_time_ms=500,
                 success=True
@@ -324,7 +324,7 @@ def login(user, pass):
 """
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
-        mock_execute.return_value = AdapterResponse(
+        mock_execute.return_value = AIResponse(
             raw_output=insecure_response,
             execution_time_ms=700,
             success=True
@@ -358,7 +358,7 @@ async def test_background_worker_integration(config):
         )
 
         with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
-            mock_execute.return_value = AdapterResponse(
+            mock_execute.return_value = AIResponse(
                 raw_output="def background_task(): pass",
                 execution_time_ms=400,
                 success=True
@@ -385,7 +385,7 @@ async def test_performance_metrics(config):
     )
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
-        mock_execute.return_value = AdapterResponse(
+        mock_execute.return_value = AIResponse(
             raw_output="def measured_func(): pass",
             execution_time_ms=1200,
             success=True
