@@ -408,12 +408,16 @@ class GuardrailDaemon:
                 "tool": request.tool,
                 "agent": request.agent,
                 "mode": request.mode,
-                "prompt": request.prompt[:1000],  # Limit prompt size
-                "raw_output": response.raw_output[:5000],  # Limit output size
+                "prompt": request.prompt[:2000],  # Limit prompt size
+                "raw_output": response.raw_output[:10000],  # Limit output size
                 "parsed_output": {
-                    "code_blocks": len(parsed.code_blocks),
-                    "file_paths": len(parsed.file_paths),
-                    "commands": len(parsed.commands),
+                    "code_blocks": [
+                        {"language": cb.language, "code": cb.code[:5000]}
+                        for cb in parsed.code_blocks
+                    ],
+                    "file_paths": parsed.file_paths,
+                    "commands": parsed.commands,
+                    "explanations": [exp[:500] for exp in parsed.explanations],
                     "test_coverage": parsed.test_coverage,
                 },
                 "violations_count": len(violations),

@@ -492,34 +492,69 @@ def interactive():
                     progress.add_task("[cyan]Processing...", total=None)
                     result = await daemon.process_request(request)
 
-                # Display result
+                # Display detailed result
                 status = "✅" if result.approved else "❌"
-                console.print(f"\n{status} {result.raw_output}\n")
 
-                # v2: Show task classification if available
-                if result.task_classification and result.task_classification.task_type != "code":
+                # Main response
+                console.print(f"\n{status} [bold]{result.raw_output}[/bold]\n")
+
+                # Show code blocks if any
+                if result.parsed and result.parsed.code_blocks:
+                    console.print("[cyan]📝 Code Generated:[/cyan]")
+                    for i, cb in enumerate(result.parsed.code_blocks, 1):
+                        console.print(f"\n[dim]Block {i} ({cb.language}):[/dim]")
+                        from rich.syntax import Syntax
+                        syntax = Syntax(cb.code, cb.language or "text", theme="monokai", line_numbers=True)
+                        console.print(syntax)
+                    console.print()
+
+                # Show explanations if any
+                if result.parsed and result.parsed.explanations:
+                    console.print("[blue]💡 Explanation:[/blue]")
+                    for exp in result.parsed.explanations[:3]:  # Show first 3
+                        console.print(f"  • {exp}")
+                    console.print()
+
+                # Show task classification
+                if result.task_classification:
                     console.print(
                         f"[dim]📋 Task: {result.task_classification.task_type} "
                         f"({result.task_classification.confidence:.0%} confidence)[/dim]"
                     )
 
-                # v2: Show file operations if any
+                # Show file operations with details
                 if result.file_operations:
                     console.print(
-                        f"[green]💾 Created {len(result.file_operations)} file(s)[/green]"
+                        f"\n[green]💾 Files Created: {len(result.file_operations)}[/green]"
                     )
                     for file_path in result.file_operations:
                         console.print(f"   ✅ {file_path}")
 
-                # Show violations only if guardrails were applied
+                # Show violations with details
                 if result.guardrails_applied and result.violations:
                     console.print(
-                        f"[yellow]⚠️  {len(result.violations)} violation(s) detected[/yellow]"
+                        f"\n[yellow]⚠️  Violations: {len(result.violations)}[/yellow]"
                     )
+                    # Show top 3 violations
+                    for v in result.violations[:3]:
+                        console.print(
+                            f"   [{v.severity}] {v.guardrail_type}: {v.rule_violated}"
+                        )
+                    if len(result.violations) > 3:
+                        console.print(f"   [dim]... and {len(result.violations) - 3} more[/dim]")
 
+                # Show failures
                 if result.failures:
                     console.print(
-                        f"[red]🚨 {len(result.failures)} failure(s) detected[/red]"
+                        f"\n[red]🚨 Failures: {len(result.failures)}[/red]"
+                    )
+                    for f in result.failures[:3]:
+                        console.print(f"   • {f.category}: {f.issue}")
+
+                # Show execution time
+                if result.execution_time_ms:
+                    console.print(
+                        f"\n[dim]⏱️  {result.execution_time_ms}ms[/dim]"
                     )
 
                 console.print()
