@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GuardLoop - Self-Learning AI Governance for Code. Experimental framework that learns from LLM failures and generates adaptive guardrails automatically.">
+    <meta property="og:title" content="GuardLoop - Self-Learning AI Governance">
+    <meta property="og:description" content="Experimental AI governance that learns from failures and adapts automatically">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://guardloop.dev">
+    <title>GuardLoop - Self-Learning AI Governance</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <img src="assets/logo.svg" alt="GuardLoop" class="logo">
+                <span class="brand-name">GuardLoop</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#quick-start">Quick Start</a></li>
+                <li><a href="https://github.com/samibs/guardloop.dev" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <div class="hero-badge">🧪 Experimental Research Project</div>
+            <h1 class="hero-title">Self-Learning AI Governance</h1>
+            <p class="hero-subtitle">What if AI governance could learn from failures and adapt automatically?</p>
+            <div class="hero-cta">
+                <a href="#quick-start" class="btn btn-primary">Get Started</a>
+                <a href="https://github.com/samibs/guardloop.dev" class="btn btn-secondary">View on GitHub</a>
+            </div>
+
+            <div class="terminal">
+                <div class="terminal-header">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> pip install guardloop
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> guardloop init
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span> claude "create a login function with JWT auth"
+                    </div>
+                    <div class="terminal-line success">
+                        <span class="icon">✅</span> Implementation validated
+                    </div>
+                    <div class="terminal-line warning">
+                        <span class="icon">⚠️</span> Suggestions from guardrails:
+                    </div>
+                    <div class="terminal-line indent">
+                        - Add input sanitization
+                    </div>
+                    <div class="terminal-line indent">
+                        - Implement rate limiting
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Core Concepts</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>Capture Interactions</h3>
+                    <p>Every AI interaction and outcome is logged for pattern analysis</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Analyze Patterns</h3>
+                    <p>Detect recurring failures (missing tests, security issues, etc.)</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Learn & Generate</h3>
+                    <p>Create dynamic guardrails from failure patterns automatically</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Prevent Mistakes</h3>
+                    <p>Stop repeated mistakes before they reach production</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Pre-Warm Cache</h3>
+                    <p>99.9% faster first request (0.22ms vs 300ms cold start)</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Task Classification</h3>
+                    <p>Smart guardrail bypass for creative work, enforcement for code</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="workflow">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <h3>After 5 similar failures</h3>
+                    <p>GuardLoop detects: "Missing try-catch blocks in async functions"</p>
+                </div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <h3>Pattern Analysis</h3>
+                    <p>Confidence: 0.85<br>Occurrences: 5</p>
+                </div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <h3>Guardrail Generated</h3>
+                    <p>"Always wrap async database calls in try-catch blocks"</p>
+                </div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <h3>Status: Enforced</h3>
+                    <p>trial → validated → enforced</p>
+                </div>
+            </div>
+
+            <div class="status-grid">
+                <div class="status-card working">
+                    <h3>✅ What Works Today</h3>
+                    <ul>
+                        <li>Claude CLI integration</li>
+                        <li>Pattern detection & learning</li>
+                        <li>Task classification</li>
+                        <li>Pre-warm cache (99.9% faster)</li>
+                        <li>File safety validation</li>
+                        <li>Conversation history</li>
+                    </ul>
+                </div>
+                <div class="status-card theoretical">
+                    <h3>🚧 In Progress</h3>
+                    <ul>
+                        <li>Full 13-agent orchestration</li>
+                        <li>Multi-tool support (Gemini/Codex)</li>
+                        <li>Semantic guardrail matching</li>
+                        <li>Advanced compliance validation</li>
+                        <li>Performance benchmarking</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="quick-start" class="quick-start">
+        <div class="container">
+            <h2 class="section-title">Get Started in 60 Seconds</h2>
+
+            <div class="install-steps">
+                <div class="step">
+                    <h3>1. Install GuardLoop</h3>
+                    <div class="code-block">
+                        <code id="install-cmd">pip install guardloop</code>
+                        <button class="copy-btn" data-target="install-cmd">Copy</button>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3>2. Initialize</h3>
+                    <div class="code-block">
+                        <code id="init-cmd">guardloop init</code>
+                        <button class="copy-btn" data-target="init-cmd">Copy</button>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3>3. Use with Claude</h3>
+                    <div class="code-block">
+                        <code id="run-cmd">guardloop run claude "create a login function"</code>
+                        <button class="copy-btn" data-target="run-cmd">Copy</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">223</div>
+                    <div class="stat-label">Tests Passing</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">75%</div>
+                    <div class="stat-label">Coverage</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Working Agents</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Faster Cache</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="use-cases">
+        <div class="container">
+            <h2 class="section-title">Good Fit For</h2>
+            <div class="use-case-grid">
+                <div class="use-case">
+                    <span class="use-case-icon">✅</span>
+                    <p>Experimenting with AI governance concepts</p>
+                </div>
+                <div class="use-case">
+                    <span class="use-case-icon">✅</span>
+                    <p>Research projects exploring LLM safety</p>
+                </div>
+                <div class="use-case">
+                    <span class="use-case-icon">✅</span>
+                    <p>Developers comfortable with alpha software</p>
+                </div>
+                <div class="use-case">
+                    <span class="use-case-icon">✅</span>
+                    <p>Contributors who want to shape direction</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚠️ Not Ready For</h3>
+                <p>Production environments • Enterprise compliance • Multi-tool orchestration • Commercial support</p>
+                <p><a href="https://github.com/samibs/guardloop.dev/blob/main/CRITICAL.md">Read Known Issues & Limitations →</a></p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Explore Self-Learning AI Governance?</h2>
+            <p>Star ⭐ if the idea resonates. Contribute if you want to build it together.</p>
+            <div class="cta-buttons">
+                <a href="https://github.com/samibs/guardloop.dev" class="btn btn-primary">Get Started on GitHub</a>
+                <a href="https://github.com/samibs/guardloop.dev/blob/main/CRITICAL.md" class="btn btn-secondary">Read Limitations</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Product</h3>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="https://github.com/samibs/guardloop.dev">GitHub</a></li>
+                        <li><a href="https://pypi.org/project/guardloop/">PyPI</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="https://github.com/samibs/guardloop.dev/blob/main/README.md">Getting Started</a></li>
+                        <li><a href="https://github.com/samibs/guardloop.dev/blob/main/CRITICAL.md">Known Issues</a></li>
+                        <li><a href="https://github.com/samibs/guardloop.dev/blob/main/ROADMAP.md">Roadmap</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Community</h3>
+                    <ul>
+                        <li><a href="https://github.com/samibs/guardloop.dev">GitHub</a></li>
+                        <li><a href="https://github.com/samibs/guardloop.dev/issues">Issues</a></li>
+                        <li><a href="https://github.com/samibs/guardloop.dev/discussions">Discussions</a></li>
+                        <li><a href="https://github.com/samibs/guardloop.dev/blob/main/CONTRIBUTING.md">Contributing</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="https://github.com/samibs/guardloop.dev/blob/main/LICENSE">MIT License</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 guardloop.dev • Built by developers, for developers</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
