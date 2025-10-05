@@ -2,8 +2,15 @@
 
 from typing import List, Tuple
 
-import numpy as np
 import structlog
+
+try:
+    import numpy as np
+
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
+    np = None  # type: ignore
 
 logger = structlog.get_logger(__name__)
 
@@ -13,6 +20,11 @@ class SemanticGuardrailMatcher:
 
     def __init__(self):
         """Initialize semantic matcher with lightweight embedding model."""
+        if not NUMPY_AVAILABLE:
+            raise ImportError(
+                "numpy is required for semantic matching. "
+                "Install with: pip install numpy sentence-transformers"
+            )
         self.model = None
         self.guardrail_embeddings = {}
         self._model_loaded = False

@@ -1,8 +1,21 @@
 """Tests for SemanticGuardrailMatcher"""
 
+from unittest.mock import MagicMock, Mock, patch
+
 import pytest
-from unittest.mock import Mock, MagicMock, patch
-import numpy as np
+
+# Try to import numpy, skip all tests if not available
+try:
+    import numpy as np
+
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
+    np = None
+
+pytestmark = pytest.mark.skipif(
+    not NUMPY_AVAILABLE, reason="numpy not installed (optional dependency)"
+)
 
 
 class TestSemanticMatcher:
