@@ -7,6 +7,7 @@ from typing import Dict, List, Optional, Tuple
 
 import structlog
 
+from guardrail.core.smart_selector import SmartGuardrailSelector
 from guardrail.utils.config import get_config
 
 logger = structlog.get_logger(__name__)
@@ -75,6 +76,9 @@ class ContextManager:
         self.guardrails_path = Path(self.config.guardrails.base_path).expanduser()
         self.agents_path = Path(self.config.guardrails.agents_path).expanduser()
 
+        # Initialize smart selector
+        self.smart_selector = SmartGuardrailSelector(self.guardrails_path)
+
         logger.info(
             "ContextManager initialized",
             guardrails_path=str(self.guardrails_path),
@@ -114,17 +118,29 @@ class ContextManager:
 
         guardrails_content = []
 
-        # Smart selection: Only load relevant guardrails based on prompt keywords
-        relevant_files = self._select_relevant_guardrails(prompt)
+        # Use smart selector to choose optimal guardrails
+        # Auto-classify task type if not provided
+        if not task_type:
+            task_type = self.smart_selector.classify_task_type(prompt)
 
-        # Load only relevant core guardrail files
-        for filename in relevant_files:
-            if filename in self.config.guardrails.files:
-                content = self._load_file(self.guardrails_path / filename)
-                if content:
-                    # Extract only key points (summaries/rules) to reduce size
-                    summarized = self._extract_key_points(content, filename)
-                    guardrails_content.append(f"# {filename}\n\n{summarized}")
+        # Select guardrails with token budget (5K for guardrails only)
+        selected_files = self.smart_selector.select_guardrails(
+            task_type=task_type, prompt=prompt, mode=mode, token_budget=5000
+        )
+
+        logger.info(
+            "Smart selection complete",
+            selected_count=len(selected_files),
+            task_type=task_type,
+            estimated_tokens=self.smart_selector.get_token_estimate(selected_files),
+        )
+
+        # Load selected core and specialized guardrail files
+        for filepath in selected_files:
+            full_path = self.guardrails_path / filepath
+            content = self._load_file(full_path)
+            if content:
+                guardrails_content.append(f"# {filepath}\n\n{content}")
 
         # v2: Load dynamic (learned) guardrails from DB
         if db_session and task_type:
@@ -235,106 +251,9 @@ class ContextManager:
 
         return full_context
 
-    def _select_relevant_guardrails(self, prompt: str) -> List[str]:
-        """Select relevant guardrail files based on prompt content
-
-        Args:
-            prompt: User prompt to analyze
-
-        Returns:
-            List of relevant guardrail filenames
-        """
-        prompt_lower = prompt.lower()
-
-        # Keywords for each guardrail type
-        guardrail_keywords = {
-            "BPSBS.md": [
-                "authentication", "security", "mfa", "azure", "rbac", "login",
-                "auth", "user", "permission", "access", "token", "session"
-            ],
-            "AI_Guardrails.md": [
-                "ai", "llm", "prompt", "model", "claude", "gemini", "openai",
-                "training", "inference", "embedding", "vector", "ml", "machine learning"
-            ],
-            "UX_UI_Guardrails.md": [
-                "ui", "ux", "interface", "component", "design", "responsive",
-                "accessibility", "frontend", "react", "vue", "css", "button", "form"
-            ],
-        }
-
-        relevant = []
-
-        # Check each guardrail file for keyword matches
-        for filename, keywords in guardrail_keywords.items():
-            if any(keyword in prompt_lower for keyword in keywords):
-                relevant.append(filename)
-
-        # If no specific match, include BPSBS (core standards) only
-        if not relevant:
-            relevant.append("BPSBS.md")
-
-        logger.debug("Selected relevant guardrails", files=relevant, prompt_preview=prompt[:100])
-        return relevant
-
-    def _extract_key_points(self, content: str, filename: str) -> str:
-        """Extract key points/rules from guardrail content to reduce size
-
-        Args:
-            content: Full guardrail content
-            filename: Guardrail filename for context
-
-        Returns:
-            Summarized key points
-        """
-        lines = content.split('\n')
-        key_points = []
-        in_rule_section = False
-
-        for line in lines:
-            line_stripped = line.strip()
-
-            # Keep headers
-            if line_stripped.startswith('#'):
-                key_points.append(line)
-                in_rule_section = True
-                continue
-
-            # Keep bullet points (rules/requirements)
-            if line_stripped.startswith(('-', '*', '•')):
-                key_points.append(line)
-                continue
-
-            # Keep numbered lists
-            if line_stripped and line_stripped[0].isdigit() and '.' in line_stripped[:3]:
-                key_points.append(line)
-                continue
-
-            # Keep "MUST", "REQUIRED", "CRITICAL" lines
-            if any(keyword in line_stripped.upper() for keyword in ['MUST', 'REQUIRED', 'CRITICAL', 'MANDATORY']):
-                key_points.append(line)
-                continue
-
-            # Add blank lines for readability (but limit consecutive blanks)
-            if not line_stripped and key_points and key_points[-1].strip():
-                key_points.append('')
-
-        # Join and clean up
-        summarized = '\n'.join(key_points)
-
-        # Remove excessive blank lines
-        while '\n\n\n' in summarized:
-            summarized = summarized.replace('\n\n\n', '\n\n')
-
-        reduction = (1 - len(summarized) / len(content)) * 100
-        logger.debug(
-            "Extracted key points",
-            filename=filename,
-            original_size=len(content),
-            summarized_size=len(summarized),
-            reduction_percent=f"{reduction:.1f}%"
-        )
-
-        return summarized.strip()
+    # Old methods removed - replaced by SmartGuardrailSelector
+    # _select_relevant_guardrails() → smart_selector.select_guardrails()
+    # _extract_key_points() → no longer needed (guardrails pre-optimized)
 
     def _load_file(self, file_path: Path) -> Optional[str]:
         """Load content from a file with error handling
