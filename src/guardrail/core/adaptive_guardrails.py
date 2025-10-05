@@ -128,16 +128,22 @@ class AdaptiveGuardrailGenerator:
         return guardrails
 
     def get_active_guardrails(
-        self, task_type: Optional[str] = None, min_confidence: float = 0.6
+        self,
+        task_type: Optional[str] = None,
+        min_confidence: float = 0.6,
+        prompt: Optional[str] = None,
+        max_rules: int = 5,
     ) -> List[DynamicGuardrailModel]:
-        """Get active guardrails for context injection
+        """Get active guardrails for context injection with relevance scoring
 
         Args:
             task_type: Filter by task type
             min_confidence: Minimum confidence threshold
+            prompt: User prompt for relevance scoring (optional)
+            max_rules: Maximum number of rules to return (default: 5)
 
         Returns:
-            List of active guardrails
+            List of active guardrails, sorted by relevance
         """
         query = (
             self.session.query(DynamicGuardrailModel)
@@ -148,17 +154,26 @@ class AdaptiveGuardrailGenerator:
 
         if task_type:
             # Filter by task type in JSON array
-            query = query.filter(
-                DynamicGuardrailModel.task_types.contains([task_type])
-            )
+            query = query.filter(DynamicGuardrailModel.task_types.contains([task_type]))
 
-        guardrails = query.order_by(DynamicGuardrailModel.confidence.desc()).all()
+        guardrails = query.all()
+
+        # Apply relevance scoring if prompt provided
+        if prompt and guardrails:
+            guardrails = self._score_by_relevance(guardrails, prompt, task_type)
+
+        # Sort by score (relevance + confidence + recency + success)
+        guardrails.sort(key=lambda gr: self._calculate_priority_score(gr, task_type), reverse=True)
+
+        # Limit to top N most relevant
+        guardrails = guardrails[:max_rules]
 
         logger.debug(
             "Retrieved active guardrails",
             count=len(guardrails),
             task_type=task_type,
             min_confidence=min_confidence,
+            max_rules=max_rules,
         )
 
         return guardrails
@@ -362,3 +377,106 @@ class AdaptiveGuardrailGenerator:
             "critical": "🔴",
         }
         return icons.get(severity, "⚠️")
+
+    def _score_by_relevance(
+        self,
+        guardrails: List[DynamicGuardrailModel],
+        prompt: str,
+        task_type: Optional[str] = None,
+    ) -> List[DynamicGuardrailModel]:
+        """Score guardrails by relevance to prompt
+
+        Args:
+            guardrails: List of guardrails to score
+            prompt: User prompt
+            task_type: Task type
+
+        Returns:
+            Guardrails with relevance scores added to metadata
+        """
+        prompt_lower = prompt.lower()
+
+        for gr in guardrails:
+            relevance_score = 0.0
+
+            # Keyword overlap in rule text
+            rule_words = set(gr.rule_text.lower().split())
+            prompt_words = set(prompt_lower.split())
+            overlap = len(rule_words & prompt_words)
+            if overlap > 0:
+                relevance_score += min(overlap * 0.2, 1.0)  # Max 1.0 for keyword overlap
+
+            # Category matching
+            category_keywords = {
+                "security": ["auth", "security", "token", "permission", "access"],
+                "performance": ["slow", "optimize", "performance", "speed", "cache"],
+                "quality": ["bug", "error", "fix", "quality", "test"],
+                "architecture": ["design", "architecture", "pattern", "structure"],
+            }
+
+            if gr.rule_category in category_keywords:
+                category_matches = sum(
+                    1 for kw in category_keywords[gr.rule_category] if kw in prompt_lower
+                )
+                if category_matches > 0:
+                    relevance_score += min(category_matches * 0.3, 1.0)  # Max 1.0 for category
+
+            # Store relevance score in metadata
+            if not gr.rule_metadata:
+                gr.rule_metadata = {}
+            gr.rule_metadata["relevance_score"] = relevance_score
+
+        return guardrails
+
+    def _calculate_priority_score(
+        self, guardrail: DynamicGuardrailModel, task_type: Optional[str] = None
+    ) -> float:
+        """Calculate priority score for guardrail
+
+        Args:
+            guardrail: Guardrail to score
+            task_type: Task type
+
+        Returns:
+            Priority score (higher = higher priority)
+        """
+        score = 0.0
+
+        # Relevance score (0-2 points)
+        if guardrail.rule_metadata and "relevance_score" in guardrail.rule_metadata:
+            score += guardrail.rule_metadata["relevance_score"] * 2.0
+
+        # Confidence (0-2 points)
+        score += guardrail.confidence * 2.0
+
+        # Recency bonus (0-1 points) - prefer recently activated rules
+        if guardrail.activated_at:
+            days_since_activation = (datetime.utcnow() - guardrail.activated_at).days
+            recency_score = max(0, 1.0 - (days_since_activation / 30.0))  # Decays over 30 days
+            score += recency_score
+
+        # Success rate from effectiveness tracking (0-2 points)
+        effectiveness = (
+            self.session.query(RuleEffectivenessModel)
+            .filter(RuleEffectivenessModel.rule_id == guardrail.id)
+            .all()
+        )
+
+        if effectiveness:
+            total_triggered = sum(e.times_triggered for e in effectiveness)
+            prevented = sum(e.prevented_failures for e in effectiveness)
+            false_pos = sum(e.false_positives for e in effectiveness)
+
+            if total_triggered > 0:
+                success_rate = (prevented - false_pos) / total_triggered
+                score += max(0, success_rate * 2.0)  # Max 2 points for 100% success
+
+        # Task type match bonus (0-1 points)
+        if task_type and guardrail.task_types and task_type in guardrail.task_types:
+            score += 1.0
+
+        # Enforcement mode priority
+        enforcement_weights = {"block": 0.5, "auto_fix": 0.3, "warn": 0.1}
+        score += enforcement_weights.get(guardrail.enforcement_mode, 0.0)
+
+        return score

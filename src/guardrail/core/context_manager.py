@@ -149,7 +149,7 @@ class ContextManager:
 
                 adaptive_gen = AdaptiveGuardrailGenerator(db_session)
                 dynamic_guardrails = adaptive_gen.get_active_guardrails(
-                    task_type=task_type, min_confidence=0.7
+                    task_type=task_type, min_confidence=0.7, prompt=prompt, max_rules=5
                 )
 
                 if dynamic_guardrails:
