@@ -1,4 +1,4 @@
-"""CLI commands for Guardrail"""
+"""CLI commands for GuardLoop"""
 
 import asyncio
 import json
@@ -28,7 +28,7 @@ console = Console()
 @click.group()
 @click.version_option(version="2.0.0")
 def cli():
-    """🛡️  Guardrail v2 - Self-Learning AI Governance System
+    """🛡️  GuardLoop v2 - Self-Learning AI Governance System
 
     \b
     Commands:
@@ -43,9 +43,9 @@ def cli():
 
     \b
     Examples:
-      guardrail run claude "implement auth"      # One-shot request
-      guardrail interactive                      # Start conversation
-      guardrail status                           # Check system
+      guardloop run claude "implement auth"      # One-shot request
+      guardloop interactive                      # Start conversation
+      guardloop status                           # Check system
     """
     # Initialize logging on CLI startup
     configure_logging()
@@ -155,7 +155,7 @@ def run(tool: str, prompt: str, agent: Optional[str], mode: str, verbose: bool):
 @cli.command()
 def init():
     """Initialize guardrail configuration"""
-    console.print("\n🛡️  [bold]Initializing Guardrail...[/bold]\n")
+    console.print("\n🛡️  [bold]Initializing GuardLoop...[/bold]\n")
 
     # Create config manager
     config_manager = ConfigManager()
@@ -184,8 +184,8 @@ def init():
     console.print(f"📋 Guardrails directory: [cyan]{guardrails_path}[/cyan]")
 
     # Find package guardrails directory
-    import guardrail
-    package_dir = Path(guardrail.__file__).parent.parent
+    import guardloop
+    package_dir = Path(guardloop.__file__).parent.parent
     source_guardrails = package_dir / "guardrails"
 
     if source_guardrails.exists():
@@ -223,8 +223,8 @@ def init():
     console.print("\n✅ [green bold]Initialization complete![/green bold]\n")
     console.print("Next steps:")
     console.print("  1. Review guardrails: [cyan]~/.guardrail/guardrails/[/cyan]")
-    console.print("  2. Configure: [cyan]guardrail config[/cyan]")
-    console.print("  3. Test: [cyan]guardrail run claude 'Hello, world!'[/cyan]")
+    console.print("  2. Configure: [cyan]guardloop config[/cyan]")
+    console.print("  3. Test: [cyan]guardloop run claude 'Hello, world!'[/cyan]")
 
 
 @cli.command()
@@ -262,7 +262,7 @@ def analyze(tool: Optional[str], days: int):
 @cli.command()
 def status():
     """Show guardrail system status"""
-    console.print("\n🛡️  [bold]Guardrail System Status[/bold]\n")
+    console.print("\n🛡️  [bold]GuardLoop System Status[/bold]\n")
 
     try:
         config = get_config()
@@ -380,7 +380,7 @@ def daemon(background: bool):
         signal.signal(signal.SIGINT, signal_handler)
         signal.signal(signal.SIGTERM, signal_handler)
 
-        console.print("\n🛡️  [bold]Guardrail Daemon Started[/bold]\n")
+        console.print("\n🛡️  [bold]GuardLoop Daemon Started[/bold]\n")
         console.print(f"Mode: [cyan]{config.mode}[/cyan]")
         console.print(f"Workers: [cyan]{len(worker_manager.workers)}[/cyan]")
         console.print("\nPress Ctrl+C to stop\n")
@@ -398,7 +398,7 @@ def daemon(background: bool):
 @cli.command()
 def config():
     """Show current configuration"""
-    console.print("\n⚙️  [bold]Guardrail Configuration[/bold]\n")
+    console.print("\n⚙️  [bold]GuardLoop Configuration[/bold]\n")
 
     try:
         config_manager = ConfigManager()
@@ -421,7 +421,7 @@ def config():
 @cli.command()
 def interactive():
     """Interactive guardrail session"""
-    console.print("\n🛡️  [bold]Interactive Guardrail Session[/bold]\n")
+    console.print("\n🛡️  [bold]Interactive GuardLoop Session[/bold]\n")
     console.print("Type 'exit' or 'quit' to end session\n")
 
     # Load config
