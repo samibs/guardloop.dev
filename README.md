@@ -1,4 +1,4 @@
-# 🛡️ Guardrail v2 [Experimental]
+# 🛡️ GuardLoop v2 [Experimental]
 **Exploring Self-Learning AI Governance**
 
 ![Status](https://img.shields.io/badge/status-experimental-orange)
@@ -18,7 +18,7 @@
 
 **Hypothesis**: What if AI governance could learn from failures and adapt automatically?
 
-**Guardrail's Approach**:
+**GuardLoop's Approach**:
 1. 📝 **Capture** every AI interaction and outcome
 2. 🔍 **Analyze** patterns in failures (missing tests, security issues, etc.)
 3. 🧠 **Learn** and generate dynamic guardrails
@@ -110,7 +110,7 @@ guardrail run claude "create a hello world function"
 
 ### 1. Pattern Detection (Working)
 
-After multiple failures with similar issues, Guardrail learns:
+After multiple failures with similar issues, GuardLoop learns:
 
 ```bash
 # After 5 sessions where Claude forgot error handling

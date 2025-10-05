@@ -1,4 +1,4 @@
-# 🗺️ Guardrail Development Roadmap
+# 🗺️ GuardLoop Development Roadmap
 
 **Vision**: Self-learning AI governance that evolves with your team's actual usage patterns.
 
