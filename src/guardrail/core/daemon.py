@@ -182,6 +182,12 @@ class GuardrailDaemon:
             else:
                 # Skip guardrails for creative/content tasks
                 context = context_prompt
+                logger.info(
+                    "✨ Creative task detected - bypassing guardrails for direct execution",
+                    session_id=request.session_id,
+                    task_type=task_classification.task_type if task_classification else "unknown",
+                    confidence=task_classification.confidence if task_classification else 0.0,
+                )
 
             logger.debug(
                 "Context built",
