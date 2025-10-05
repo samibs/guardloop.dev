@@ -150,11 +150,12 @@ class ContextManager:
 
         # Load agent-specific instructions
         if agent and agent in self.AGENTS:
-            agent_content = self._load_agent_instructions(agent)
+            # Use summary by default, checklist in strict mode, full when explicitly needed
+            agent_version = "checklist" if mode == "strict" else "summary"
+            agent_content = self._load_agent_instructions(agent, version=agent_version)
             if agent_content:
-                # Agents are typically smaller, include full content
                 guardrails_content.append(
-                    f"# Agent-Specific Instructions: {agent.upper()}\n\n{agent_content}"
+                    f"# Agent-Specific Instructions: {agent.upper()} ({agent_version})\n\n{agent_content}"
                 )
 
         # Combine all content
@@ -365,15 +366,24 @@ class ContextManager:
             )
             return None
 
-    def _load_agent_instructions(self, agent: str) -> Optional[str]:
+    def _load_agent_instructions(self, agent: str, version: str = "summary") -> Optional[str]:
         """Load agent-specific instructions
 
         Args:
             agent: Agent name
+            version: Version to load - "summary" (default), "checklist", or "full"
 
         Returns:
             Agent instructions or None if not found
         """
+        # Try new directory structure first (agent/version.md)
+        agent_dir = self.agents_path / agent
+        if agent_dir.exists() and agent_dir.is_dir():
+            version_file = agent_dir / f"{version}.md"
+            if version_file.exists():
+                return self._load_file(version_file)
+
+        # Fallback to old structure (agent.md)
         agent_file = self.agents_path / f"{agent}.md"
         return self._load_file(agent_file)
 
