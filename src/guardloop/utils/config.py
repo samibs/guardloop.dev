@@ -20,11 +20,11 @@ class ToolConfig(BaseModel):
 class GuardrailsConfig(BaseModel):
     """Guardrails configuration"""
 
-    base_path: str = "~/.guardrail/guardrails"
+    base_path: str = "~/.guardloop/guardrails"
     files: List[str] = Field(
         default_factory=lambda: ["BPSBS.md", "AI_Guardrails.md", "UX_UI_Guardrails.md"]
     )
-    agents_path: str = "~/.guardrail/guardrails/agents"
+    agents_path: str = "~/.guardloop/guardrails/agents"
 
     @field_validator("base_path", "agents_path")
     @classmethod
@@ -35,7 +35,7 @@ class GuardrailsConfig(BaseModel):
 class DatabaseConfig(BaseModel):
     """Database configuration"""
 
-    path: str = "~/.guardrail/data/guardrail.db"
+    path: str = "~/.guardloop/data/guardloop.db"
     backup_enabled: bool = True
     backup_interval_hours: int = 24
 
@@ -49,7 +49,7 @@ class LoggingConfig(BaseModel):
     """Logging configuration"""
 
     level: str = "INFO"
-    file: str = "~/.guardrail/logs/guardrail.log"
+    file: str = "~/.guardloop/logs/guardloop.log"
     max_size_mb: int = 100
     backup_count: int = 5
 
@@ -140,12 +140,12 @@ class Settings(BaseSettings):
 
     # Logging
     guardrail_log_level: str = "INFO"
-    guardrail_log_file: str = "~/.guardrail/logs/guardrail.log"
+    guardrail_log_file: str = "~/.guardloop/logs/guardloop.log"
     guardrail_log_max_size_mb: int = 100
     guardrail_log_backup_count: int = 5
 
     # Database
-    guardrail_db_path: str = "~/.guardrail/data/guardrail.db"
+    guardrail_db_path: str = "~/.guardloop/data/guardloop.db"
     guardrail_db_backup_enabled: bool = True
     guardrail_db_backup_interval_hours: int = 24
 
@@ -155,8 +155,8 @@ class Settings(BaseSettings):
     guardrail_codex_path: str = "codex"
 
     # Guardrails
-    guardrail_base_path: str = "~/.guardrail/guardrails"
-    guardrail_agents_path: str = "~/.guardrail/guardrails/agents"
+    guardrail_base_path: str = "~/.guardloop/guardrails"
+    guardrail_agents_path: str = "~/.guardloop/guardrails/agents"
 
     # Features
     guardrail_background_analysis: bool = True
@@ -193,7 +193,7 @@ class ConfigManager:
         self.config_path = (
             Path(config_path).expanduser()
             if config_path
-            else Path.home() / ".guardrail" / "config.yaml"
+            else Path.home() / ".guardloop" / "config.yaml"
         )
         self.settings = Settings()
         self.config: Optional[Config] = None

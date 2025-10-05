@@ -222,7 +222,7 @@ def init():
 
     console.print("\n✅ [green bold]Initialization complete![/green bold]\n")
     console.print("Next steps:")
-    console.print("  1. Review guardrails: [cyan]~/.guardrail/guardrails/[/cyan]")
+    console.print("  1. Review guardrails: [cyan]~/.guardloop/guardrails/[/cyan]")
     console.print("  2. Configure: [cyan]guardloop config[/cyan]")
     console.print("  3. Test: [cyan]guardloop run claude 'Hello, world!'[/cyan]")
 
