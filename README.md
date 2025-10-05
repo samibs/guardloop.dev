@@ -1,466 +1,298 @@
-# 🛡️ Guardrail v2
+# 🛡️ Guardrail v2 [Experimental]
+**Exploring Self-Learning AI Governance**
 
-**Self-Learning AI Governance System**
+![Status](https://img.shields.io/badge/status-experimental-orange)
+![Python](https://img.shields.io/badge/python-3.10+-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Contributors Welcome](https://img.shields.io/badge/contributors-welcome-brightgreen)
 
-[![Tests](https://img.shields.io/badge/tests-173%20passing-brightgreen)](https://github.com/samibs/guardrail.dev)
-[![Coverage](https://img.shields.io/badge/coverage-75%25-yellow)](https://github.com/samibs/guardrail.dev)
-[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+> An experimental system that learns from LLM failures and generates adaptive guardrails.
 
-Guardrail is a **self-improving AI governance system** that learns from LLM mistakes, generates dynamic guardrails, and prevents repeated failures. It automatically enforces coding standards, security requirements, and compliance rules across Claude, Gemini, Codex, and other AI tools.
+⚠️ **This is a research project and proof-of-concept.** Core ideas are validated, production deployment requires hardening.
 
-## 🎯 What Makes v2.1 Different?
+---
 
-**The Problem**: Static guardrails miss evolving LLM failure patterns. You repeat the same mistakes. Even with adaptive learning, bloated context and inefficient routing waste tokens and time.
+## 💡 The Core Idea
 
-**The Solution**: Guardrail v2.1 combines adaptive learning with intelligent optimization → Smart agent routing (40-70% fewer agents) → Semantic guardrail matching → Dynamic budget management → 60%+ faster with 80%+ less context.
+**Problem**: LLMs make mistakes. Static rules can't catch evolving failure patterns.
 
-## 🚀 v2.1 Performance Optimization
+**Hypothesis**: What if AI governance could learn from failures and adapt automatically?
 
-### Performance Metrics
+**Guardrail's Approach**:
+1. 📝 **Capture** every AI interaction and outcome
+2. 🔍 **Analyze** patterns in failures (missing tests, security issues, etc.)
+3. 🧠 **Learn** and generate dynamic guardrails
+4. 🛡️ **Prevent** repeated mistakes automatically
 
-| Metric | v2.0 (Baseline) | v2.1 (Optimized) | Improvement |
-|--------|-----------------|------------------|-------------|
-| **Context Size** | 24K tokens (all guardrails) | <5K tokens (smart selection) | **80%+ reduction** |
-| **Agent Count** | 13 agents (always) | 1-5 agents (task-based) | **40-70% fewer** |
-| **Response Time** | 390s (full chain) | 60-195s (optimized) | **50-85% faster** |
-| **Creative Tasks** | Full validation (unnecessary) | Skipped (intelligent bypass) | **95%+ faster** |
-| **Semantic Matching** | Keyword only | AI embeddings | **Better relevance** |
-| **Budget Management** | Fixed 5K tokens | Dynamic (2K-13K) | **Model-optimized** |
+---
 
-### Smart Selection Examples
+## ✅ What Works Today
 
-**Before v2.1** (All Tasks Get Full Treatment):
-```bash
->>> fix typo in README
-🛡️ Guardrails: All 3 core + 13 agents
-⏱️  Time: 390s (full chain)
-📊 Context: 24K tokens
-```
+**Core Features (Validated & Working)**:
+- ✅ AI interaction logging and pattern detection
+- ✅ Dynamic guardrail generation from failures
+- ✅ Task classification (skip guardrails for creative work)
+- ✅ Basic enforcement with Claude CLI
+- ✅ Pre-warm cache for instant guardrail loading (99.9% faster first request)
+- ✅ File safety validation and auto-save
+- ✅ Conversation history across sessions
 
-**After v2.1** (Intelligent Task Routing):
+**Tested & Reliable**:
+- ✅ Claude CLI integration (primary adapter)
+- ✅ SQLite failure logging with analytics
+- ✅ 3 core agents (architect, coder, tester)
+- ✅ Context optimization (pre-warm cache: 0.22ms vs 300ms cold start)
 
-**Simple Task** - Minimal agents:
-```bash
->>> fix typo in README
-📋 Task: simple (confidence: 0.95)
-🛡️ Guardrails: core/always.md only (354 tokens)
-👥 Agents: 1 (coder)
-⏱️  Time: 30s
-💾 Auto-saved: README.md
+---
 
-✅ 85% faster, 98% less context
-```
+## 🚧 What's Theoretical/In Progress
 
-**Medium Task** - Focused chain:
-```bash
->>> implement user authentication
-📋 Task: medium (confidence: 0.90)
-🛡️ Guardrails: 3 relevant (2.1K tokens)
-👥 Agents: 3 (architect → coder → secops)
-⏱️  Time: 90s
-💾 Auto-saved: 3 files
+**Features Under Development**:
+- 🚧 Full 13-agent orchestration (10 agents are basic stubs)
+- 🚧 Multi-tool support (Gemini/Codex adapters incomplete)
+- 🚧 Semantic guardrail matching (embeddings not yet implemented)
+- 🚧 Advanced compliance validation (GDPR/ISO rules exist but not legally validated)
+- 🚧 Performance metrics (some claims are projections, not benchmarked)
 
-✅ 77% faster, 91% less context
-```
+**Known Limitations**:
+- ⚠️ Only Claude adapter is fully functional
+- ⚠️ Agent chain optimization is hardcoded, not dynamic yet
+- ⚠️ Large contexts (>10K tokens) may timeout
+- ⚠️ File auto-save has edge cases with binary/system files
 
-**Critical Task** - Full validation (when needed):
-```bash
->>> build OAuth2 authentication system
-📋 Task: critical (confidence: 0.95)
-🛡️ Guardrails: All relevant (8.5K tokens)
-👥 Agents: 9 (full security validation)
-⏱️  Time: 270s
-💾 Auto-saved: 12 files
+**See [CRITICAL.md](CRITICAL.md) for complete limitations list.**
 
-✅ 31% faster, 65% less context (full quality)
-```
-
-**Creative Task** - Intelligent bypass:
-```bash
->>> write product launch blog post
-📋 Task: creative (confidence: 0.92)
-🛡️ Guardrails: ⏭️  Skipped (not code)
-👥 Agents: 0 (direct LLM)
-⏱️  Time: 15s
-
-✅ 96% faster (no unnecessary validation)
-```
-
-### Semantic Matching in Action
-
-**Old System** (Keyword Matching):
-```python
-# Prompt: "prevent SQL injection"
-# Matches: Only rules with exact keywords "SQL" and "injection"
-# Misses: "Use parameterized queries", "Sanitize database inputs"
-```
-
-**New System** (Semantic AI):
-```python
-# Prompt: "prevent SQL injection"
-# Matches (by meaning):
-# - "Use parameterized queries" (similarity: 0.87)
-# - "Sanitize all database inputs" (similarity: 0.76)
-# - "Validate user input before queries" (similarity: 0.71)
-# - "Never concatenate SQL strings" (similarity: 0.68)
-```
-
-### Dynamic Budget Management
-
-**Model-Aware Token Allocation**:
-
-| Model | Simple Task | Medium Task | Critical Task |
-|-------|-------------|-------------|---------------|
-| claude-opus-4 | 3,000 tokens | 6,000 tokens | 10,000 tokens |
-| claude-sonnet-4 | 1,800 tokens | 3,600 tokens | 6,000 tokens |
-| gpt-4-turbo | 2,400 tokens | 4,800 tokens | 8,000 tokens |
-| gpt-3.5-turbo | 600 tokens | 1,200 tokens | 2,000 tokens |
-
-**Budget Allocation** (Intelligent Distribution):
-- **Core** (30%): Universal rules (always applicable)
-- **Agents** (40%): Agent-specific instructions
-- **Specialized** (20%): Task-specific guardrails
-- **Learned** (10%): Dynamic patterns from failures
-
-## ✨ Key Features
-
-### **Version 2.1 (Intelligent Optimization)** 🆕
-- ⚡ **Smart Agent Routing** - Task complexity determines agent chain (1-9 agents vs always 13)
-- 🎯 **Semantic Guardrail Matching** - AI embeddings find relevant rules by meaning, not just keywords
-- 📊 **Dynamic Budget Management** - Model-aware token allocation (2K-13K based on LLM and complexity)
-- 🚀 **Performance Optimization** - 60%+ faster with 80%+ less context while maintaining quality
-
-### **Version 2 (Adaptive Learning)**
-- 🧠 **Adaptive Learning System** - Analyzes DB for LLM failure patterns and auto-generates guardrails
-- 🎯 **Task Classification** - Detects code vs content/creative tasks, skips guardrails when irrelevant
-- 💾 **Auto-Save Files** - Safely executes file operations from LLM output with validation
-- 💬 **Conversation History** - Maintains context across interactive sessions for proper Q&A flow
-- 📈 **Dynamic Guardrails** - Learned rules from real failures, not just static templates
-
-### **Version 1 (Foundation)**
-- 🛡️ **Automatic Guardrail Injection** - Every AI prompt includes your organization's standards
-- 🔍 **Real-time Violation Detection** - Catch security issues, bad patterns, and failures before they reach code
-- 📊 **AI Failure Analytics** - ML-powered failure pattern detection with actionable insights
-- 👥 **Multi-Agent Orchestration** - 13 specialized agents ensure comprehensive quality validation
-- 🔐 **Security-First Design** - MFA, Azure AD, RBAC enforced by default
-- 📈 **Compliance Tracking** - Built-in support for ISO 27001, GDPR, SOC 2
+---
 
 ## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.10+
+- Claude CLI installed (`pip install claude-cli`)
+- ⚠️ **Note**: Only Claude is fully supported. Gemini/Codex coming soon.
 
 ### Installation
 
 ```bash
-# Install from PyPI (when published)
-pip install guardrail
-
-# Or install from source
+# Clone the repository
 git clone https://github.com/samibs/guardrail.dev.git
 cd guardrail.dev
 
-# Create and activate virtual environment
+# Create virtual environment
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install in development mode
+# Install dependencies
 pip install -e .
+
+# Initialize guardrail
+guardrail init
 
 # Verify installation
 guardrail --version
 ```
 
-### Initialize
+### First Run
 
 ```bash
-# Setup guardrail in your project
-guardrail init
+# Test with a simple command
+guardrail run claude "create a hello world function"
 
-# This creates:
-# ~/.guardrail/
-#   ├── config.yaml
-#   ├── guardrails/          # Your organization's guardrail rules
-#   │   ├── BPSBS.md
-#   │   ├── AI_Guardrails.md
-#   │   └── agents/
-#   ├── data/
-#   └── logs/
+# Expected: Should work with basic guardrails
+# If it fails: Check logs at ~/.guardrail/logs/
 ```
 
-### Use with Any AI Tool
+⚠️ **Troubleshooting**: See [CRITICAL.md](CRITICAL.md) for common issues and workarounds.
+
+---
+
+## 💡 Core Concepts Demonstrated
+
+### 1. Pattern Detection (Working)
+
+After multiple failures with similar issues, Guardrail learns:
 
 ```bash
-# Single request (one-shot)
-guardrail run claude "implement user authentication"
+# After 5 sessions where Claude forgot error handling
+$ guardrail analyze --days 7
 
-# Interactive session (for conversations)
-guardrail interactive
+📊 Pattern Detected:
+   - Missing try-catch blocks in async functions
+   - Occurrences: 5
+   - Confidence: 0.85
 
-# Check system status
-guardrail status
-
-# View configuration
-guardrail config
-
-# Analyze violations and failures
-guardrail analyze --days 7
-
-# Export failure reports
-guardrail export --output failures.md
+🧠 Generated Guardrail:
+   "Always wrap async database calls in try-catch blocks"
+   Status: trial → validated → enforced
 ```
+
+### 2. Task Classification (Working)
+
+Intelligently skips guardrails for non-code tasks:
+
+```bash
+# Code task - guardrails applied ✅
+>>> implement user authentication
+📋 Classified: code (confidence: 0.95)
+🛡️ Guardrails: Applied
+
+# Creative task - guardrails skipped ⏭️
+>>> write a product launch blog post
+📋 Classified: creative (confidence: 0.92)
+🛡️ Guardrails: Skipped (not needed)
+```
+
+### 3. Pre-Warm Cache (Working)
+
+Instant guardrail loading eliminates cold-start latency:
+
+```bash
+# Performance Results:
+- Pre-warm time: 1.74ms (initialization overhead)
+- First request: 0.22ms (cached) vs ~300ms (cold)
+- Improvement: 99.9% faster
+```
+
+### 4. File Safety (Working)
+
+Validates and auto-saves LLM-generated files:
+
+```bash
+>>> create auth service
+
+💾 Auto-saved (safety score: 0.95):
+   - auth/jwt_manager.py ✅
+   - auth/middleware.py ✅
+   - tests/test_auth.py ✅
+
+⚠️ Requires confirmation (system path):
+   - /etc/auth.conf (blocked)
+```
+
+---
+
+## 🎯 Use Cases
+
+**Good Fit (Early Adopters)**:
+- ✅ Experimenting with AI governance concepts
+- ✅ Research projects exploring LLM safety
+- ✅ Developers comfortable with alpha-quality software
+- ✅ Contributors who want to shape the direction
+- ✅ Teams learning from LLM failure patterns
+
+**Not Ready For**:
+- ❌ Production environments requiring 99.9% uptime
+- ❌ Enterprise compliance (legal validation needed)
+- ❌ Multi-tool orchestration (only Claude works well)
+- ❌ Teams needing commercial support
+
+---
+
+## 📊 Current Project Status
+
+**Tests**: 223 passing (includes core + optimization tests)
+**Coverage**: 75%
+**Agents**: 3 working (architect, coder, tester) + 10 basic stubs
+**Adapters**: 1 complete (Claude), 2 incomplete (Gemini, Codex)
+**v2 Features**: 5 adaptive learning capabilities (validated)
+**Performance**: Pre-warm cache optimized (99.9% faster)
+
+---
+
+## 🗺️ Roadmap
+
+See [ROADMAP.md](ROADMAP.md) for detailed development plan.
+
+**Next Milestones**:
+- **v2.1** (4 weeks): Complete all 13 agents, finish adapters
+- **v2.2** (8 weeks): Semantic matching, performance benchmarking
+- **v3.0** (Future): Enterprise features, VS Code extension
+
+**Want to influence priorities?** [Open an issue](https://github.com/samibs/guardrail.dev/issues) or [start a discussion](https://github.com/samibs/guardrail.dev/discussions)!
+
+---
 
 ## 📖 Documentation
 
 - 📚 [Getting Started](docs/getting-started.md)
 - ⚙️ [Configuration Guide](docs/configuration.md)
+- 🚨 **[Known Issues & Limitations](CRITICAL.md)** ← Read this first!
+- 🗺️ [Roadmap](ROADMAP.md)
 - 🤖 [Agent System](docs/phase5-agents.md)
-- 🔌 [API Documentation](docs/api.md)
-- ⚡ **v2.1**: [Performance Optimization](docs/optimization.md)
-- 🧠 **v2**: [Adaptive Learning](docs/adaptive-learning.md)
-- 🎯 **v2**: [Task Classification](docs/task-classification.md)
-- 💾 **v2**: [File Safety System](docs/file-safety.md)
+- ⚡ [Performance Optimization](docs/PERFORMANCE_OPTIMIZATION_PREWARM.md)
 
-## 🏗️ Architecture
-
-### v2.1: Intelligent Optimization Layer 🆕
-
-```
-Request → Complexity Analysis → Smart Routing → Optimized Execution
-   ↓              ↓                    ↓              ↓
-Classify    Simple/Medium/     1-9 Agents    Context <5K
-Task        Critical           (not 13)      (not 24K)
-```
-
-**Core v2.1 Components**:
-
-1. **AgentChainOptimizer** - Selects minimal agent chain based on task complexity
-2. **SemanticGuardrailMatcher** - Uses AI embeddings for intelligent rule matching
-3. **ContextBudgetManager** - Dynamically allocates tokens based on model and complexity
-4. **SmartGuardrailSelector** - Combines semantic + budget optimization
-
-### v2: Adaptive Learning Pipeline
-
-```
-LLM Interaction → Database → Pattern Analysis → Guardrail Generation → Enforcement
-      ↓              ↓              ↓                    ↓                 ↓
-   Capture       Store All      Find Patterns      Create Rules      Prevent Repeats
-```
-
-**Core v2 Components**:
-
-1. **TaskClassifier** - Determines if guardrails are needed (code vs creative)
-2. **PatternAnalyzer** - Extracts recurring failures from database
-3. **AdaptiveGuardrailGenerator** - Creates and manages dynamic rules
-4. **ConversationManager** - Maintains context across interactive sessions
-5. **FileExecutor** - Safely executes file operations with validation
-6. **ContextManager** - Injects static + dynamic guardrails into LLM context
-
-### v1: Multi-Agent System
-
-Guardrail uses 13 specialized agents in orchestrated chains:
-
-1. **Orchestrator** - Routes requests to appropriate specialized agents
-2. **Architect** - Ensures system design quality and scalability
-3. **Coder** - Enforces implementation best practices (100% test coverage)
-4. **Tester** - Validates comprehensive test coverage
-5. **SecOps** - Security validation (MFA, injection prevention)
-6. **SRE** - Reliability and operational concerns
-7. **And 7 more specialized agents...**
-
-## 💡 Usage Examples
-
-### v2: Task Classification in Action
-
-**Code Task** - Guardrails applied:
-```bash
->>> implement user authentication with JWT
-
-📋 Task: code (confidence: 0.95)
-🛡️ Guardrails: ✅ Applied (static + 12 learned rules)
-
-✅ Implementation validated
-⚠️  Suggestions from SecOps:
-    - Add input sanitization
-    - Implement rate limiting
-
-💾 Created 3 file(s):
-    - auth/jwt_manager.py (auto-saved)
-    - auth/middleware.py (auto-saved)
-    - tests/test_auth.py (auto-saved)
-```
-
-**Creative Task** - Guardrails skipped:
-```bash
->>> create an HTML infographic showing our product features
-
-📋 Task: creative (confidence: 0.92)
-🛡️ Guardrails: ⏭️  Skipped (not a code task)
-
-✨ Generated infographic.html
-💾 Created 1 file(s):
-    - marketing/infographic.html (auto-saved)
-```
-
-### v2: Interactive Mode with Conversation History
-
-**Multi-turn conversation** - Context maintained:
-```bash
-$ guardrail interactive
-
-✨ Session started: claude in standard mode
-
->>> implement user authentication
-[Claude responds with authentication options...]
-
->>> option 2 - create a web application with OAuth
-💬 Conversation: Turn 2 (context: 1.2K tokens)
-[Claude remembers your choice and implements OAuth...]
-
->>> add password reset functionality
-💬 Conversation: Turn 3 (context: 2.8K tokens)
-[Claude adds reset to the existing auth system...]
-
->>> exit
-```
-
-### v2: Adaptive Learning System
-
-**Pattern Detection**:
-```bash
-# After 5 sessions where Claude forgot to add error handling
-$ guardrail analyze --days 7
-
-📊 Analysis Results:
-   - 5 failures: Missing try-catch blocks in async functions
-   - Confidence: 0.85
-   - Severity: high
-
-🧠 Generated Dynamic Guardrail:
-   "Always wrap async database calls in try-catch blocks"
-   Status: validated → enforced
-```
-
-**Learned Guardrail in Action**:
-```bash
->>> create a user service with database queries
-
-🛡️ Guardrails: ✅ Applied (static + 13 learned rules)
-📈 Learned Rule #7: "Always wrap async database calls in try-catch blocks"
-
-[Claude's implementation includes proper error handling...]
-
-✅ Implementation validated (no violations)
-```
-
-### Standard Mode (Suggestions)
-
-```bash
-$ guardrail run claude "create login API endpoint"
-
-✅ Implementation validated
-⚠️  Suggestions from SecOps:
-    - Add input sanitization
-    - Implement rate limiting
-
-✅ Test coverage: 95%
-```
-
-### Strict Mode (Enforcement)
-
-```bash
-$ guardrail run claude "create auth system" --mode strict
-
-❌ Blocked by SecOps Agent
-   Reason: Missing MFA implementation
-   Required: MFA + Azure AD + RBAC
-```
-
-## ⚙️ v2: Configuration & Pattern Management
-
-### Feature Flags
-
-Control v2 features in `~/.guardrail/config.yaml`:
-
-```yaml
-features:
-  # v2 Adaptive Learning
-  v2_adaptive_learning: true     # Enable pattern analysis & dynamic guardrails
-  v2_task_classification: true    # Classify code vs creative tasks
-  v2_auto_save_files: true       # Auto-save safe file operations
-  v2_conversation_history: true  # Maintain context across turns
-  v2_dynamic_guardrails: true    # Load learned rules from DB
-```
-
-### Pattern Analysis
-
-```bash
-# Analyze recent failures and generate guardrails
-guardrail analyze --days 30
-
-# View learned patterns
-guardrail patterns list
-
-# Promote a trial guardrail to enforced
-guardrail patterns promote <pattern_id>
-
-# Deprecate outdated guardrail
-guardrail patterns deprecate <pattern_id>
-
-# Export learned guardrails
-guardrail patterns export --output learned_rules.md
-```
-
-### Guardrail Lifecycle
-
-```
-┌─────────┐     ┌──────────┐     ┌──────────┐     ┌────────────┐
-│  trial  │ ──> │validated │ ──> │ enforced │ ──> │ deprecated │
-└─────────┘     └──────────┘     └──────────┘     └────────────┘
-   3+ uses        confidence       production        obsolete
-               score >= 0.7       ready             or wrong
-```
-
-### File Safety Settings
-
-Control auto-save behavior:
-
-```yaml
-file_executor:
-  auto_save_enabled: true
-  safe_extensions: [".py", ".js", ".ts", ".json", ".md", ".txt"]
-  min_safety_score: 0.8          # 0.0-1.0
-  require_confirmation_for:
-    - system_paths
-    - dangerous_patterns
-    - hardcoded_secrets
-```
+---
 
 ## 🛠️ Development
 
+### Setup Development Environment
+
 ```bash
-# Setup
+# Install development dependencies
 pip install -e ".[dev]"
 
-# Run tests
+# Run all tests
 pytest
 
-# Coverage
+# Run with coverage
 pytest --cov=src/guardrail --cov-report=html
 
-# Test v2 components
+# Test specific components
 pytest tests/core/test_task_classifier.py
 pytest tests/core/test_pattern_analyzer.py
-pytest tests/core/test_adaptive_guardrails.py
 ```
 
-## 📊 Project Status
+### Project Structure
 
-- **Tests**: 223 passing (50+ new optimization tests)
-- **Coverage**: 75%
-- **Agents**: 1-13 (smart routing based on complexity)
-- **Guardrails**: 3 built-in + dynamic learning + semantic matching
-- **v2.1 Features**: 4 optimization capabilities
-- **v2 Features**: 5 adaptive learning capabilities
-- **Performance**: 60%+ faster, 80%+ less context
+```
+guardrail.dev/
+├── src/guardrail/
+│   ├── core/           # Core orchestration engine
+│   ├── adapters/       # LLM tool adapters (Claude, Gemini, etc.)
+│   └── utils/          # Shared utilities
+├── tests/              # Test suite (223 tests)
+├── docs/               # Documentation
+└── ~/.guardrail/       # User configuration & data
+    ├── config.yaml
+    ├── guardrails/     # Static + dynamic rules
+    └── data/           # SQLite database
+```
+
+---
+
+## 🤝 Contributing
+
+**We're actively seeking contributors!**
+
+**High-Impact Areas**:
+1. 🚧 Complete Gemini/Codex adapters
+2. 🚧 Implement remaining 10 agents
+3. 🚧 Add semantic matching with embeddings
+4. 🧪 Write more tests and edge case coverage
+5. 📚 Improve documentation and examples
+
+**How to Contribute**:
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes and add tests
+4. Commit with clear messages (`git commit -m 'Add semantic matching'`)
+5. Push and open a Pull Request
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+---
+
+## 🌟 Why This Matters
+
+**The Vision**: AI governance that evolves with your team's actual usage patterns, not just theoretical rules.
+
+**Current State**: Proof-of-concept validating the core hypothesis - yes, AI can learn from failures and improve governance automatically.
+
+**What's Next**: Hardening for production, expanding beyond Claude, validating at scale.
+
+**Star ⭐ if the idea resonates. Contribute if you want to build it together.**
+
+---
 
 ## 📄 License
 
@@ -468,4 +300,6 @@ MIT License - see [LICENSE](LICENSE) file.
 
 ---
 
-**Made with ❤️ by developers, for developers**
+**Built by developers, for developers. Shaped by the community.**
+
+*Questions? [Open an issue](https://github.com/samibs/guardrail.dev/issues) | [Join discussions](https://github.com/samibs/guardrail.dev/discussions)*
