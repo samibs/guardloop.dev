@@ -162,6 +162,8 @@ class SmartGuardrailSelector:
         prompt: str = "",
         mode: str = "standard",
         token_budget: int = 5000,
+        model: Optional[str] = None,
+        task_complexity: Optional[str] = None,
     ) -> List[str]:
         """Select optimal guardrails based on task and constraints
 
@@ -169,11 +171,29 @@ class SmartGuardrailSelector:
             task_type: Optional task type classification
             prompt: User prompt for keyword analysis
             mode: Operating mode (standard or strict)
-            token_budget: Maximum tokens allowed for guardrails
+            token_budget: Maximum tokens allowed for guardrails (overridden if model provided)
+            model: Optional LLM model name for dynamic budget calculation
+            task_complexity: Optional task complexity (simple/medium/complex/critical)
 
         Returns:
             List of guardrail file paths to load (relative to guardrails_path)
         """
+        # Dynamic budget calculation if model and complexity provided
+        if model and task_complexity:
+            from guardrail.core.budget_manager import ContextBudgetManager
+
+            budget_manager = ContextBudgetManager()
+            token_budget = budget_manager.get_budget(model, task_complexity)
+            token_budget = budget_manager.adjust_for_mode(token_budget, mode)
+
+            logger.info(
+                "Dynamic budget calculated",
+                model=model,
+                complexity=task_complexity,
+                mode=mode,
+                budget=token_budget,
+            )
+
         selected = set()
         total_tokens = 0
 
