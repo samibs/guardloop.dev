@@ -7,7 +7,7 @@ Complete checklist for launching Guardrail to production and public release.
 ### Infrastructure & Deployment
 
 - [ ] **Domain Setup**
-  - [ ] Register guardrail.dev domain
+  - [ ] Register guardloop.dev domain
   - [ ] Configure DNS records (A, CNAME, MX)
   - [ ] Setup SSL certificates (Let's Encrypt or CloudFlare)
   - [ ] Configure CDN (CloudFlare, Fastly, or AWS CloudFront)
@@ -20,7 +20,7 @@ Complete checklist for launching Guardrail to production and public release.
   - [ ] Configure contact forms and email notifications
 
 - [ ] **Documentation Site**
-  - [ ] Deploy docs.guardrail.dev (GitBook, Read the Docs, or Docusaurus)
+  - [ ] Deploy docs.guardloop.dev (GitBook, Read the Docs, or Docusaurus)
   - [ ] Create getting-started guide
   - [ ] Create configuration reference
   - [ ] Create API documentation
@@ -58,7 +58,7 @@ Complete checklist for launching Guardrail to production and public release.
 ### Marketing & Community
 
 - [ ] **Social Media Setup**
-  - [ ] Create Twitter/X account (@guardraildev)
+  - [ ] Create Twitter/X account (@guardloopdev)
   - [ ] Create LinkedIn company page
   - [ ] Create Discord server for community
   - [ ] Create Reddit account for posting
@@ -77,7 +77,7 @@ Complete checklist for launching Guardrail to production and public release.
   - [ ] Setup email newsletter (Substack or ConvertKit)
   - [ ] Create Discord welcome message and channels
   - [ ] Prepare FAQ document
-  - [ ] Setup support email (support@guardrail.dev)
+  - [ ] Setup support email (support@guardloop.dev)
 
 ### Legal & Compliance
 
@@ -108,7 +108,7 @@ Complete checklist for launching Guardrail to production and public release.
 - [ ] **PyPI Release**
   - [ ] Upload final v1.0.0 to PyPI
   - [ ] Verify package appears on PyPI
-  - [ ] Test installation: `pip install guardrail`
+  - [ ] Test installation: `pip install guardloop`
   - [ ] Create GitHub release v1.0.0
   - [ ] Tag release in git
 
@@ -240,11 +240,11 @@ Complete checklist for launching Guardrail to production and public release.
 # Final package verification
 python -m build
 twine check dist/*
-pip install dist/guardrail-1.0.0-py3-none-any.whl
-guardrail --version  # Should output: guardrail, version 1.0.0
+pip install dist/guardloop-1.0.0-py3-none-any.whl
+guardloop --version  # Should output: guardloop, version 1.0.0
 
 # Test suite verification
-pytest --cov=src/guardrail --cov-report=term-missing
+pytest --cov=src/guardloop --cov-report=term-missing
 coverage report --fail-under=75
 
 # Security audit
@@ -325,6 +325,6 @@ Before launching, verify ALL critical items:
 
 ---
 
-**Prepared by**: guardrail.dev team
+**Prepared by**: guardloop.dev team
 **Last Updated**: 2025-10-04
 **Version**: 1.0.0

@@ -24,7 +24,7 @@ Guardrail v2.1 introduces intelligent optimization that delivers **60%+ faster e
 #### How It Works
 
 ```python
-from guardrail.agents.chain_optimizer import AgentChainOptimizer
+from guardloop.agents.chain_optimizer import AgentChainOptimizer
 
 optimizer = AgentChainOptimizer()
 
@@ -46,9 +46,9 @@ The system analyzes:
 
 ### 2. Semantic Guardrail Matching
 
-**Problem**: v2.0 used keyword matching, missing semantically related guardrails.
+**Problem**: v2.0 used keyword matching, missing semantically related guardloops.
 
-**Solution**: AI embeddings (sentence-transformers) match guardrails by meaning.
+**Solution**: AI embeddings (sentence-transformers) match guardloops by meaning.
 
 #### Semantic vs Keyword Matching
 
@@ -78,11 +78,11 @@ matches = [
 #### How It Works
 
 ```python
-from guardrail.core.semantic_matcher import SemanticGuardrailMatcher
-from guardrail.core.adaptive_guardrails import AdaptiveGuardrailGenerator
+from guardloop.core.semantic_matcher import SemanticGuardrailMatcher
+from guardloop.core.adaptive_guardloops import AdaptiveGuardrailGenerator
 
 # Enable semantic matching
-guardrails = adaptive_gen.get_active_guardrails(
+guardloops = adaptive_gen.get_active_guardloops(
     task_type="code",
     prompt="Implement user authentication with password hashing",
     use_semantic_matching=True,  # 🆕 AI-powered matching
@@ -91,7 +91,7 @@ guardrails = adaptive_gen.get_active_guardrails(
 )
 
 # Results include similarity scores
-for g in guardrails:
+for g in guardloops:
     similarity = g.rule_metadata.get('semantic_similarity', 0)
     print(f"{g.rule_text} (similarity: {similarity:.2f})")
 ```
@@ -101,7 +101,7 @@ for g in guardrails:
 - **Model**: all-MiniLM-L6-v2 (sentence-transformers)
 - **Size**: 80MB (lightweight)
 - **Dimensions**: 384
-- **Speed**: ~50ms per guardrail
+- **Speed**: ~50ms per guardloop
 - **Similarity**: Cosine similarity (0.0-1.0)
 
 #### Installation
@@ -134,23 +134,23 @@ pip install sentence-transformers
 Budget is distributed across 4 categories:
 
 ```yaml
-core_guardrails: 30%      # Universal rules (always applicable)
+core_guardloops: 30%      # Universal rules (always applicable)
 agent_instructions: 40%   # Agent-specific guidance
-specialized_rules: 20%    # Task-specific guardrails
-learned_patterns: 10%     # Dynamic guardrails from failures
+specialized_rules: 20%    # Task-specific guardloops
+learned_patterns: 10%     # Dynamic guardloops from failures
 ```
 
 #### How It Works
 
 ```python
-from guardrail.core.budget_manager import ContextBudgetManager
-from guardrail.core.smart_selector import SmartGuardrailSelector
+from guardloop.core.budget_manager import ContextBudgetManager
+from guardloop.core.smart_selector import SmartGuardrailSelector
 
 manager = ContextBudgetManager()
-selector = SmartGuardrailSelector(guardrails_path)
+selector = SmartGuardrailSelector(guardloops_path)
 
 # Dynamic budget calculation
-selected = selector.select_guardrails(
+selected = selector.select_guardloops(
     task_type="implement_authentication",
     prompt="Build OAuth2 login system",
     model="claude-sonnet-4",        # 🆕 Model-aware
@@ -184,13 +184,13 @@ COMPLEXITY_MULTIPLIERS = {
 
 ```python
 # Old System (v2.0)
-all_guardrails = load_all_guardrails()  # 24K tokens
-context = build_context(prompt, all_guardrails)
+all_guardloops = load_all_guardloops()  # 24K tokens
+context = build_context(prompt, all_guardloops)
 # Result: 24,000 tokens every time
 
 # New System (v2.1)
-smart_guardrails = select_smart(prompt, complexity, model)  # <5K tokens
-context = build_context(prompt, smart_guardrails)
+smart_guardloops = select_smart(prompt, complexity, model)  # <5K tokens
+context = build_context(prompt, smart_guardloops)
 # Result: 354 tokens (simple) to 8,500 tokens (critical)
 # Average: 80%+ reduction
 ```
@@ -213,7 +213,7 @@ execute_chain(agents, task)
 ### Semantic Matching Performance
 
 ```python
-# Benchmark results (100 guardrails, 10 searches)
+# Benchmark results (100 guardloops, 10 searches)
 indexing_time = 120ms      # One-time cost
 avg_search_time = 45ms     # Per search
 cache_hit_rate = 92%       # Embedding reuse
@@ -231,7 +231,7 @@ overhead = negligible          # <1% of total time
 
 ### Enable v2.1 Optimizations
 
-Add to `~/.guardrail/config.yaml`:
+Add to `~/.guardloop/config.yaml`:
 
 ```yaml
 # v2.1 Optimization Features
@@ -257,7 +257,7 @@ agent_chain_optimizer:
 semantic_matcher:
   model: "all-MiniLM-L6-v2"       # Embedding model
   threshold: 0.3                   # Minimum similarity score
-  top_k: 5                        # Max guardrails to return
+  top_k: 5                        # Max guardloops to return
   cache_embeddings: true          # Cache for performance
 
 # Budget Manager Configuration
@@ -278,7 +278,7 @@ budget_manager:
 
   # Allocation ratios
   allocation_ratios:
-    core: 0.30        # 30% to core guardrails
+    core: 0.30        # 30% to core guardloops
     agents: 0.40      # 40% to agent instructions
     specialized: 0.20  # 20% to specialized rules
     learned: 0.10     # 10% to learned patterns
@@ -350,7 +350,7 @@ agent_chains:
 ### Example 1: Simple Task Optimization
 
 ```bash
-$ guardrail run claude "fix typo in README"
+$ guardloop run claude "fix typo in README"
 
 📋 Task Classification:
    - Type: simple
@@ -376,7 +376,7 @@ $ guardrail run claude "fix typo in README"
 ### Example 2: Critical Task with Full Validation
 
 ```bash
-$ guardrail run claude "implement OAuth2 authentication" --mode strict
+$ guardloop run claude "implement OAuth2 authentication" --mode strict
 
 📋 Task Classification:
    - Type: critical
@@ -410,7 +410,7 @@ $ guardrail run claude "implement OAuth2 authentication" --mode strict
 ### Example 3: Creative Task Bypass
 
 ```bash
-$ guardrail run claude "write blog post about new features"
+$ guardloop run claude "write blog post about new features"
 
 📋 Task Classification:
    - Type: creative
@@ -419,7 +419,7 @@ $ guardrail run claude "write blog post about new features"
 
 🎯 Smart Routing:
    - Agent Chain: 0 (direct to LLM)
-   - Budget: 0 tokens (no guardrails needed)
+   - Budget: 0 tokens (no guardloops needed)
    - Guardrails: skipped (not a code task)
 
 ⚡ Optimization:
@@ -439,7 +439,7 @@ $ guardrail run claude "write blog post about new features"
 
 ```bash
 # View optimization metrics
-$ guardrail metrics --period 30d
+$ guardloop metrics --period 30d
 
 📊 v2.1 Optimization Metrics (Last 30 Days)
 
@@ -578,7 +578,7 @@ model_budgets:
 ### Step 1: Enable v2.1 Features
 
 ```yaml
-# ~/.guardrail/config.yaml
+# ~/.guardloop/config.yaml
 features:
   v2_1_smart_routing: true
   v2_1_semantic_matching: true
@@ -598,20 +598,20 @@ pip install sentence-transformers
 python scripts/benchmark_optimization.py
 
 # Test with simple task
-guardrail run claude "fix typo in README"
+guardloop run claude "fix typo in README"
 
 # Test with critical task
-guardrail run claude "implement authentication" --mode strict
+guardloop run claude "implement authentication" --mode strict
 ```
 
 ### Step 4: Monitor Performance
 
 ```bash
 # Check metrics
-guardrail metrics --period 7d
+guardloop metrics --period 7d
 
 # View optimization savings
-guardrail analyze --focus optimization
+guardloop analyze --focus optimization
 ```
 
 ## Best Practices
@@ -624,9 +624,9 @@ guardrail analyze --focus optimization
 
 ### 2. Semantic Matching
 
-- Keep guardrails concise and focused
+- Keep guardloops concise and focused
 - Use clear, semantic rule descriptions
-- Regularly review and refine guardrails based on similarity scores
+- Regularly review and refine guardloops based on similarity scores
 - Adjust threshold (default: 0.3) based on precision needs
 
 ### 3. Budget Management

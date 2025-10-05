@@ -2,9 +2,13 @@
 
 from typing import Dict, List, Optional
 
+import structlog
+
 from guardloop.agents.base import AgentContext, AgentDecision, BaseAgent
 from guardloop.agents.chain_optimizer import AgentChainOptimizer
 from guardloop.utils.config import Config
+
+logger = structlog.get_logger(__name__)
 
 
 class OrchestratorAgent(BaseAgent):

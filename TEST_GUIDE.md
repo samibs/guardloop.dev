@@ -20,8 +20,8 @@ source venv/bin/activate
 pip install -e ".[dev]"
 
 # Verify installation
-guardrail --version
-# Should output: guardrail, version 1.0.0
+guardloop --version
+# Should output: guardloop, version 1.0.0
 ```
 
 ## Test Suite
@@ -30,7 +30,7 @@ guardrail --version
 
 ```bash
 # Run all tests with coverage
-pytest --cov=src/guardrail --cov-report=html --cov-report=term-missing -v
+pytest --cov=src/guardloop --cov-report=html --cov-report=term-missing -v
 
 # Expected output:
 # - 173 tests passing
@@ -75,26 +75,26 @@ mypy src/ --ignore-missing-imports
 
 ```bash
 # Test help command
-guardrail --help
+guardloop --help
 
-# Test init command (creates ~/.guardrail directory)
-guardrail init
+# Test init command (creates ~/.guardloop directory)
+guardloop init
 
 # Test version command
-guardrail --version
+guardloop --version
 ```
 
 ### Test 2: Configuration
 
 ```bash
 # Check if config was created
-ls -la ~/.guardrail/
-cat ~/.guardrail/config.yaml
+ls -la ~/.guardloop/
+cat ~/.guardloop/config.yaml
 
 # Expected structure:
-# ~/.guardrail/
+# ~/.guardloop/
 #   ├── config.yaml
-#   ├── guardrails/
+#   ├── guardloops/
 #   ├── data/
 #   └── logs/
 ```
@@ -103,8 +103,8 @@ cat ~/.guardrail/config.yaml
 
 ```bash
 # Check database creation
-ls -la ~/.guardrail/data/
-sqlite3 ~/.guardrail/data/guardrail.db ".tables"
+ls -la ~/.guardloop/data/
+sqlite3 ~/.guardloop/data/guardloop.db ".tables"
 
 # Expected tables:
 # - requests
@@ -120,8 +120,8 @@ Create a test script to simulate AI interaction:
 ```python
 # test_mock_request.py
 import asyncio
-from guardrail.core.daemon import GuardrailDaemon, AIRequest
-from guardrail.utils.config import Config, DatabaseConfig
+from guardloop.core.daemon import GuardrailDaemon, AIRequest
+from guardloop.utils.config import Config, DatabaseConfig
 
 async def test_request():
     config = Config(
@@ -164,7 +164,7 @@ python test_mock_request.py
 
 ```bash
 # Clean previous builds
-rm -rf dist/ build/ src/guardrail.egg-info/
+rm -rf dist/ build/ src/guardloop.egg-info/
 
 # Build package
 python -m build
@@ -172,8 +172,8 @@ python -m build
 # Verify build artifacts
 ls -lh dist/
 # Should see:
-# - guardrail-1.0.0.tar.gz (~54KB)
-# - guardrail-1.0.0-py3-none-any.whl (~61KB)
+# - guardloop-1.0.0.tar.gz (~54KB)
+# - guardloop-1.0.0-py3-none-any.whl (~61KB)
 ```
 
 ### Test Package Installation
@@ -184,14 +184,14 @@ python -m venv test_venv
 source test_venv/bin/activate
 
 # Install from wheel
-pip install dist/guardrail-1.0.0-py3-none-any.whl
+pip install dist/guardloop-1.0.0-py3-none-any.whl
 
 # Test installation
-guardrail --version
-guardrail --help
+guardloop --version
+guardloop --help
 
 # Test init in clean environment
-guardrail init
+guardloop init
 
 # Deactivate and remove test environment
 deactivate
@@ -202,11 +202,11 @@ rm -rf test_venv
 
 ### Scenario 1: Standard Mode (Suggestions)
 
-Test that guardrails provide suggestions without blocking:
+Test that guardloops provide suggestions without blocking:
 
 ```bash
 # This requires Claude CLI to be installed
-# guardrail execute --tool claude --prompt "create a login endpoint" --mode standard
+# guardloop execute --tool claude --prompt "create a login endpoint" --mode standard
 ```
 
 Expected behavior:
@@ -219,7 +219,7 @@ Expected behavior:
 Test that strict mode blocks violations:
 
 ```bash
-# guardrail execute --tool claude --prompt "create auth without MFA" --mode strict
+# guardloop execute --tool claude --prompt "create auth without MFA" --mode strict
 ```
 
 Expected behavior:
@@ -232,7 +232,7 @@ Expected behavior:
 Test multi-agent orchestration:
 
 ```bash
-# guardrail execute --tool claude --prompt "design and implement user authentication" --agent architect
+# guardloop execute --tool claude --prompt "design and implement user authentication" --agent architect
 ```
 
 Expected behavior:
@@ -248,8 +248,8 @@ Expected behavior:
 # test_performance.py
 import asyncio
 import time
-from guardrail.core.daemon import GuardrailDaemon, AIRequest
-from guardrail.utils.config import Config, DatabaseConfig
+from guardloop.core.daemon import GuardrailDaemon, AIRequest
+from guardloop.utils.config import Config, DatabaseConfig
 
 async def performance_test():
     config = Config(
@@ -329,8 +329,8 @@ pip install -e ".[dev]"
 
 ```bash
 # Solution: Close other connections or use :memory:
-rm ~/.guardrail/data/guardrail.db
-guardrail init
+rm ~/.guardloop/data/guardloop.db
+guardloop init
 ```
 
 ### Issue 3: Test Failures
@@ -394,7 +394,7 @@ act -j lint
 ### Generate HTML Coverage Report
 
 ```bash
-pytest --cov=src/guardrail --cov-report=html
+pytest --cov=src/guardloop --cov-report=html
 open htmlcov/index.html  # macOS/Linux
 # or
 start htmlcov/index.html  # Windows
@@ -403,7 +403,7 @@ start htmlcov/index.html  # Windows
 ### Generate XML Coverage Report (for CI)
 
 ```bash
-pytest --cov=src/guardrail --cov-report=xml
+pytest --cov=src/guardloop --cov-report=xml
 cat coverage.xml
 ```
 

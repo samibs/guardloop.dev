@@ -10,7 +10,7 @@ Reorganized from flat structure to hierarchical:
 
 **Before:**
 ```
-guardrails/agents/
+guardloops/agents/
 ├── orchestrator.md
 ├── business-analyst.md
 ├── cold-blooded-architect.md
@@ -19,7 +19,7 @@ guardrails/agents/
 
 **After:**
 ```
-guardrails/agents/
+guardloops/agents/
 ├── orchestrator/
 │   ├── full.md (original, 516 tokens)
 │   ├── summary.md (125 tokens)
@@ -140,7 +140,7 @@ Each agent maintains essential information:
    - Dynamic context expansion
 
 3. **Caching & Indexing**
-   - Cache frequently used guardrails
+   - Cache frequently used guardloops
    - Index rules for faster lookup
    - Pre-compile validation patterns
 

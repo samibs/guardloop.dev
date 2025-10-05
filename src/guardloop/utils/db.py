@@ -3,7 +3,7 @@
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from sqlalchemy import (
     Boolean,
@@ -17,8 +17,6 @@ from sqlalchemy import (
     String,
     Text,
     create_engine,
-    event,
-    text,
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, relationship, sessionmaker

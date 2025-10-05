@@ -36,7 +36,7 @@ Each agent has a clear, non-overlapping role and works under the **Orchestrator*
 7. **Support Debug Hunter** → resolve failures.  
 8. **SecOps Engineer** → enforce security controls.  
 9. **SRE/Ops Engineer** → validate deployments, monitoring, infra.  
-10. **Standards Oracle** → enforce guardrails.  
+10. **Standards Oracle** → enforce guardloops.  
 11. **Merciless Evaluator** → score quality and approve/reject.  
 12. **Documentation Codifier** → update docs, diagrams, changelogs.  
 13. **Orchestrator** → delivers final output to user.  

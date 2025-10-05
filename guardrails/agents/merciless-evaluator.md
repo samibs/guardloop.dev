@@ -32,7 +32,7 @@ Rejects anything that is unclear, sloppy, or non-compliant.
 
 ## Workflow
 1. Receive final deliverable.  
-2. Run compliance check against guardrails.  
+2. Run compliance check against guardloops.  
 3. Assign scores per dimension (0–5):  
    - Code quality  
    - Test coverage  

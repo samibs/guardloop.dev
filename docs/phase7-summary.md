@@ -16,7 +16,7 @@ Phase 7 focused on preparing Guardrail for production release, including PyPI pa
 - **Description**: Updated to "Guardrails for AI Development"
 - **Keywords**: Added "governance" to keywords list
 - **Dependencies**: Streamlined to core requirements (8 packages)
-- **Scripts**: Added guardrail-wrapper entry point
+- **Scripts**: Added guardloop-wrapper entry point
 - **Tool Configuration**: Updated black, ruff, mypy settings
 
 **Dependencies** (Production):
@@ -46,7 +46,7 @@ dependencies = [
 **setup.py** - Backwards compatibility wrapper:
 ```python
 #!/usr/bin/env python3
-"""Setup configuration for guardrail.dev"""
+"""Setup configuration for guardloop.dev"""
 from setuptools import setup
 setup()  # Configuration is in pyproject.toml
 ```
@@ -55,7 +55,7 @@ setup()  # Configuration is in pyproject.toml
 ```
 include README.md
 include LICENSE
-recursive-include guardrails *.md
+recursive-include guardloops *.md
 recursive-include scripts *.sh
 ```
 
@@ -67,8 +67,8 @@ recursive-include scripts *.sh
 ```bash
 python -m build
 # Successfully built:
-# - guardrail-1.0.0.tar.gz (54KB)
-# - guardrail-1.0.0-py3-none-any.whl (61KB)
+# - guardloop-1.0.0.tar.gz (54KB)
+# - guardloop-1.0.0-py3-none-any.whl (61KB)
 ```
 
 **Package Contents**:
@@ -82,14 +82,14 @@ python -m build
 
 **Installation Testing**:
 ```bash
-pip install dist/guardrail-1.0.0-py3-none-any.whl
-guardrail --version
-# Output: guardrail, version 1.0.0 ✅
+pip install dist/guardloop-1.0.0-py3-none-any.whl
+guardloop --version
+# Output: guardloop, version 1.0.0 ✅
 ```
 
 **Build Warnings** (Non-Critical):
 - License format deprecation warning (SPDX expression recommended for future)
-- No *.md files in guardrails/ directory (expected, guardrails are in separate directory)
+- No *.md files in guardloops/ directory (expected, guardloops are in separate directory)
 
 ### Task 7.2: Landing Page & Marketing ✅
 
@@ -233,20 +233,20 @@ guardrail --version
 **Installation Methods**:
 ```bash
 # PyPI (production ready)
-pip install guardrail
+pip install guardloop
 
 # From source
-git clone https://github.com/guardrail-dev/guardrail.git
-cd guardrail
+git clone https://github.com/guardloop-dev/guardloop.git
+cd guardloop
 pip install -e .
 
 # From wheel
-pip install guardrail-1.0.0-py3-none-any.whl
+pip install guardloop-1.0.0-py3-none-any.whl
 ```
 
 **Entry Points**:
-- `guardrail` - Main CLI command
-- `guardrail-wrapper` - Shell wrapper for AI tool integration
+- `guardloop` - Main CLI command
+- `guardloop-wrapper` - Shell wrapper for AI tool integration
 
 ### Marketing & Launch Strategy
 
@@ -261,7 +261,7 @@ pip install guardrail-1.0.0-py3-none-any.whl
 **Launch Channels** (8 platforms):
 1. PyPI - Package distribution
 2. GitHub - Repository and releases
-3. guardrail.dev - Landing page and docs
+3. guardloop.dev - Landing page and docs
 4. ProductHunt - Product launch
 5. HackerNews - Show HN post
 6. Reddit - r/programming, r/MachineLearning, r/Python
@@ -274,14 +274,14 @@ pip install guardrail-1.0.0-py3-none-any.whl
 
 **Build Warnings**:
 1. License format deprecation - Consider switching to SPDX expression in future versions
-2. Missing *.md files in guardrails/ - Expected behavior, guardrails stored separately
+2. Missing *.md files in guardloops/ - Expected behavior, guardloops stored separately
 
 ### Post-Launch Priorities
 
 1. **Domain & Hosting**
-   - Register guardrail.dev domain
+   - Register guardloop.dev domain
    - Deploy landing page to Vercel/Netlify
-   - Setup docs.guardrail.dev subdomain
+   - Setup docs.guardloop.dev subdomain
    - Configure SSL and CDN
 
 2. **PyPI Publishing**
@@ -296,7 +296,7 @@ pip install guardrail-1.0.0-py3-none-any.whl
    - Setup GitHub Discussions
 
 4. **Marketing Execution**
-   - Create social media accounts (@guardraildev)
+   - Create social media accounts (@guardloopdev)
    - Record demo video
    - Write launch blog post
    - Prepare ProductHunt listing
@@ -315,7 +315,7 @@ pip install guardrail-1.0.0-py3-none-any.whl
 - Dependencies: 8 (production) + 6 (dev)
 - Python Support: 3.10, 3.11, 3.12
 - License: MIT
-- Entry Points: 2 (guardrail, guardrail-wrapper)
+- Entry Points: 2 (guardloop, guardloop-wrapper)
 
 **Code Quality**:
 - Tests: 173 passing

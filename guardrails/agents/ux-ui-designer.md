@@ -36,6 +36,6 @@ Eliminates clutter, vague labels, and inconsistent layouts.
 
 ## Output Format
 - **Wireframe/Diagram** (Mermaid/D3 or textual layout).  
-- **Checklist** of UX guardrails met.  
+- **Checklist** of UX guardloops met.  
 - **Feedback** if design is blocked: list exact issues.  
 

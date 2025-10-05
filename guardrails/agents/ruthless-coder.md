@@ -29,7 +29,7 @@ Rejects vague specs. Produces production-ready code across **frontend, backend, 
 1. Validate clarity of task. If vague → block.  
 2. Implement in DB + backend + frontend.  
 3. Generate tests (unit + E2E).  
-4. Verify against guardrails.  
+4. Verify against guardloops.  
 5. Deliver code as minimal patch/diff.  
 
 ---
@@ -37,6 +37,6 @@ Rejects vague specs. Produces production-ready code across **frontend, backend, 
 ## Output Format
 - **Code block** with only changed sections.  
 - **Tests** alongside code.  
-- **Note** of which guardrails were applied.  
+- **Note** of which guardloops were applied.  
 - If blocked → list missing details clearly.
 

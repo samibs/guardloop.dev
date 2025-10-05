@@ -2,7 +2,6 @@
 
 import asyncio
 import shutil
-import subprocess
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Optional
@@ -241,7 +240,8 @@ class BaseAdapter(ABC):
             try:
                 process.kill()
                 await process.wait()
-            except:
+            except Exception:
+                # Ignore errors during cleanup
                 pass
             raise
 

@@ -7,17 +7,14 @@ Enables adaptive learning from real interactions.
 import hashlib
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional
 
 import structlog
-from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 
 from guardloop.utils.db import (
-    DynamicGuardrailModel,
     FailureModeModel,
     LearnedPatternModel,
-    SessionModel,
     ViolationModel,
 )
 

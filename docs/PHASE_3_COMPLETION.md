@@ -8,7 +8,7 @@ Phase 3 implementation is **100% complete** with all tests passing (122/122).
 
 ### Task 3.1: Core Daemon Implementation ✅
 
-**File**: `src/guardrail/core/daemon.py` (360 lines)
+**File**: `src/guardloop/core/daemon.py` (360 lines)
 
 **Key Classes**:
 - `AIRequest` - Request dataclass with tool, prompt, agent, mode, session_id
@@ -18,10 +18,10 @@ Phase 3 implementation is **100% complete** with all tests passing (122/122).
 
 **Core Features**:
 1. **8-Step Orchestration Flow**:
-   - Build context with guardrails injection
+   - Build context with guardloops injection
    - Execute AI CLI via adapters
    - Parse AI response
-   - Validate against guardrails
+   - Validate against guardloops
    - Detect failure modes
    - Enforce mode-based decisions (standard/strict)
    - Async session logging (non-blocking)
@@ -38,7 +38,7 @@ Phase 3 implementation is **100% complete** with all tests passing (122/122).
    - Database logging failures (non-blocking)
 
 4. **Integration**:
-   - ContextManager for guardrail injection
+   - ContextManager for guardloop injection
    - AdapterFactory for AI tool execution
    - ResponseParser for output parsing
    - GuardrailValidator for validation
@@ -47,7 +47,7 @@ Phase 3 implementation is **100% complete** with all tests passing (122/122).
 
 ### Task 3.2: Background Workers ✅
 
-**File**: `src/guardrail/core/workers.py` (450 lines)
+**File**: `src/guardloop/core/workers.py` (450 lines)
 
 **Base Worker**:
 - `BackgroundWorker` - Abstract base class with start/stop lifecycle
@@ -70,7 +70,7 @@ Phase 3 implementation is **100% complete** with all tests passing (122/122).
 3. **MarkdownExporter** (runs every 10 minutes):
    - Exports recent failures (last 100) to markdown
    - Generates formatted tables with timestamp, category, severity, tool, context
-   - Saves to `~/.guardrail/AI_Failure_Modes.md`
+   - Saves to `~/.guardloop/AI_Failure_Modes.md`
    - Truncates long context to 50 characters
 
 4. **CleanupWorker** (runs daily):
@@ -114,7 +114,7 @@ Phase 3 implementation is **100% complete** with all tests passing (122/122).
 
 ### Updated Files
 
-1. **`src/guardrail/utils/config.py`**:
+1. **`src/guardloop/utils/config.py`**:
    - Added worker feature flags to `FeaturesConfig`:
      ```python
      # Background workers (Phase 3)
@@ -124,7 +124,7 @@ Phase 3 implementation is **100% complete** with all tests passing (122/122).
      cleanup_worker: bool = True
      ```
 
-2. **`src/guardrail/utils/db.py`**:
+2. **`src/guardloop/utils/db.py`**:
    - Renamed reserved column `metadata` → `agent_metadata` in `AgentActivityModel`
 
 ## Bug Fixes
@@ -134,17 +134,17 @@ Phase 3 implementation is **100% complete** with all tests passing (122/122).
 1. **SQLAlchemy Reserved Word Error**:
    - **Error**: `InvalidRequestError: 'metadata' is reserved`
    - **Fix**: Renamed column to `agent_metadata`
-   - **Location**: `src/guardrail/utils/db.py:189`
+   - **Location**: `src/guardloop/utils/db.py:189`
 
 2. **ContextManager Initialization Error**:
-   - **Error**: `TypeError: unexpected keyword argument 'guardrails_path'`
+   - **Error**: `TypeError: unexpected keyword argument 'guardloops_path'`
    - **Fix**: ContextManager uses global config, removed path parameters
-   - **Location**: `src/guardrail/core/daemon.py:65`
+   - **Location**: `src/guardloop/core/daemon.py:65`
 
 3. **Missing Worker Feature Flags**:
    - **Error**: `AttributeError: 'FeaturesConfig' has no attribute 'analysis_worker'`
    - **Fix**: Added 4 worker boolean flags to FeaturesConfig
-   - **Location**: `src/guardrail/utils/config.py:76-79`
+   - **Location**: `src/guardloop/utils/config.py:76-79`
 
 4. **Markdown Test Assertion Mismatch**:
    - **Error**: Expected plain text but markdown uses bold formatting
@@ -154,7 +154,7 @@ Phase 3 implementation is **100% complete** with all tests passing (122/122).
 5. **Pydantic Model .get() Method Error**:
    - **Error**: `AttributeError: 'ToolConfig' object has no attribute 'get'`
    - **Fix**: Changed `cfg.get("enabled")` → `cfg.enabled` (direct attribute access)
-   - **Location**: `src/guardrail/core/daemon.py:90,354`
+   - **Location**: `src/guardloop/core/daemon.py:90,354`
 
 ## Architecture Decisions
 
@@ -179,9 +179,9 @@ Phase 3 implementation is **100% complete** with all tests passing (122/122).
 ## Usage Example
 
 ```python
-from guardrail.core.daemon import GuardrailDaemon, AIRequest
-from guardrail.core.workers import WorkerManager
-from guardrail.utils.config import Config
+from guardloop.core.daemon import GuardrailDaemon, AIRequest
+from guardloop.core.workers import WorkerManager
+from guardloop.utils.config import Config
 
 # Initialize daemon
 config = Config()

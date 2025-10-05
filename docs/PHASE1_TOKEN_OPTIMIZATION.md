@@ -43,7 +43,7 @@
 
 ### Task 1.2: Core Guardrails Refactor ✅
 
-**Objective**: Modularize guardrails into core + specialized files
+**Objective**: Modularize guardloops into core + specialized files
 
 **Implementation**:
 - Created 3 core files (1,100 token budget)
@@ -73,13 +73,13 @@
 
 ### Task 1.3: Smart Guardrail Selector ✅
 
-**Objective**: Intelligent guardrail selection based on task type and token budget
+**Objective**: Intelligent guardloop selection based on task type and token budget
 
 **Implementation**:
 - Created `SmartGuardrailSelector` class
-- 15+ task types mapped to optimal guardrail combinations
+- 15+ task types mapped to optimal guardloop combinations
 - Keyword-based matching with confidence scoring
-- Token budget enforcement (default: 5K for guardrails)
+- Token budget enforcement (default: 5K for guardloops)
 
 **Features**:
 
@@ -90,9 +90,9 @@
 
 2. **Intelligent Selection**:
    - Always includes core/always.md (priority 1)
-   - Task-specific guardrails added automatically
+   - Task-specific guardloops added automatically
    - Keyword-based matching from prompts
-   - Creative mode detection → minimal guardrails
+   - Creative mode detection → minimal guardloops
    - Strict mode → includes all core files
 
 3. **Token Budget Enforcement**:
@@ -124,7 +124,7 @@
 **Implementation**:
 - Integrated SmartGuardrailSelector initialization
 - Auto-classifies task type if not provided
-- Removed old `_select_relevant_guardrails()` and `_extract_key_points()` methods
+- Removed old `_select_relevant_guardloops()` and `_extract_key_points()` methods
 - Simplified loading logic
 
 **Changes**:
@@ -132,21 +132,21 @@
 1. **Smart Selector Integration**:
    - Added SmartGuardrailSelector initialization
    - Auto-classifies task type from prompt
-   - Selects optimal guardrails within 5K token budget
+   - Selects optimal guardloops within 5K token budget
 
 2. **Removed Old Methods**:
-   - `_select_relevant_guardrails()` → replaced by smart_selector.select_guardrails()
-   - `_extract_key_points()` → no longer needed (guardrails pre-optimized)
+   - `_select_relevant_guardloops()` → replaced by smart_selector.select_guardloops()
+   - `_extract_key_points()` → no longer needed (guardloops pre-optimized)
 
 3. **Enhanced Loading**:
    - Loads from core/ and specialized/ directories
-   - Respects token budget (5K for guardrails)
+   - Respects token budget (5K for guardloops)
    - Task-specific selection with keyword fallback
-   - Creative mode detection for minimal guardrails
+   - Creative mode detection for minimal guardloops
 
 **Benefits**:
 - 40-60% token reduction through smart selection
-- Minimal guardrails for creative tasks (354 tokens)
+- Minimal guardloops for creative tasks (354 tokens)
 - Full coverage for strict mode (716 tokens)
 - Task-optimized loading (650-850 tokens)
 - Backward compatible with existing code
@@ -155,7 +155,7 @@
 
 ### Task 1.5: Learned Guardrail Optimization ✅
 
-**Objective**: Add relevance scoring to limit dynamic guardrails to top 5 most relevant
+**Objective**: Add relevance scoring to limit dynamic guardloops to top 5 most relevant
 
 **Implementation**:
 - Added relevance scoring system
@@ -178,14 +178,14 @@
 
 3. **Priority Scoring** (0-8.5 total points):
    - Relevance: 0-2 points (keyword + category)
-   - Confidence: 0-2 points (guardrail confidence score)
+   - Confidence: 0-2 points (guardloop confidence score)
    - Recency: 0-1 points (decays over 30 days)
    - Success rate: 0-2 points (from effectiveness tracking)
    - Task type match: 0-1 point (exact match bonus)
    - Enforcement mode: 0-0.5 points (block > auto_fix > warn)
 
 **Benefits**:
-- Reduces learned guardrail tokens by 60-80%
+- Reduces learned guardloop tokens by 60-80%
 - Only shows most relevant rules to current task
 - Prioritizes high-confidence, successful rules
 - Considers recent patterns over old ones
@@ -210,7 +210,7 @@
 1. **Faster Context Loading**: 65% fewer tokens = 65% faster loading
 2. **Lower API Costs**: Smaller prompts = reduced token usage per request
 3. **Improved Response Times**: Less context = faster AI processing
-4. **Better Quality**: Focused, relevant guardrails = better validation
+4. **Better Quality**: Focused, relevant guardloops = better validation
 
 ### Quality Preservation
 
@@ -227,13 +227,13 @@
 ### Scripts
 - ✅ `scripts/generate_agent_summaries.py`: Agent summary generation
 - ✅ `scripts/test_agent_summaries.py`: Token validation for agents
-- ✅ `scripts/generate_core_guardrails.py`: Core guardrail generation
-- ✅ `scripts/test_core_guardrails.py`: Token validation for guardrails
+- ✅ `scripts/generate_core_guardloops.py`: Core guardloop generation
+- ✅ `scripts/test_core_guardloops.py`: Token validation for guardloops
 
 ### Core Implementation
-- ✅ `src/guardrail/core/smart_selector.py`: Smart guardrail selector
-- ✅ `src/guardrail/core/context_manager.py`: Updated with smart selection
-- ✅ `src/guardrail/core/adaptive_guardrails.py`: Added relevance scoring
+- ✅ `src/guardloop/core/smart_selector.py`: Smart guardloop selector
+- ✅ `src/guardloop/core/context_manager.py`: Updated with smart selection
+- ✅ `src/guardloop/core/adaptive_guardloops.py`: Added relevance scoring
 
 ### Tests
 - ✅ `tests/test_smart_selector.py`: Comprehensive unit tests
@@ -244,8 +244,8 @@
 
 ### Guardrail Files (39 total)
 - ✅ 13 agent directories with 3 versions each (39 files)
-- ✅ 3 core guardrail files
-- ✅ 6 specialized guardrail modules
+- ✅ 3 core guardloop files
+- ✅ 6 specialized guardloop modules
 
 ---
 
@@ -256,7 +256,7 @@
 | Token reduction | ≥60% | 65.4% | ✅ Exceeded |
 | Agent summary limit | ≤400 | Max 136 | ✅ Pass |
 | Agent checklist limit | ≤200 | Max 63 | ✅ Pass |
-| Core guardrails budget | 1,100 | 716 | ✅ Pass |
+| Core guardloops budget | 1,100 | 716 | ✅ Pass |
 | Specialized budget | 3,600 | 2,360 | ✅ Pass |
 | Files created | 26 | 39+ | ✅ Exceeded |
 | Time estimate | Week 1 | On time | ✅ On schedule |
@@ -269,7 +269,7 @@
 ### Phase 2 Options (Week 2-3)
 
 1. **Caching & Indexing**:
-   - Cache frequently used guardrails
+   - Cache frequently used guardloops
    - Index rules for faster lookup
    - Pre-compile validation patterns
 
@@ -279,7 +279,7 @@
    - Dynamic context expansion
 
 3. **Performance Optimization**:
-   - Parallel loading of guardrails
+   - Parallel loading of guardloops
    - Streaming validation
    - Early termination on critical violations
 
@@ -289,7 +289,7 @@
 2. **Collect metrics** on smart selection effectiveness
 3. **Gather user feedback** on validation quality
 4. **A/B test** different token budgets (3K vs 5K vs 7K)
-5. **Track relevance scoring** accuracy for learned guardrails
+5. **Track relevance scoring** accuracy for learned guardloops
 
 ---
 

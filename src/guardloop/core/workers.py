@@ -4,9 +4,7 @@ import asyncio
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, Any, List
-
-import structlog
+from typing import Any, Dict, List
 
 from guardloop.core.logger import get_logger
 from guardloop.utils.config import Config
@@ -82,8 +80,7 @@ class AnalysisWorker(BackgroundWorker):
             Dictionary of trend data
         """
         # Query last 24h of failures
-        cutoff_time = datetime.now() - timedelta(hours=24)
-
+        # cutoff_time would be used for actual DB query
         trends = {
             "timestamp": datetime.now().isoformat(),
             "period": "24h",
@@ -375,7 +372,7 @@ class CleanupWorker(BackgroundWorker):
         Returns:
             Number of deleted sessions
         """
-        cutoff_date = datetime.now() - timedelta(days=days)
+        # cutoff_date would be used for actual DB query
         # Delete from database
         logger.debug("Old sessions deleted", cutoff_days=days)
         return 0  # Placeholder

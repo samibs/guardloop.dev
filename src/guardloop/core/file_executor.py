@@ -4,7 +4,6 @@ Safely executes file operations from LLM output with validation and user confirm
 Enables auto-save for code files when safe.
 """
 
-import os
 import re
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple

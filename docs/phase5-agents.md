@@ -8,7 +8,7 @@ The agent system provides intelligent, specialized validation of AI outputs thro
 
 ### Core Components
 
-#### 1. Base Agent System (`src/guardrail/agents/base.py`)
+#### 1. Base Agent System (`src/guardloop/agents/base.py`)
 
 **AgentContext** - Contextual information for agent evaluation:
 ```python
@@ -41,7 +41,7 @@ class AgentDecision:
 - `_calculate_confidence(approved, issues_count, total_checks)` - Confidence scoring
 - Loads agent-specific instructions from markdown files
 
-#### 2. Orchestrator Agent (`src/guardrail/agents/orchestrator.py`)
+#### 2. Orchestrator Agent (`src/guardloop/agents/orchestrator.py`)
 
 **Responsibilities**:
 - Routes prompts to appropriate starting agent using keyword-based matching
@@ -272,7 +272,7 @@ pytest tests/test_agents/ -v
 pytest tests/ -v
 
 # With coverage
-pytest tests/test_agents/ --cov=src/guardrail/agents --cov-report=html
+pytest tests/test_agents/ --cov=src/guardloop/agents --cov-report=html
 ```
 
 ## Usage Examples
@@ -280,9 +280,9 @@ pytest tests/test_agents/ --cov=src/guardrail/agents --cov-report=html
 ### Basic Agent Evaluation
 
 ```python
-from guardrail.agents.orchestrator import OrchestratorAgent
-from guardrail.agents.base import AgentContext
-from guardrail.utils.config import Config
+from guardloop.agents.orchestrator import OrchestratorAgent
+from guardloop.agents.base import AgentContext
+from guardloop.utils.config import Config
 
 # Initialize
 config = Config(mode="standard")
@@ -334,7 +334,7 @@ if not decisions[-1].approved:
 
 ### Daemon Integration
 
-The agent system integrates with the guardrail daemon through:
+The agent system integrates with the guardloop daemon through:
 
 1. **Context Builder**: Creates AgentContext from tool outputs
 2. **Decision Processor**: Applies agent decisions to validation workflow
@@ -344,10 +344,10 @@ The agent system integrates with the guardrail daemon through:
 
 ```bash
 # Validate with agents
-guardrail validate --agent-mode standard --output results.json
+guardloop validate --agent-mode standard --output results.json
 
 # Strict validation
-guardrail validate --agent-mode strict --fail-on-block
+guardloop validate --agent-mode strict --fail-on-block
 ```
 
 ## Future Enhancements
@@ -383,7 +383,7 @@ guardrail validate --agent-mode strict --fail-on-block
 
 ### Agent Instructions
 
-Each agent loads instructions from `~/.guardrail/guardrails/agents/<agent-name>.md`:
+Each agent loads instructions from `~/.guardloop/guardloops/agents/<agent-name>.md`:
 
 ```markdown
 # Architect Agent Instructions
@@ -469,7 +469,7 @@ agents:
 
 **Issue**: Agent not loading
 - **Cause**: Missing instruction file
-- **Solution**: Create markdown file in ~/.guardrail/guardrails/agents/
+- **Solution**: Create markdown file in ~/.guardloop/guardloops/agents/
 
 ## Summary
 

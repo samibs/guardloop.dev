@@ -25,13 +25,13 @@ bash scripts/install.sh
 **Post-installation**:
 ```bash
 # Activate environment
-source ~/.guardrail/venv/bin/activate
+source ~/.guardloop/venv/bin/activate
 
 # Reload shell
 source ~/.bashrc  # or ~/.zshrc
 
 # Test
-guardrail --version
+guardloop --version
 ```
 
 #### `uninstall.sh`
@@ -51,14 +51,14 @@ bash scripts/uninstall.sh
 
 ### Tool Wrapper
 
-#### `guardrail-wrapper.sh`
+#### `guardloop-wrapper.sh`
 Transparent wrapper for AI CLI tools.
 
-**Purpose**: Intercept AI tool calls and route through guardrails
+**Purpose**: Intercept AI tool calls and route through guardloops
 
 **Usage**:
 ```bash
-guardrail-wrapper <tool> <prompt>
+guardloop-wrapper <tool> <prompt>
 ```
 
 **Environment Variables**:
@@ -69,10 +69,10 @@ guardrail-wrapper <tool> <prompt>
 **Example**:
 ```bash
 # Basic usage
-guardrail-wrapper claude "Create a login form"
+guardloop-wrapper claude "Create a login form"
 
 # With environment variables
-GUARDRAIL_MODE=strict GUARDRAIL_AGENT=architect guardrail-wrapper claude "Design auth service"
+GUARDRAIL_MODE=strict GUARDRAIL_AGENT=architect guardloop-wrapper claude "Design auth service"
 ```
 
 ## Shell Aliases
@@ -88,7 +88,7 @@ codex <prompt>    # Wrapped codex
 
 ### Command Shortcuts
 ```bash
-gr               # Short for guardrail
+gr               # Short for guardloop
 gr-strict        # Set strict mode
 gr-verbose       # Enable verbose output
 ```
@@ -121,9 +121,9 @@ export GUARDRAIL_CONFIG_PATH="/path/to/config.yaml"
 
 ### Configuration File
 
-Located at: `~/.guardrail/config.yaml`
+Located at: `~/.guardloop/config.yaml`
 
-Edit directly or use: `guardrail config`
+Edit directly or use: `guardloop config`
 
 ## Workflow Examples
 
@@ -134,7 +134,7 @@ Edit directly or use: `guardrail config`
 bash scripts/install.sh
 
 # 2. Configure tools
-vim ~/.guardrail/config.yaml
+vim ~/.guardloop/config.yaml
 
 # 3. Use wrapped tools
 claude "Create user authentication"
@@ -205,7 +205,7 @@ which codex
 **Guardrail not found**:
 ```bash
 # Check installation
-which guardrail
+which guardloop
 
 # If missing, run install again
 bash scripts/install.sh
@@ -233,27 +233,27 @@ vim ~/.bashrc  # or ~/.zshrc
 
 ```bash
 # Test wrapper
-bash scripts/guardrail-wrapper.sh claude "test prompt"
+bash scripts/guardloop-wrapper.sh claude "test prompt"
 
 # Test with environment
-GUARDRAIL_MODE=strict bash scripts/guardrail-wrapper.sh claude "test"
+GUARDRAIL_MODE=strict bash scripts/guardloop-wrapper.sh claude "test"
 ```
 
 ### Modifying Scripts
 
 1. Edit script:
    ```bash
-   vim scripts/guardrail-wrapper.sh
+   vim scripts/guardloop-wrapper.sh
    ```
 
 2. Make executable:
    ```bash
-   chmod +x scripts/guardrail-wrapper.sh
+   chmod +x scripts/guardloop-wrapper.sh
    ```
 
 3. Test changes:
    ```bash
-   bash scripts/guardrail-wrapper.sh <tool> <prompt>
+   bash scripts/guardloop-wrapper.sh <tool> <prompt>
    ```
 
 ## Security Considerations
@@ -271,7 +271,7 @@ GUARDRAIL_MODE=strict bash scripts/guardrail-wrapper.sh claude "test"
 ### Best Practices
 - Review scripts before execution
 - Keep backups of configuration
-- Use version control for guardrail files
+- Use version control for guardloop files
 - Monitor database size
 
 ## Support

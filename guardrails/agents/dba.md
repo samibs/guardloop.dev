@@ -27,7 +27,7 @@ Reviews schemas, migrations, and queries to prevent technical debt.
 
 ## Workflow
 1. Receive proposed DB schema/migration.  
-2. Review against guardrails.  
+2. Review against guardloops.  
 3. Optimize design (indexes, constraints).  
 4. Approve or return with feedback.  
 5. Provide DBA notes for docs + SRE.  

@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-**Objective**: Add semantic matching and dynamic budget management for intelligent guardrail selection
+**Objective**: Add semantic matching and dynamic budget management for intelligent guardloop selection
 
 **Achievement**: **Semantic similarity and model-aware budgeting** fully operational
 
@@ -14,13 +14,13 @@
 
 ### Task 3.1: Implement Embeddings for Guardrail Matching ✅
 
-**Objective**: Use semantic similarity instead of keyword matching for better guardrail relevance
+**Objective**: Use semantic similarity instead of keyword matching for better guardloop relevance
 
 **Implementation**:
 - Created `SemanticGuardrailMatcher` with sentence-transformers
 - Uses all-MiniLM-L6-v2 model (80MB, 384-dim embeddings)
 - Lazy loading of embedding model for performance
-- Batch encoding and caching of guardrail embeddings
+- Batch encoding and caching of guardloop embeddings
 - Cosine similarity calculation for semantic matching
 - Threshold-based filtering (default: 0.3 similarity)
 - Top-K result selection with score sorting
@@ -35,20 +35,20 @@
 
 **Semantic Matching Architecture**:
 ```python
-# 1. Index guardrails (pre-compute embeddings)
+# 1. Index guardloops (pre-compute embeddings)
 matcher = SemanticGuardrailMatcher()
-await matcher.index_guardrails(guardrails)
+await matcher.index_guardloops(guardloops)
 
-# 2. Find relevant guardrails
+# 2. Find relevant guardloops
 relevant = await matcher.find_relevant(
     prompt="Implement SQL injection prevention",
-    guardrails=guardrails,
+    guardloops=guardloops,
     top_k=5,
     threshold=0.3
 )
 
 # 3. Results sorted by similarity
-# [(guardrail, 0.87), (guardrail, 0.76), ...]
+# [(guardloop, 0.87), (guardloop, 0.76), ...]
 ```
 
 **Cosine Similarity Formula**:
@@ -59,7 +59,7 @@ similarity = dot(prompt_emb, rule_emb) / (norm(prompt_emb) * norm(rule_emb))
 **Integration Example**:
 ```python
 # Enable semantic matching
-guardrails = adaptive_gen.get_active_guardrails(
+guardloops = adaptive_gen.get_active_guardloops(
     task_type="code",
     prompt=user_prompt,
     use_semantic_matching=True,  # Enable semantic mode
@@ -67,14 +67,14 @@ guardrails = adaptive_gen.get_active_guardrails(
 )
 
 # Semantic similarity stored in metadata
-for g in guardrails:
+for g in guardloops:
     print(f"{g.rule_text}: {g.rule_metadata['semantic_similarity']:.2f}")
 ```
 
 **Performance Metrics**:
 - Model size: 80MB (all-MiniLM-L6-v2)
 - Embedding dimension: 384
-- Inference speed: ~50ms per guardrail
+- Inference speed: ~50ms per guardloop
 - Cache hit rate: >90% for repeated queries
 - Memory usage: ~500KB per 100 cached embeddings
 
@@ -93,7 +93,7 @@ pip install sentence-transformers
 - Created `ContextBudgetManager` with model-specific budgets
 - Model budgets for Claude, GPT, and Gemini
 - Complexity multipliers (simple → critical)
-- Budget allocation across guardrail categories
+- Budget allocation across guardloop categories
 - Mode adjustment (strict +30% increase)
 - Model name normalization (handles variations)
 - Token estimation and validation
@@ -127,7 +127,7 @@ pip install sentence-transformers
 **Budget Allocation Ratios**:
 - **Core** (30%): Universal rules (always applicable)
 - **Agents** (40%): Agent-specific instructions
-- **Specialized** (20%): Task-specific guardrails
+- **Specialized** (20%): Task-specific guardloops
 - **Learned** (10%): Dynamic learned rules
 
 **Budget Calculation Example**:
@@ -165,7 +165,7 @@ allocation = manager.allocate_budget(2340)
 **Integration with SmartGuardrailSelector**:
 ```python
 # Automatic budget calculation
-selected = selector.select_guardrails(
+selected = selector.select_guardloops(
     task_type="implement_function",
     prompt=user_prompt,
     mode="strict",
@@ -191,7 +191,7 @@ selected = selector.select_guardrails(
 - **Model optimization**: Uses full capacity of high-context models
 - **Task efficiency**: Simple tasks use 30% budget, critical use 100%
 - **Strict mode intelligence**: Adds 30% budget for enhanced validation
-- **Category fairness**: Balanced allocation across guardrail types
+- **Category fairness**: Balanced allocation across guardloop types
 
 ### Quality Improvements
 
@@ -220,10 +220,10 @@ selected = selector.select_guardrails(
 ## Files Created/Modified
 
 ### Core Implementation
-- ✅ `src/guardrail/core/semantic_matcher.py`: Semantic similarity matching (150 lines)
-- ✅ `src/guardrail/core/budget_manager.py`: Dynamic budget management (200 lines)
-- ✅ `src/guardrail/core/adaptive_guardrails.py`: Semantic integration (updated)
-- ✅ `src/guardrail/core/smart_selector.py`: Budget integration (updated)
+- ✅ `src/guardloop/core/semantic_matcher.py`: Semantic similarity matching (150 lines)
+- ✅ `src/guardloop/core/budget_manager.py`: Dynamic budget management (200 lines)
+- ✅ `src/guardloop/core/adaptive_guardloops.py`: Semantic integration (updated)
+- ✅ `src/guardloop/core/smart_selector.py`: Budget integration (updated)
 
 ### Tests
 - ✅ `tests/test_semantic_matcher.py`: Semantic matching tests (150 lines, 10+ tests)
@@ -260,12 +260,12 @@ selected = selector.select_guardrails(
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
 # Batch encode for efficiency
-texts = [g.rule_text for g in guardrails]
+texts = [g.rule_text for g in guardloops]
 embeddings = model.encode(texts, show_progress_bar=False)
 
 # Cache for reuse
-for guardrail, embedding in zip(guardrails, embeddings):
-    self.guardrail_embeddings[guardrail.id] = embedding
+for guardloop, embedding in zip(guardloops, embeddings):
+    self.guardloop_embeddings[guardloop.id] = embedding
 ```
 
 **Similarity Calculation**:
@@ -280,7 +280,7 @@ similarity = np.dot(prompt_emb, rule_emb) / (
 
 # Filter and sort
 if similarity >= threshold:
-    scores.append((guardrail, float(similarity)))
+    scores.append((guardloop, float(similarity)))
 
 scores.sort(key=lambda x: x[1], reverse=True)
 return scores[:top_k]
@@ -328,13 +328,13 @@ def allocate_budget(self, total_budget: int) -> Dict[str, int]:
 ### Example 1: Semantic Matching for Security
 
 ```python
-from guardrail.core.semantic_matcher import SemanticGuardrailMatcher
-from guardrail.core.adaptive_guardrails import AdaptiveGuardrailGenerator
+from guardloop.core.semantic_matcher import SemanticGuardrailMatcher
+from guardloop.core.adaptive_guardloops import AdaptiveGuardrailGenerator
 
-# Get guardrails with semantic matching
+# Get guardloops with semantic matching
 adaptive_gen = AdaptiveGuardrailGenerator(db_session)
 
-guardrails = adaptive_gen.get_active_guardrails(
+guardloops = adaptive_gen.get_active_guardloops(
     task_type="code",
     prompt="Implement user authentication with password hashing",
     use_semantic_matching=True,
@@ -348,7 +348,7 @@ guardrails = adaptive_gen.get_active_guardrails(
 # - "Validate authentication tokens securely"
 # (Even though prompt didn't mention "bcrypt" or "salt")
 
-for g in guardrails:
+for g in guardloops:
     similarity = g.rule_metadata.get('semantic_similarity', 0)
     print(f"{g.rule_text} (similarity: {similarity:.2f})")
 ```
@@ -356,14 +356,14 @@ for g in guardrails:
 ### Example 2: Dynamic Budgets for Different Models
 
 ```python
-from guardrail.core.budget_manager import ContextBudgetManager
-from guardrail.core.smart_selector import SmartGuardrailSelector
+from guardloop.core.budget_manager import ContextBudgetManager
+from guardloop.core.smart_selector import SmartGuardrailSelector
 
 manager = ContextBudgetManager()
-selector = SmartGuardrailSelector(guardrails_path)
+selector = SmartGuardrailSelector(guardloops_path)
 
 # GPT-3.5 with simple task (small budget)
-selected_gpt35 = selector.select_guardrails(
+selected_gpt35 = selector.select_guardloops(
     task_type="fix_typo",
     prompt="Fix typo in README",
     model="gpt-3.5-turbo",
@@ -373,7 +373,7 @@ selected_gpt35 = selector.select_guardrails(
 # Result: core/always.md only (354 tokens)
 
 # Claude Opus with critical task (large budget)
-selected_opus = selector.select_guardrails(
+selected_opus = selector.select_guardloops(
     task_type="build_auth_system",
     prompt="Implement OAuth2 authentication",
     model="claude-opus-4",
@@ -381,14 +381,14 @@ selected_opus = selector.select_guardrails(
     mode="strict"
 )
 # Budget: 10000 * 1.0 * 1.3 = 13,000 tokens
-# Result: All relevant guardrails loaded
+# Result: All relevant guardloops loaded
 ```
 
 ### Example 3: Combined Semantic + Dynamic Budget
 
 ```python
 # Best of both worlds
-guardrails = adaptive_gen.get_active_guardrails(
+guardloops = adaptive_gen.get_active_guardloops(
     task_type="code",
     prompt="Create API endpoint with rate limiting",
     use_semantic_matching=True,
@@ -400,10 +400,10 @@ budget_manager = ContextBudgetManager()
 total_budget = budget_manager.get_budget("claude-sonnet-4", "medium")
 allocation = budget_manager.allocate_budget(total_budget)
 
-# Allocate learned guardrails within budget
+# Allocate learned guardloops within budget
 learned_budget = allocation["learned"]  # 10% of total
-guardrails_within_budget = [
-    g for g in guardrails
+guardloops_within_budget = [
+    g for g in guardloops
     if budget_manager.estimate_tokens(g.rule_text) <= learned_budget
 ]
 ```
@@ -469,13 +469,13 @@ guardrails_within_budget = [
 3. **A/B test** semantic vs keyword matching
 4. **Collect user feedback** on relevance improvements
 5. **Analyze cache hit rates** and optimize
-6. **Profile performance** with large guardrail sets
+6. **Profile performance** with large guardloop sets
 
 ---
 
 ## Conclusion
 
-Phase 3 successfully delivered **semantic similarity matching** and **dynamic budget management** for intelligent guardrail selection. The implementation is:
+Phase 3 successfully delivered **semantic similarity matching** and **dynamic budget management** for intelligent guardloop selection. The implementation is:
 
 ✅ **Production Ready**: Fully tested with 40+ unit tests
 ✅ **Backward Compatible**: Both features optional via flags

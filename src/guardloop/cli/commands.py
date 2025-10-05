@@ -1,10 +1,9 @@
 """CLI commands for GuardLoop"""
 
 import asyncio
-import json
 import signal
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -19,7 +18,7 @@ from rich.tree import Tree
 from guardloop.core.daemon import AIRequest, GuardrailDaemon
 from guardloop.core.logger import configure_logging
 from guardloop.core.workers import WorkerManager
-from guardloop.utils.config import Config, ConfigManager, get_config
+from guardloop.utils.config import ConfigManager, get_config
 from guardloop.utils.db import DatabaseManager
 
 console = Console()
@@ -453,8 +452,8 @@ def interactive():
 
     # REPL loop with conversation history (v2)
     async def repl():
-        import uuid
         import os
+        import uuid
 
         daemon = GuardrailDaemon(config)
         conversation_id = str(uuid.uuid4())  # v2: conversation tracking

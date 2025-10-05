@@ -32,7 +32,7 @@ Phase 6 focused on establishing enterprise-grade testing infrastructure, compreh
 - `test_full_flow_strict_mode` - Strict validation mode with enforcement
 - `test_agent_chain_execution` - Multi-agent orchestration (architect → dba → coder → tester)
 - `test_failure_detection` - AI failure pattern recognition
-- `test_guardrail_injection` - Guardrail markdown injection into prompts
+- `test_guardloop_injection` - Guardrail markdown injection into prompts
 - `test_context_preservation` - Context retention across multiple requests
 - `test_multi_tool_support` - Claude, Gemini, Codex adapter validation
 - `test_violation_thresholds` - Security violation severity detection
@@ -56,7 +56,7 @@ Phase 6 focused on establishing enterprise-grade testing infrastructure, compreh
 
 **Created comprehensive project documentation including**:
 - Professional badges (tests, coverage, Python version, license)
-- Key features highlight (automatic guardrail injection, real-time violation detection, AI failure analytics)
+- Key features highlight (automatic guardloop injection, real-time violation detection, AI failure analytics)
 - Quick start guide (installation, initialization, usage examples)
 - Architecture overview (13 specialized agents)
 - Usage examples (standard mode vs strict mode)
@@ -187,7 +187,7 @@ The following documentation files are planned but not yet created:
 **Resolution Path**: Update config tests to handle string paths with ~ notation
 
 ### Issue 2: Integration Test Config Fields
-**Problem**: Integration tests reference `config.agents` instead of `config.guardrails`
+**Problem**: Integration tests reference `config.agents` instead of `config.guardloops`
 **Impact**: Medium - Integration tests not yet fully validated
 **Status**: Identified but not fixed
 **Resolution Path**: Update integration tests to use correct config field names
@@ -230,7 +230,7 @@ The following documentation files are planned but not yet created:
    - Create CHANGELOG.md
 
 3. **Fix Integration Tests**
-   - Correct config.agents → config.guardrails references
+   - Correct config.agents → config.guardloops references
    - Validate all integration tests execute successfully
    - Add additional edge case coverage
 

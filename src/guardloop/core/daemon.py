@@ -5,16 +5,13 @@ import time
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
-from pathlib import Path
-from typing import List, Optional, Dict, Any
-
-import structlog
+from typing import Any, Dict, List, Optional
 
 from guardloop.adapters import AdapterFactory, AIResponse
 from guardloop.core.adaptive_guardrails import AdaptiveGuardrailGenerator
 from guardloop.core.context_manager import ContextManager
 from guardloop.core.conversation_manager import ConversationManager
-from guardloop.core.failure_detector import FailureDetector, DetectedFailure
+from guardloop.core.failure_detector import DetectedFailure, FailureDetector
 from guardloop.core.file_executor import FileExecutor
 from guardloop.core.logger import get_logger
 from guardloop.core.parser import ParsedResponse, ResponseParser

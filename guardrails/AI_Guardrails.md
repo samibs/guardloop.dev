@@ -52,7 +52,7 @@ It combines a **one-page enforcement checklist** with **best practices and recom
 - Use AI like a junior dev → you are the senior architect.
 
 ### 2. Automate Enforcement
-- Use SpecCTRL to enforce guardrails (`bpsbs.md`, `AI_Guardrails.md`).
+- Use SpecCTRL to enforce guardloops (`bpsbs.md`, `AI_Guardrails.md`).
 - Pipelines must fail on <100% coverage or failed scans (SAST/DAST).
 - Every repo must include `/health`, `/version`, `/metrics`, and an Admin module.
 

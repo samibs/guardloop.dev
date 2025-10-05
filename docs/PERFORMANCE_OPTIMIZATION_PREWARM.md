@@ -8,7 +8,7 @@ Implemented pre-warm cache strategy to eliminate cold-start latency on daemon in
 
 ### Strategy
 
-Pre-warm cache loads frequently accessed guardrails during daemon initialization:
+Pre-warm cache loads frequently accessed guardloops during daemon initialization:
 
 **High Priority** (loaded ~80% of requests):
 - `core/always.md` - Always loaded for all tasks
@@ -22,13 +22,13 @@ Pre-warm cache loads frequently accessed guardrails during daemon initialization
 
 ### Code Changes
 
-**File**: `src/guardrail/core/daemon.py`
+**File**: `src/guardloop/core/daemon.py`
 
 Added `_prewarm_cache()` method called during initialization:
 
 ```python
 def _prewarm_cache(self) -> None:
-    """Pre-warm cache with commonly used guardrails."""
+    """Pre-warm cache with commonly used guardloops."""
     prewarm_start = time.time()
 
     # High priority files
@@ -47,7 +47,7 @@ def _prewarm_cache(self) -> None:
 
     # Load files into cache
     for filename, task_type, mode in high_priority + medium_priority:
-        self.context_manager.load_guardrails(
+        self.context_manager.load_guardloops(
             agent=None,
             mode=mode,
             prompt="",
@@ -96,7 +96,7 @@ Testing request after pre-warm:
 ## Benefits
 
 ### 1. Eliminates Cold-Start Latency
-- **Before**: First request loads guardrails from disk (~300ms)
+- **Before**: First request loads guardloops from disk (~300ms)
 - **After**: Guardrails pre-loaded, cache hit in <1ms
 - **Impact**: 99.9% faster first request
 
@@ -132,14 +132,14 @@ Testing request after pre-warm:
 ### Cache Key Format
 
 ```
-guardrails_{agent}_{mode}_{task_type}
+guardloops_{agent}_{mode}_{task_type}
 ```
 
 Examples:
-- `guardrails_None_standard_none` - Default/unknown
-- `guardrails_None_standard_authentication` - Auth tasks
-- `guardrails_None_standard_api` - API tasks
-- `guardrails_None_standard_database` - Database tasks
+- `guardloops_None_standard_none` - Default/unknown
+- `guardloops_None_standard_authentication` - Auth tasks
+- `guardloops_None_standard_api` - API tasks
+- `guardloops_None_standard_database` - Database tasks
 
 ### TTL and Invalidation
 
@@ -197,7 +197,7 @@ Track actual usage and adjust priorities:
 
 ```python
 # Analyze usage patterns
-most_used = analyze_guardrail_usage(last_7_days)
+most_used = analyze_guardloop_usage(last_7_days)
 prewarm_list = most_used[:10]  # Top 10
 ```
 

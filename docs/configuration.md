@@ -5,10 +5,10 @@ Complete configuration reference for Guardrail v2.1 with optimization settings.
 ## Configuration File Location
 
 ```
-~/.guardrail/config.yaml
+~/.guardloop/config.yaml
 ```
 
-The configuration file is created during `guardrail init` and contains all system settings.
+The configuration file is created during `guardloop init` and contains all system settings.
 
 ## Core Configuration
 
@@ -23,7 +23,7 @@ system:
 
 # Database Configuration
 database:
-  path: "~/.guardrail/data/guardrail.db"
+  path: "~/.guardloop/data/guardloop.db"
   backup_enabled: true
   backup_interval: "24h"
 
@@ -58,11 +58,11 @@ features:
   v2_1_dynamic_budgets: true       # Model-aware budgets
 
   # v2.0 Adaptive Learning
-  v2_adaptive_learning: true       # Pattern analysis & dynamic guardrails
+  v2_adaptive_learning: true       # Pattern analysis & dynamic guardloops
   v2_task_classification: true     # Code vs creative task detection
   v2_auto_save_files: true         # Auto-save safe file operations
   v2_conversation_history: true    # Multi-turn context
-  v2_dynamic_guardrails: true      # Learned rules from DB
+  v2_dynamic_guardloops: true      # Learned rules from DB
 ```
 
 ## v2.1 Optimization Settings
@@ -217,7 +217,7 @@ semantic_matcher:
 
   # Matching Parameters
   threshold: 0.3                   # Minimum similarity score (0.0-1.0)
-  top_k: 5                        # Max guardrails to return
+  top_k: 5                        # Max guardloops to return
 
   # Performance
   cache_embeddings: true          # Cache for speed (recommended)
@@ -261,7 +261,7 @@ budget_manager:
 
   # Allocation Ratios (must sum to 1.0)
   allocation_ratios:
-    core: 0.30          # 30% to core guardrails
+    core: 0.30          # 30% to core guardloops
     agents: 0.40        # 40% to agent instructions
     specialized: 0.20   # 20% to specialized rules
     learned: 0.10       # 10% to learned patterns
@@ -278,9 +278,9 @@ budget_manager:
 ### Static Guardrails
 
 ```yaml
-guardrails:
-  base_path: "~/.guardrail/guardrails"
-  agents_path: "~/.guardrail/guardrails/agents"
+guardloops:
+  base_path: "~/.guardloop/guardloops"
+  agents_path: "~/.guardloop/guardloops/agents"
 
   # Core Guardrails (always loaded)
   files:
@@ -306,7 +306,7 @@ guardrails:
 ### Dynamic Guardrails
 
 ```yaml
-dynamic_guardrails:
+dynamic_guardloops:
   # Pattern Analysis
   min_occurrences: 3              # Min failures to create pattern
   confidence_threshold: 0.7       # Min confidence to promote
@@ -317,8 +317,8 @@ dynamic_guardrails:
   deprecation_threshold: 0.3      # Confidence below which to deprecate
 
   # Enforcement
-  enforce_validated: true         # Apply validated guardrails
-  enforce_trial: false            # Don't enforce trial guardrails
+  enforce_validated: true         # Apply validated guardloops
+  enforce_trial: false            # Don't enforce trial guardloops
 ```
 
 ## File Safety
@@ -382,7 +382,7 @@ logging:
   file_level: "DEBUG"
 
   # Log Files
-  log_dir: "~/.guardrail/logs"
+  log_dir: "~/.guardloop/logs"
   max_file_size: "10MB"
   max_files: 10
 
@@ -423,7 +423,7 @@ metrics:
 ```yaml
 performance:
   # Caching
-  cache_guardrails: true
+  cache_guardloops: true
   cache_embeddings: true
   cache_ttl: 3600                 # Seconds
 
@@ -443,7 +443,7 @@ integrations:
   # Git Integration
   git:
     auto_commit: false
-    commit_message_template: "guardrail: {task_type} - {summary}"
+    commit_message_template: "guardloop: {task_type} - {summary}"
     require_tests: true
 
   # CI/CD Integration
@@ -463,7 +463,7 @@ integrations:
 ### Development Environment
 
 ```yaml
-# ~/.guardrail/config.dev.yaml
+# ~/.guardloop/config.dev.yaml
 system:
   mode: "standard"
   log_level: "DEBUG"
@@ -483,7 +483,7 @@ logging:
 ### Production Environment
 
 ```yaml
-# ~/.guardrail/config.prod.yaml
+# ~/.guardloop/config.prod.yaml
 system:
   mode: "strict"
   log_level: "WARNING"
@@ -514,7 +514,7 @@ logging:
 
 ```bash
 # Check configuration syntax
-guardrail config --validate
+guardloop config --validate
 
 # Output:
 # ✅ Configuration valid
@@ -528,13 +528,13 @@ guardrail config --validate
 
 ```bash
 # Display current configuration
-guardrail config --show
+guardloop config --show
 
 # Display specific section
-guardrail config --show budget_manager
+guardloop config --show budget_manager
 
 # Export configuration
-guardrail config --export > config-backup.yaml
+guardloop config --export > config-backup.yaml
 ```
 
 ## Migration Guide
@@ -543,7 +543,7 @@ guardrail config --export > config-backup.yaml
 
 1. **Backup existing configuration**:
 ```bash
-cp ~/.guardrail/config.yaml ~/.guardrail/config.v2.0.yaml
+cp ~/.guardloop/config.yaml ~/.guardloop/config.v2.0.yaml
 ```
 
 2. **Add v2.1 feature flags**:
@@ -575,8 +575,8 @@ pip install sentence-transformers
 
 5. **Test configuration**:
 ```bash
-guardrail config --validate
-guardrail run claude "test optimization" --dry-run
+guardloop config --validate
+guardloop run claude "test optimization" --dry-run
 ```
 
 ## Troubleshooting
@@ -588,13 +588,13 @@ guardrail run claude "test optimization" --dry-run
 **Solution**:
 ```bash
 # Check syntax
-guardrail config --validate --verbose
+guardloop config --validate --verbose
 
 # Reset to defaults
-guardrail config --reset
+guardloop config --reset
 
 # Restore from backup
-cp ~/.guardrail/config.v2.0.yaml ~/.guardrail/config.yaml
+cp ~/.guardloop/config.v2.0.yaml ~/.guardloop/config.yaml
 ```
 
 **Issue**: Feature flags not working
@@ -622,7 +622,7 @@ allocation_ratios:
 
 1. **Version Control**: Keep `config.yaml` in version control (without secrets)
 2. **Environment Variables**: Use `${VAR_NAME}` for sensitive values
-3. **Regular Validation**: Run `guardrail config --validate` after changes
+3. **Regular Validation**: Run `guardloop config --validate` after changes
 4. **Backup**: Backup before major configuration changes
 5. **Testing**: Test configuration changes in development first
 6. **Monitoring**: Enable metrics to track configuration effectiveness

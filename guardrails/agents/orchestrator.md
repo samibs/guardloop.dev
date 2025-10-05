@@ -43,7 +43,7 @@ Manages workflow from requirements → design → build → test → secure → 
 7. **Support Debug Hunter** → resolve defects.  
 8. **SecOps Engineer** → enforce security.  
 9. **SRE/Ops Engineer** → validate infra, deployment, monitoring.  
-10. **Standards Oracle** → enforce guardrails.  
+10. **Standards Oracle** → enforce guardloops.  
 11. **Merciless Evaluator** → score and approve/reject.  
 12. **Documentation Codifier** → finalize docs.  
 13. Orchestrator delivers final product.  

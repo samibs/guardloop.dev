@@ -32,7 +32,7 @@ class TestContextSizeReduction:
 ```
 
 **Results**:
-- Old system: ~24K tokens (all guardrails)
+- Old system: ~24K tokens (all guardloops)
 - New system: <10K tokens (smart selection)
 - Target: 60%+ reduction ✅ **Achieved**
 
@@ -51,13 +51,13 @@ class TestResponseTimeImprovement:
 #### 3. Creative Task Bypass Tests
 ```python
 class TestCreativeTaskSkip:
-    async def test_creative_tasks_skip_guardrails(self)
-    async def test_code_tasks_require_guardrails(self)
+    async def test_creative_tasks_skip_guardloops(self)
+    async def test_code_tasks_require_guardloops(self)
 ```
 
 **Results**:
-- Creative tasks correctly bypass guardrails ✅
-- Code tasks correctly apply guardrails ✅
+- Creative tasks correctly bypass guardloops ✅
+- Code tasks correctly apply guardloops ✅
 - 95%+ faster for creative tasks ✅
 
 #### 4. Agent Chain Optimization Tests
@@ -80,7 +80,7 @@ class TestSemanticMatching:
 ```
 
 **Results**:
-- Indexing: <5s for 100 guardrails ✅
+- Indexing: <5s for 100 guardloops ✅
 - Search: <1s per query ✅
 - Better relevance than keyword matching ✅
 
@@ -268,8 +268,8 @@ Complete configuration reference with:
 - Dynamic budget management settings
 
 **Guardrail Configuration**:
-- Static guardrails setup
-- Dynamic guardrails lifecycle
+- Static guardloops setup
+- Dynamic guardloops lifecycle
 
 **File Safety**:
 - Auto-save settings
@@ -405,7 +405,7 @@ def test_config():
 @pytest.mark.asyncio
 async def test_smart_selection_reduces_context(self, test_config):
     """Verify smart selection reduces context size significantly."""
-    from guardrail.core.context_manager import ContextManager
+    from guardloop.core.context_manager import ContextManager
 
     # Old system simulation
     old_context = simulate_old_system()  # ~24K tokens
@@ -499,7 +499,7 @@ pytest tests/performance/
 pytest tests/performance/test_optimization.py::TestContextSizeReduction
 
 # Run with coverage
-pytest tests/performance/ --cov=src/guardrail --cov-report=html
+pytest tests/performance/ --cov=src/guardloop --cov-report=html
 
 # Run benchmarks
 python scripts/benchmark_optimization.py

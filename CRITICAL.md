@@ -60,7 +60,7 @@ This is an experimental research project. Core concepts work, but there are sign
 
 **Impact**: File auto-save may fail or require confirmation more often than expected.
 
-**Workaround**: Review `~/.guardrail/logs/` if files aren't saved. Use `--no-auto-save` flag for manual control.
+**Workaround**: Review `~/.guardloop/logs/` if files aren't saved. Use `--no-auto-save` flag for manual control.
 
 ---
 
@@ -70,7 +70,7 @@ This is an experimental research project. Core concepts work, but there are sign
 
 **Impact**: Guardrail selection is less intelligent than described. May miss relevant rules.
 
-**Workaround**: Manually review which guardrails are applied. Add keywords to custom rules.
+**Workaround**: Manually review which guardloops are applied. Add keywords to custom rules.
 
 ---
 
@@ -86,7 +86,7 @@ These features are tested and reliable:
 2. ✅ **Pattern Detection & Learning**
    - SQLite logging of all interactions
    - Basic pattern analysis (>3 occurrences)
-   - Dynamic guardrail generation
+   - Dynamic guardloop generation
 
 3. ✅ **Task Classification**
    - Code vs creative detection
@@ -94,7 +94,7 @@ These features are tested and reliable:
    - Guardrail bypass for creative work
 
 4. ✅ **Pre-Warm Cache**
-   - Instant guardrail loading (0.22ms cached vs 300ms cold)
+   - Instant guardloop loading (0.22ms cached vs 300ms cold)
    - 99.9% improvement for first request
    - Minimal initialization overhead (1.74ms)
 
@@ -116,8 +116,8 @@ These features are tested and reliable:
 
 1. **Large Context Timeout** (Severity: High)
    - **Issue**: Requests with >10K token context may timeout
-   - **Trigger**: Complex prompts + many guardrails + full agent chain
-   - **Workaround**: Use `--mode standard` or reduce guardrail scope
+   - **Trigger**: Complex prompts + many guardloops + full agent chain
+   - **Workaround**: Use `--mode standard` or reduce guardloop scope
    - **Status**: Investigating optimization strategies
 
 2. **Multi-Tool Switching in Interactive Mode** (Severity: Medium)
@@ -169,7 +169,7 @@ Features mentioned in vision but not yet implemented:
 - Are comfortable with alpha-quality software
 - Can handle bugs and contribute fixes
 - Want to shape the project direction
-- Need basic Claude CLI guardrail enforcement
+- Need basic Claude CLI guardloop enforcement
 - Are researching LLM failure patterns
 
 ### ❌ No, if you:
@@ -186,7 +186,7 @@ Features mentioned in vision but not yet implemented:
 
 ### Before Opening an Issue
 
-1. **Check logs**: `~/.guardrail/logs/guardrail.log`
+1. **Check logs**: `~/.guardloop/logs/guardloop.log`
 2. **Verify Python version**: `python --version` (needs 3.10+)
 3. **Check Claude CLI**: `claude --version`
 4. **Review this file**: Your issue might be a known limitation
@@ -202,7 +202,7 @@ claude --version
 guardloop --version
 
 # Logs
-tail -50 ~/.guardrail/logs/guardrail.log
+tail -50 ~/.guardloop/logs/guardloop.log
 
 # Command that failed
 guardloop run claude "your command here"
@@ -215,7 +215,7 @@ guardloop run claude "your command here"
 - 🐛 **Found a bug?** [Open an issue](https://github.com/samibs/guardloop.dev/issues)
 - 💬 **Questions?** [Start a discussion](https://github.com/samibs/guardloop.dev/discussions)
 - 🤝 **Want to contribute?** See [CONTRIBUTING.md](CONTRIBUTING.md)
-- 📧 **Security issue?** Email security@guardrail.dev (if set up)
+- 📧 **Security issue?** Email security@guardloop.dev (if set up)
 
 ---
 

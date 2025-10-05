@@ -128,28 +128,28 @@ WARNING: Chain stopped by ruthless_tester
 
 ### Task 2.3: Add Skip Logic for Creative Tasks ✅
 
-**Objective**: Bypass guardrails for creative/content tasks to enable direct execution
+**Objective**: Bypass guardloops for creative/content tasks to enable direct execution
 
 **Implementation**:
 - Enhanced logging for bypassed creative tasks
 - Added ✨ creative task indicator in logs
-- Log task type and confidence when skipping guardrails
+- Log task type and confidence when skipping guardloops
 - Leverages existing task classifier logic
 
 **Creative Task Detection** (from TaskClassifier):
-- **Creative tasks** (score >= threshold) → `requires_guardrails = False`
-- **Content tasks** (score >= 0.6) → `requires_guardrails = False`
-- **Code tasks** → `requires_guardrails = True`
-- **Mixed/Unknown** → `requires_guardrails = True` (safe default)
+- **Creative tasks** (score >= threshold) → `requires_guardloops = False`
+- **Content tasks** (score >= 0.6) → `requires_guardloops = False`
+- **Code tasks** → `requires_guardloops = True`
+- **Mixed/Unknown** → `requires_guardloops = True` (safe default)
 
 **Daemon Flow**:
 ```python
 # Step 0: Classify task
 task_classification = self.task_classifier.classify(request.prompt)
-guardrails_required = task_classification.requires_guardrails
+guardloops_required = task_classification.requires_guardloops
 
 # Step 1: Build context (or skip)
-if guardrails_required:
+if guardloops_required:
     context = self.context_manager.build_context(
         prompt=context_prompt,
         agent=request.agent,
@@ -158,10 +158,10 @@ if guardrails_required:
         db_session=db_session,
     )
 else:
-    # Skip guardrails for creative/content tasks
+    # Skip guardloops for creative/content tasks
     context = context_prompt
     logger.info(
-        "✨ Creative task detected - bypassing guardrails",
+        "✨ Creative task detected - bypassing guardloops",
         task_type=task_classification.task_type,
         confidence=task_classification.confidence,
     )
@@ -179,22 +179,22 @@ else:
 INFO: Task classified
       task_type='creative'
       confidence=0.87
-      guardrails_required=False
+      guardloops_required=False
 
-INFO: ✨ Creative task detected - bypassing guardrails for direct execution
+INFO: ✨ Creative task detected - bypassing guardloops for direct execution
       task_type='creative'
       confidence=0.87
 
 INFO: Context built
       context_length=234
-      guardrails_applied=False
+      guardloops_applied=False
 ```
 
 **Benefits**:
 - **Direct execution** - No validation overhead for creative tasks
 - **Full creative freedom** - No constraints on content generation
-- **Clear logging** - Shows when and why guardrails are bypassed
-- **Safe defaults** - Ambiguous tasks still get guardrails
+- **Clear logging** - Shows when and why guardloops are bypassed
+- **Safe defaults** - Ambiguous tasks still get guardloops
 - **Preserves safety** - Code tasks always validated
 
 ---
@@ -226,7 +226,7 @@ INFO: Context built
 4. **User Control**: Override with single agent for focused work
 5. **Predictable Execution**: No more dynamic routing uncertainty
 6. **Context Accumulation**: Violations propagate through chain
-7. **Creative Freedom**: Bypass guardrails for content/creative tasks
+7. **Creative Freedom**: Bypass guardloops for content/creative tasks
 
 ### Quality Preservation
 
@@ -242,9 +242,9 @@ INFO: Context built
 ## Files Created/Modified
 
 ### Core Implementation
-- ✅ `src/guardrail/agents/chain_optimizer.py`: Chain optimization logic (310 lines)
-- ✅ `src/guardrail/agents/orchestrator.py`: Smart routing integration (updated orchestrate method)
-- ✅ `src/guardrail/core/daemon.py`: Creative task skip logic (enhanced logging)
+- ✅ `src/guardloop/agents/chain_optimizer.py`: Chain optimization logic (310 lines)
+- ✅ `src/guardloop/agents/orchestrator.py`: Smart routing integration (updated orchestrate method)
+- ✅ `src/guardloop/core/daemon.py`: Creative task skip logic (enhanced logging)
 
 ### Tests
 - ✅ `tests/test_chain_optimizer.py`: Comprehensive unit tests (223 lines, 50+ tests)

@@ -14,14 +14,14 @@
 
 **Core Adaptive Learning**:
 - [x] Pattern detection from LLM failures
-- [x] Dynamic guardrail generation
+- [x] Dynamic guardloop generation
 - [x] SQLite-based failure logging
 - [x] Guardrail lifecycle (trial → validated → enforced)
 
 **Task Intelligence**:
 - [x] Task classification (code vs creative)
 - [x] Confidence scoring
-- [x] Smart guardrail bypass for creative work
+- [x] Smart guardloop bypass for creative work
 
 **Claude Integration**:
 - [x] Full Claude CLI adapter
@@ -119,7 +119,7 @@
 #### Semantic Guardrail Matching
 - [ ] Implement embedding-based matching
   - Choose embedding model (sentence-transformers)
-  - Build guardrail index
+  - Build guardloop index
   - Similarity search implementation
 - [ ] Replace keyword matching
 - [ ] Performance optimization
@@ -163,14 +163,14 @@
 
 #### IDE Integration
 - [ ] VS Code extension
-  - Real-time guardrail suggestions
+  - Real-time guardloop suggestions
   - Inline violation warnings
   - Interactive mode in editor
 - [ ] JetBrains plugin (IntelliJ, PyCharm, etc.)
 
 #### Team Collaboration
 - [ ] Multi-user support
-- [ ] Shared guardrail libraries
+- [ ] Shared guardloop libraries
 - [ ] Team analytics dashboard
 - [ ] Role-based access control
 
@@ -194,9 +194,9 @@
 
 #### Advanced Learning
 - [ ] Cross-team pattern sharing
-- [ ] Industry-specific guardrail libraries
+- [ ] Industry-specific guardloop libraries
 - [ ] ML-powered failure prediction
-- [ ] Automated guardrail tuning
+- [ ] Automated guardloop tuning
 
 ---
 
@@ -205,10 +205,10 @@
 **Long-term Ideas** (not committed, exploring feasibility):
 
 ### AI-Native Features
-- [ ] LLM-powered guardrail generation from docs
-- [ ] Natural language guardrail definition
-- [ ] Automatic test generation from guardrails
-- [ ] Self-healing guardrails (adapt when broken)
+- [ ] LLM-powered guardloop generation from docs
+- [ ] Natural language guardloop definition
+- [ ] Automatic test generation from guardloops
+- [ ] Self-healing guardloops (adapt when broken)
 
 ### Ecosystem Integration
 - [ ] CI/CD pipeline integration (GitHub Actions, GitLab CI)
@@ -226,7 +226,7 @@
 - [ ] Federated learning across organizations
 - [ ] Privacy-preserving pattern sharing
 - [ ] Guardrail effectiveness prediction
-- [ ] Multi-modal guardrails (code + design + docs)
+- [ ] Multi-modal guardloops (code + design + docs)
 
 ---
 

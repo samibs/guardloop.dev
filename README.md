@@ -6,7 +6,7 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Contributors Welcome](https://img.shields.io/badge/contributors-welcome-brightgreen)
 
-> An experimental system that learns from LLM failures and generates adaptive guardrails.
+> An experimental system that learns from LLM failures and generates adaptive guardloops.
 
 ⚠️ **This is a research project and proof-of-concept.** Core ideas are validated, production deployment requires hardening.
 
@@ -21,7 +21,7 @@
 **GuardLoop's Approach**:
 1. 📝 **Capture** every AI interaction and outcome
 2. 🔍 **Analyze** patterns in failures (missing tests, security issues, etc.)
-3. 🧠 **Learn** and generate dynamic guardrails
+3. 🧠 **Learn** and generate dynamic guardloops
 4. 🛡️ **Prevent** repeated mistakes automatically
 
 ---
@@ -30,10 +30,10 @@
 
 **Core Features (Validated & Working)**:
 - ✅ AI interaction logging and pattern detection
-- ✅ Dynamic guardrail generation from failures
-- ✅ Task classification (skip guardrails for creative work)
+- ✅ Dynamic guardloop generation from failures
+- ✅ Task classification (skip guardloops for creative work)
 - ✅ Basic enforcement with Claude CLI
-- ✅ Pre-warm cache for instant guardrail loading (99.9% faster first request)
+- ✅ Pre-warm cache for instant guardloop loading (99.9% faster first request)
 - ✅ File safety validation and auto-save
 - ✅ Conversation history across sessions
 
@@ -50,7 +50,7 @@
 **Features Under Development**:
 - 🚧 Full 13-agent orchestration (10 agents are basic stubs)
 - 🚧 Multi-tool support (Gemini/Codex adapters incomplete)
-- 🚧 Semantic guardrail matching (embeddings not yet implemented)
+- 🚧 Semantic guardloop matching (embeddings not yet implemented)
 - 🚧 Advanced compliance validation (GDPR/ISO rules exist but not legally validated)
 - 🚧 Performance metrics (some claims are projections, not benchmarked)
 
@@ -85,7 +85,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 # Install dependencies
 pip install -e .
 
-# Initialize guardrail
+# Initialize guardloop
 guardloop init
 
 # Verify installation
@@ -98,8 +98,8 @@ guardloop --version
 # Test with a simple command
 guardloop run claude "create a hello world function"
 
-# Expected: Should work with basic guardrails
-# If it fails: Check logs at ~/.guardrail/logs/
+# Expected: Should work with basic guardloops
+# If it fails: Check logs at ~/.guardloop/logs/
 ```
 
 ⚠️ **Troubleshooting**: See [CRITICAL.md](CRITICAL.md) for common issues and workarounds.
@@ -128,15 +128,15 @@ $ guardloop analyze --days 7
 
 ### 2. Task Classification (Working)
 
-Intelligently skips guardrails for non-code tasks:
+Intelligently skips guardloops for non-code tasks:
 
 ```bash
-# Code task - guardrails applied ✅
+# Code task - guardloops applied ✅
 >>> implement user authentication
 📋 Classified: code (confidence: 0.95)
 🛡️ Guardrails: Applied
 
-# Creative task - guardrails skipped ⏭️
+# Creative task - guardloops skipped ⏭️
 >>> write a product launch blog post
 📋 Classified: creative (confidence: 0.92)
 🛡️ Guardrails: Skipped (not needed)
@@ -144,7 +144,7 @@ Intelligently skips guardrails for non-code tasks:
 
 ### 3. Pre-Warm Cache (Working)
 
-Instant guardrail loading eliminates cold-start latency:
+Instant guardloop loading eliminates cold-start latency:
 
 ```bash
 # Performance Results:
@@ -235,7 +235,7 @@ pip install -e ".[dev]"
 pytest
 
 # Run with coverage
-pytest --cov=src/guardrail --cov-report=html
+pytest --cov=src/guardloop --cov-report=html
 
 # Test specific components
 pytest tests/core/test_task_classifier.py
@@ -246,15 +246,15 @@ pytest tests/core/test_pattern_analyzer.py
 
 ```
 guardloop.dev/
-├── src/guardrail/
+├── src/guardloop/
 │   ├── core/           # Core orchestration engine
 │   ├── adapters/       # LLM tool adapters (Claude, Gemini, etc.)
 │   └── utils/          # Shared utilities
 ├── tests/              # Test suite (223 tests)
 ├── docs/               # Documentation
-└── ~/.guardrail/       # User configuration & data
+└── ~/.guardloop/       # User configuration & data
     ├── config.yaml
-    ├── guardrails/     # Static + dynamic rules
+    ├── guardloops/     # Static + dynamic rules
     └── data/           # SQLite database
 ```
 

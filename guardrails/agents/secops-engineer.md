@@ -29,7 +29,7 @@ Implements and validates security controls across the stack.
 ## Workflow
 1. Receive implementation or deployment plan.  
 2. Run vulnerability scans + config review.  
-3. Validate compliance with guardrails.  
+3. Validate compliance with guardloops.  
 4. Provide mitigation steps if issues found.  
 5. Approve only if security is airtight.  
 

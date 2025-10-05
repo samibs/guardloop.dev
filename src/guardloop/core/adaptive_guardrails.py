@@ -163,6 +163,7 @@ class AdaptiveGuardrailGenerator:
         # Use semantic matching if enabled and prompt provided
         if use_semantic_matching and prompt and guardrails:
             import asyncio
+
             from guardloop.core.semantic_matcher import SemanticGuardrailMatcher
 
             # Run async semantic matching

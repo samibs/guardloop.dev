@@ -9,23 +9,23 @@ Phase 4 implementation is **100% complete** with all tests passing (143/143).
 ### Task 4.1: CLI Framework Setup ✅
 
 **Files Created**:
-- `src/guardrail/cli/commands.py` (550 lines) - Main CLI commands
-- `src/guardrail/main.py` - Alternative entry point
-- `src/guardrail/__main__.py` - Package entry point
+- `src/guardloop/cli/commands.py` (550 lines) - Main CLI commands
+- `src/guardloop/main.py` - Alternative entry point
+- `src/guardloop/__main__.py` - Package entry point
 
 **Framework**: Click 8.1.0+ with Rich for beautiful terminal output
 
 **Entry Points** (in `pyproject.toml`):
 ```toml
 [project.scripts]
-guardrail = "guardrail.__main__:cli"
-gr = "guardrail.__main__:cli"  # Short alias
+guardloop = "guardloop.__main__:cli"
+gr = "guardloop.__main__:cli"  # Short alias
 ```
 
 ### Implemented Commands
 
-#### 1. **`guardrail run <tool> <prompt>`** ✅
-Execute AI tool with guardrails
+#### 1. **`guardloop run <tool> <prompt>`** ✅
+Execute AI tool with guardloops
 
 **Options**:
 - `--agent, -a` - Specify agent (architect/coder/tester/etc)
@@ -41,24 +41,24 @@ Execute AI tool with guardrails
 
 **Example**:
 ```bash
-guardrail run claude "Create a login form" --agent coder --mode strict --verbose
+guardloop run claude "Create a login form" --agent coder --mode strict --verbose
 ```
 
-#### 2. **`guardrail init`** ✅
-Initialize guardrail configuration
+#### 2. **`guardloop init`** ✅
+Initialize guardloop configuration
 
 **Actions**:
-- Creates `~/.guardrail/` directory structure
+- Creates `~/.guardloop/` directory structure
 - Initializes configuration file
 - Sets up database schema
-- Creates guardrails and logs directories
+- Creates guardloops and logs directories
 
 **Output**:
 - Progress indicators
 - File paths displayed
 - Next steps guidance
 
-#### 3. **`guardrail analyze`** ✅
+#### 3. **`guardloop analyze`** ✅
 Analyze failures and violations
 
 **Options**:
@@ -71,8 +71,8 @@ Analyze failures and violations
 - Database size
 - Trends analysis (placeholder for future enhancement)
 
-#### 4. **`guardrail status`** ✅
-Show guardrail system status
+#### 4. **`guardloop status`** ✅
+Show guardloop system status
 
 **Display**:
 - Configuration tree with features
@@ -81,7 +81,7 @@ Show guardrail system status
 - Database metrics
 - System operational status
 
-#### 5. **`guardrail export`** ✅
+#### 5. **`guardloop export`** ✅
 Export failures to markdown
 
 **Options**:
@@ -94,8 +94,8 @@ Export failures to markdown
 - Creates directory if needed
 - Displays output path
 
-#### 6. **`guardrail daemon`** ✅
-Start guardrail daemon with background workers
+#### 6. **`guardloop daemon`** ✅
+Start guardloop daemon with background workers
 
 **Options**:
 - `--background, -b` - Run in background (placeholder)
@@ -106,7 +106,7 @@ Start guardrail daemon with background workers
 - Graceful shutdown handling (SIGINT, SIGTERM)
 - Worker count display
 
-#### 7. **`guardrail config`** ✅
+#### 7. **`guardloop config`** ✅
 Show current configuration
 
 **Display**:
@@ -114,8 +114,8 @@ Show current configuration
 - Config file path
 - Syntax-highlighted output
 
-#### 8. **`guardrail interactive`** ✅
-Interactive guardrail session (REPL mode)
+#### 8. **`guardloop interactive`** ✅
+Interactive guardloop session (REPL mode)
 
 **Features**:
 - Tool selection menu (Claude/Gemini/Codex)
@@ -135,17 +135,17 @@ Interactive guardrail session (REPL mode)
 ### Task 4.2: Shell Wrapper Scripts ✅
 
 **Files Created**:
-- `scripts/guardrail-wrapper.sh` - Shell wrapper for AI tools
+- `scripts/guardloop-wrapper.sh` - Shell wrapper for AI tools
 - `scripts/install.sh` - Installation script (already existed, verified)
 - `scripts/uninstall.sh` - Uninstallation script
 
-#### Shell Wrapper (`guardrail-wrapper.sh`)
+#### Shell Wrapper (`guardloop-wrapper.sh`)
 
-**Purpose**: Transparently wrap AI CLI tools with guardrails
+**Purpose**: Transparently wrap AI CLI tools with guardloops
 
 **Usage**:
 ```bash
-guardrail-wrapper <tool> <prompt>
+guardloop-wrapper <tool> <prompt>
 ```
 
 **Features**:
@@ -162,7 +162,7 @@ guardrail-wrapper <tool> <prompt>
 ```bash
 export GUARDRAIL_MODE=strict
 export GUARDRAIL_AGENT=architect
-guardrail-wrapper claude "Design user authentication service"
+guardloop-wrapper claude "Design user authentication service"
 ```
 
 #### Installation Script (`scripts/install.sh`)
@@ -211,12 +211,12 @@ export GUARDRAIL_CONFIG_PATH="/custom/path/config.yaml"
 **Shell Aliases** (added by install.sh):
 ```bash
 # Tool wrappers
-alias claude='guardrail-wrapper claude'
-alias gemini='guardrail-wrapper gemini'
-alias codex='guardrail-wrapper codex'
+alias claude='guardloop-wrapper claude'
+alias gemini='guardloop-wrapper gemini'
+alias codex='guardloop-wrapper codex'
 
 # Command shortcuts
-alias gr='guardrail'
+alias gr='guardloop'
 alias gr-strict='GUARDRAIL_MODE=strict'
 alias gr-verbose='GUARDRAIL_VERBOSE=true'
 
@@ -363,25 +363,25 @@ signal.signal(signal.SIGTERM, signal_handler)
 
 ```bash
 # Initialize
-guardrail init
+guardloop init
 
 # Run with defaults
-guardrail run claude "Create a user model"
+guardloop run claude "Create a user model"
 
 # Run with options
-guardrail run gemini "Design API" --agent architect --mode strict -v
+guardloop run gemini "Design API" --agent architect --mode strict -v
 
 # Check status
-guardrail status
+guardloop status
 
 # Analyze failures
-guardrail analyze --days 30 --tool claude
+guardloop analyze --days 30 --tool claude
 
 # Export report
-guardrail export -o failures.md -l 200
+guardloop export -o failures.md -l 200
 
 # Interactive mode
-guardrail interactive
+guardloop interactive
 ```
 
 ### Using Shell Wrappers
@@ -403,17 +403,17 @@ claude "Design microservices architecture"
 
 ```bash
 # Start daemon
-guardrail daemon
+guardloop daemon
 
 # Monitor with analysis
-guardrail analyze --days 1 --tool claude
+guardloop analyze --days 1 --tool claude
 
 # Export and review
-guardrail export -o daily_report.md
+guardloop export -o daily_report.md
 cat daily_report.md
 
 # Configuration check
-guardrail config | grep -A 5 "tools:"
+guardloop config | grep -A 5 "tools:"
 ```
 
 ## Installation Workflow
@@ -422,21 +422,21 @@ guardrail config | grep -A 5 "tools:"
 
 ```bash
 # Clone repository
-git clone https://github.com/guardrail-dev/guardrail.git
-cd guardrail
+git clone https://github.com/guardloop-dev/guardloop.git
+cd guardloop
 
 # Run installation
 bash scripts/install.sh
 
 # Activate environment
-source ~/.guardrail/venv/bin/activate
+source ~/.guardloop/venv/bin/activate
 
 # Reload shell
 source ~/.bashrc  # or ~/.zshrc
 
 # Test
-guardrail --version
-guardrail status
+guardloop --version
+guardloop status
 ```
 
 ### Uninstall Steps

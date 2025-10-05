@@ -37,7 +37,7 @@ It ensures consistency, professionalism, and compliance across code, AI/LLM usag
 2. Run **log_ai_failures.py** to parse session logs and update `ai_failures.sqlite` + `AI_Failure_Modes.md`.  
 3. Run **analyze_failures.py** for quick reports and auto-refresh of Markdown logs.  
 4. Use these files as **non-negotiable standards** for all repos.  
-5. Update guardrails after retrospectives and audits.
+5. Update guardloops after retrospectives and audits.
 
 ---
 

@@ -217,7 +217,7 @@
 ## Non-Critical Warnings (7)
 
 **Pydantic V1 → V2 Migration Warnings**:
-- `src/guardrail/utils/config.py` uses `@validator` (deprecated)
+- `src/guardloop/utils/config.py` uses `@validator` (deprecated)
 - **Impact**: None - code functions correctly
 - **Fix Required**: Future migration to `@field_validator`
 - **Priority**: Low (Pydantic v2 backward compatible)

@@ -1,6 +1,7 @@
 """Semantic similarity for guardrail matching using embeddings."""
 
-from typing import List, Tuple, Optional
+from typing import List, Tuple
+
 import numpy as np
 import structlog
 
