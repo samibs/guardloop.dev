@@ -474,7 +474,14 @@ def interactive():
                 if not prompt.strip():
                     continue
 
-                # v2: Execute request with conversation history
+                # v2: Execute request with conversation history and streaming
+
+                # Stream callback to display output in real-time
+                async def stream_output(line: str):
+                    console.print(line, end="", highlight=False)
+
+                console.print()  # New line before streaming
+
                 request = AIRequest(
                     tool=tool,
                     prompt=prompt,
@@ -482,21 +489,14 @@ def interactive():
                     mode=mode,
                     conversation_id=conversation_id,
                     project_root=project_root,
+                    stream_callback=stream_output,
                 )
 
-                with Progress(
-                    SpinnerColumn(),
-                    TextColumn("[progress.description]{task.description}"),
-                    console=console,
-                ) as progress:
-                    progress.add_task("[cyan]Processing...", total=None)
-                    result = await daemon.process_request(request)
+                result = await daemon.process_request(request)
 
-                # Display detailed result
+                # Display status after streaming
                 status = "✅" if result.approved else "❌"
-
-                # Main response
-                console.print(f"\n{status} [bold]{result.raw_output}[/bold]\n")
+                console.print(f"\n{status} [dim]Request processed[/dim]\n")
 
                 # Show code blocks if any
                 if result.parsed and result.parsed.code_blocks:

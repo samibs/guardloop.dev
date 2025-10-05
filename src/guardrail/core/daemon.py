@@ -44,6 +44,7 @@ class AIRequest:
     session_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     conversation_id: Optional[str] = None  # v2: For interactive sessions
     project_root: Optional[str] = None  # v2: For file execution
+    stream_callback: Optional[Any] = None  # v2: For real-time output streaming
 
 
 @dataclass
@@ -189,9 +190,12 @@ class GuardrailDaemon:
                 guardrails_applied=guardrails_required,
             )
 
-            # 2. Execute AI CLI
+            # 2. Execute AI CLI with optional streaming
             adapter = self.get_adapter(request.tool)
-            ai_response: AIResponse = await adapter.execute(context)
+            ai_response: AIResponse = await adapter.execute(
+                context,
+                stream_callback=request.stream_callback
+            )
 
             if ai_response.error:
                 # Handle execution error

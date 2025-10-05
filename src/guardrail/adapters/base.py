@@ -44,12 +44,13 @@ class BaseAdapter(ABC):
         )
 
     @abstractmethod
-    async def execute(self, prompt: str, timeout: Optional[int] = None) -> AIResponse:
+    async def execute(self, prompt: str, timeout: Optional[int] = None, stream_callback=None) -> AIResponse:
         """Execute the AI tool with the given prompt
 
         Args:
             prompt: Enhanced prompt to send to AI
             timeout: Optional timeout override
+            stream_callback: Optional async callback for real-time output streaming
 
         Returns:
             AIResponse with execution results
@@ -83,13 +84,14 @@ class BaseAdapter(ABC):
         return shutil.which(self.cli_path) is not None
 
     async def _execute_with_retry(
-        self, prompt: str, timeout: Optional[int] = None
+        self, prompt: str, timeout: Optional[int] = None, stream_callback=None
     ) -> AIResponse:
         """Execute command with retry logic
 
         Args:
             prompt: Prompt to execute
             timeout: Optional timeout
+            stream_callback: Optional async callback for streaming
 
         Returns:
             AIResponse
@@ -106,7 +108,7 @@ class BaseAdapter(ABC):
                     timeout=timeout,
                 )
 
-                response = await self._execute_subprocess(prompt, timeout)
+                response = await self._execute_subprocess(prompt, timeout, stream_callback)
 
                 if response.exit_code == 0:
                     logger.info(
@@ -160,12 +162,13 @@ class BaseAdapter(ABC):
             raw_output="", execution_time_ms=0, error=last_error, exit_code=1, stdout="", stderr=""
         )
 
-    async def _execute_subprocess(self, prompt: str, timeout: int) -> AIResponse:
-        """Execute subprocess and capture output
+    async def _execute_subprocess(self, prompt: str, timeout: int, stream_callback=None) -> AIResponse:
+        """Execute subprocess and capture output with optional streaming
 
         Args:
             prompt: Prompt to execute
             timeout: Timeout in seconds
+            stream_callback: Optional callback for real-time output streaming
 
         Returns:
             AIResponse
@@ -184,15 +187,45 @@ class BaseAdapter(ABC):
         )
 
         try:
-            # Wait for completion with timeout
-            stdout, stderr = await asyncio.wait_for(
-                process.communicate(), timeout=timeout
-            )
+            stdout_lines = []
+            stderr_lines = []
+
+            # Stream output if callback provided
+            if stream_callback:
+                async def read_stream(stream, is_stderr=False):
+                    while True:
+                        line = await stream.readline()
+                        if not line:
+                            break
+                        decoded = line.decode("utf-8", errors="replace")
+                        if is_stderr:
+                            stderr_lines.append(decoded)
+                        else:
+                            stdout_lines.append(decoded)
+                            # Call callback with real-time output
+                            await stream_callback(decoded)
+
+                # Read both streams concurrently
+                await asyncio.wait_for(
+                    asyncio.gather(
+                        read_stream(process.stdout),
+                        read_stream(process.stderr, is_stderr=True)
+                    ),
+                    timeout=timeout
+                )
+                await process.wait()
+            else:
+                # Original non-streaming behavior
+                stdout, stderr = await asyncio.wait_for(
+                    process.communicate(), timeout=timeout
+                )
+                stdout_lines = [stdout.decode("utf-8", errors="replace")]
+                stderr_lines = [stderr.decode("utf-8", errors="replace")]
 
             execution_time_ms = int((time.time() - start_time) * 1000)
 
-            stdout_str = stdout.decode("utf-8", errors="replace").strip()
-            stderr_str = stderr.decode("utf-8", errors="replace").strip()
+            stdout_str = "".join(stdout_lines).strip()
+            stderr_str = "".join(stderr_lines).strip()
 
             return AIResponse(
                 raw_output=stdout_str,

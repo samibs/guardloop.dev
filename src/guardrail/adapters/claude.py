@@ -17,12 +17,13 @@ class ClaudeAdapter(BaseAdapter):
         super().__init__(cli_path, timeout)
         self.tool_name = "Claude"
 
-    async def execute(self, prompt: str, timeout: Optional[int] = None) -> AIResponse:
+    async def execute(self, prompt: str, timeout: Optional[int] = None, stream_callback=None) -> AIResponse:
         """Execute Claude with the given prompt
 
         Args:
             prompt: Enhanced prompt to send to Claude
             timeout: Optional timeout override
+            stream_callback: Optional async callback for real-time output streaming
 
         Returns:
             AIResponse with Claude's output
@@ -33,7 +34,7 @@ class ClaudeAdapter(BaseAdapter):
             timeout=timeout or self.timeout,
         )
 
-        return await self._execute_with_retry(prompt, timeout)
+        return await self._execute_with_retry(prompt, timeout, stream_callback)
 
     def validate_installation(self) -> bool:
         """Validate that Claude CLI is installed
