@@ -56,17 +56,13 @@ class TestGuardrailSelection:
         assert "core/always.md" in selected
 
     def test_task_specific_selection_auth(self, selector):
-        selected = selector.select_guardrails(
-            task_type="authentication", prompt="Implement MFA"
-        )
+        selected = selector.select_guardrails(task_type="authentication", prompt="Implement MFA")
         assert "core/always.md" in selected
         assert "core/security_baseline.md" in selected
         assert "specialized/auth_security.md" in selected
 
     def test_task_specific_selection_database(self, selector):
-        selected = selector.select_guardrails(
-            task_type="database", prompt="Design schema"
-        )
+        selected = selector.select_guardrails(task_type="database", prompt="Design schema")
         assert "core/always.md" in selected
         assert "specialized/database_design.md" in selected
 
@@ -88,9 +84,7 @@ class TestGuardrailSelection:
         assert selected == ["core/always.md"]
 
     def test_strict_mode_includes_all_core(self, selector):
-        selected = selector.select_guardrails(
-            prompt="Write code", mode="strict", token_budget=2000
-        )
+        selected = selector.select_guardrails(prompt="Write code", mode="strict", token_budget=2000)
 
         # Should include all core files in strict mode
         assert "core/always.md" in selected
@@ -164,9 +158,7 @@ class TestEdgeCases:
         assert "core/always.md" in selected
 
     def test_invalid_task_type(self, selector):
-        selected = selector.select_guardrails(
-            task_type="invalid_type_xyz", prompt="Do something"
-        )
+        selected = selector.select_guardrails(task_type="invalid_type_xyz", prompt="Do something")
         # Should fall back to keyword matching
         assert "core/always.md" in selected
 

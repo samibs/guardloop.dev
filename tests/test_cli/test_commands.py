@@ -85,9 +85,7 @@ class TestRunCommand:
 
     def test_run_with_agent(self, runner, mock_config, mock_daemon):
         """Test run command with agent"""
-        result = runner.invoke(
-            cli, ["run", "claude", "Test prompt", "--agent", "architect"]
-        )
+        result = runner.invoke(cli, ["run", "claude", "Test prompt", "--agent", "architect"])
         assert result.exit_code == 0
         # Verify agent was passed
         call_args = mock_daemon.process_request.call_args[0][0]
@@ -95,9 +93,7 @@ class TestRunCommand:
 
     def test_run_with_strict_mode(self, runner, mock_config, mock_daemon):
         """Test run command with strict mode"""
-        result = runner.invoke(
-            cli, ["run", "claude", "Test prompt", "--mode", "strict"]
-        )
+        result = runner.invoke(cli, ["run", "claude", "Test prompt", "--mode", "strict"])
         assert result.exit_code == 0
         # Verify mode was passed
         call_args = mock_daemon.process_request.call_args[0][0]

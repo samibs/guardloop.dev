@@ -35,7 +35,7 @@ console.log("Hello");
         assert blocks[0].language == "python"
         assert 'print("Hello World")' in blocks[0].content
         assert blocks[1].language == "javascript"
-        assert 'console.log' in blocks[1].content
+        assert "console.log" in blocks[1].content
 
     def test_extract_file_paths(self, parser):
         """Test file path extraction"""

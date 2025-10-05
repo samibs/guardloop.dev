@@ -138,13 +138,15 @@ class TestResponseTimeImprovement:
 
         # Calculate improvement
         improvement_simple = ((old_time_estimate - simple_time) / old_time_estimate) * 100
-        improvement_medium = (
-            (old_time_estimate - medium_time) / old_time_estimate
-        ) * 100
+        improvement_medium = ((old_time_estimate - medium_time) / old_time_estimate) * 100
 
         print(f"\nExecution time improvements:")
-        print(f"Simple task: {improvement_simple:.1f}% faster ({simple_time}s vs {old_time_estimate}s)")
-        print(f"Medium task: {improvement_medium:.1f}% faster ({medium_time}s vs {old_time_estimate}s)")
+        print(
+            f"Simple task: {improvement_simple:.1f}% faster ({simple_time}s vs {old_time_estimate}s)"
+        )
+        print(
+            f"Medium task: {improvement_medium:.1f}% faster ({medium_time}s vs {old_time_estimate}s)"
+        )
 
         assert improvement_simple >= 75, f"Simple tasks should be 75%+ faster"
         assert improvement_medium >= 50, f"Medium tasks should be 50%+ faster"
@@ -206,9 +208,7 @@ class TestCreativeTaskSkip:
                 classification.requires_guardrails is False
             ), f"Creative task requires guardrails: {prompt}"
 
-            print(
-                f"\n✓ '{prompt[:40]}...' → {classification.task_type} (skip guardrails)"
-            )
+            print(f"\n✓ '{prompt[:40]}...' → {classification.task_type} (skip guardrails)")
 
     @pytest.mark.asyncio
     async def test_code_tasks_require_guardrails(self):
@@ -232,9 +232,7 @@ class TestCreativeTaskSkip:
                 classification.requires_guardrails is True
             ), f"Code task doesn't require guardrails: {prompt}"
 
-            print(
-                f"\n✓ '{prompt[:40]}...' → {classification.task_type} (apply guardrails)"
-            )
+            print(f"\n✓ '{prompt[:40]}...' → {classification.task_type} (apply guardrails)")
 
 
 class TestAgentChainOptimization:
@@ -252,12 +250,8 @@ class TestAgentChainOptimization:
             chain = optimizer.select_chain(task, "standard")
             complexity = optimizer.get_complexity(task)
 
-            assert (
-                len(chain) <= 2
-            ), f"{task} uses too many agents: {len(chain)} (chain: {chain})"
-            assert (
-                complexity.value == "simple"
-            ), f"{task} complexity not simple: {complexity.value}"
+            assert len(chain) <= 2, f"{task} uses too many agents: {len(chain)} (chain: {chain})"
+            assert complexity.value == "simple", f"{task} complexity not simple: {complexity.value}"
 
             print(f"\n✓ {task}: {len(chain)} agents → {chain}")
 
@@ -273,12 +267,8 @@ class TestAgentChainOptimization:
             chain = optimizer.select_chain(task, "standard")
             complexity = optimizer.get_complexity(task)
 
-            assert (
-                2 < len(chain) <= 5
-            ), f"{task} chain length wrong: {len(chain)} (chain: {chain})"
-            assert (
-                complexity.value == "medium"
-            ), f"{task} complexity not medium: {complexity.value}"
+            assert 2 < len(chain) <= 5, f"{task} chain length wrong: {len(chain)} (chain: {chain})"
+            assert complexity.value == "medium", f"{task} complexity not medium: {complexity.value}"
 
             print(f"\n✓ {task}: {len(chain)} agents → {chain}")
 
@@ -298,9 +288,7 @@ class TestAgentChainOptimization:
             assert (
                 len(standard_chain) >= 5
             ), f"{task} standard chain too short: {len(standard_chain)}"
-            assert (
-                len(strict_chain) >= len(standard_chain)
-            ), f"{task} strict chain not longer"
+            assert len(strict_chain) >= len(standard_chain), f"{task} strict chain not longer"
             assert (
                 complexity.value == "critical"
             ), f"{task} complexity not critical: {complexity.value}"
@@ -309,11 +297,11 @@ class TestAgentChainOptimization:
             assert (
                 "secops_engineer" in strict_chain or "secops" in strict_chain
             ), f"{task} strict mode missing security"
-            assert (
-                "standards_oracle" in strict_chain
-            ), f"{task} strict mode missing standards"
+            assert "standards_oracle" in strict_chain, f"{task} strict mode missing standards"
 
-            print(f"\n✓ {task}: {len(standard_chain)} agents (standard), {len(strict_chain)} agents (strict)")
+            print(
+                f"\n✓ {task}: {len(standard_chain)} agents (standard), {len(strict_chain)} agents (strict)"
+            )
 
 
 class TestSemanticMatching:
@@ -385,9 +373,7 @@ class TestBudgetAllocation:
             assert (
                 allocation["agents"] > allocation["specialized"]
             ), "Agents should get more than specialized"
-            assert (
-                allocation["core"] > allocation["learned"]
-            ), "Core should get more than learned"
+            assert allocation["core"] > allocation["learned"], "Core should get more than learned"
 
             print(f"\n✓ Budget {total_budget:,}: {allocation}")
 
@@ -445,9 +431,7 @@ class TestRegressionSuite:
         tokens = count_tokens(context)
 
         # Regression threshold: 5K tokens
-        assert (
-            tokens < 5000
-        ), f"Context size regression: {tokens} tokens (should be <5K)"
+        assert tokens < 5000, f"Context size regression: {tokens} tokens (should be <5K)"
 
         print(f"\n✓ Context size: {tokens:,} tokens (target: <5K)")
 

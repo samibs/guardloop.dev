@@ -136,9 +136,7 @@ class TestAdapterFactory:
 
     def test_get_adapter_with_custom_path(self):
         """Test getting adapter with custom CLI path"""
-        adapter = AdapterFactory.get_adapter(
-            "claude", cli_path="/custom/path/claude", timeout=60
-        )
+        adapter = AdapterFactory.get_adapter("claude", cli_path="/custom/path/claude", timeout=60)
 
         assert adapter.cli_path == "/custom/path/claude"
         assert adapter.timeout == 60
@@ -196,6 +194,7 @@ class TestBaseAdapter:
         # Mock a long-running process that will timeout
         async def mock_long_process(prompt, timeout):
             import asyncio
+
             # Simulate timeout by raising TimeoutError
             raise asyncio.TimeoutError("Simulated timeout")
 
@@ -254,9 +253,7 @@ class TestAsyncAdapterOperations:
             )
 
         # Execute concurrently
-        results = await asyncio.gather(
-            *[adapter.execute("test") for adapter in adapters]
-        )
+        results = await asyncio.gather(*[adapter.execute("test") for adapter in adapters])
 
         assert len(results) == 3
         assert all(r.exit_code == 0 for r in results)

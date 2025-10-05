@@ -26,6 +26,7 @@ from guardloop.utils.config import Config
 
 # Fixtures
 
+
 @pytest.fixture
 def config():
     """Create test config"""
@@ -44,7 +45,7 @@ def basic_context():
     return AgentContext(
         prompt="Create a user authentication system",
         mode="standard",
-        raw_output="Implementation of user authentication system"
+        raw_output="Implementation of user authentication system",
     )
 
 
@@ -62,7 +63,7 @@ def architect_context():
         - Security: MFA, Azure AD, RBAC
         - Error handling with circuit breakers
         - Scalability with microservices
-        """
+        """,
     )
 
 
@@ -87,7 +88,7 @@ def test_authenticate_user():
     user = authenticate_user("test", "password123")
     assert user.username == "test"
             """,
-            file_path="auth.py"
+            file_path="auth.py",
         )
     ]
 
@@ -95,7 +96,7 @@ def test_authenticate_user():
         prompt="Implement user authentication with tests",
         mode="standard",
         parsed_response=ParsedResponse(code_blocks=code_blocks, test_coverage=95.0),
-        raw_output="Implementation with type hints, error handling, and tests"
+        raw_output="Implementation with type hints, error handling, and tests",
     )
 
 
@@ -124,7 +125,7 @@ def test_e2e_login():
     response = client.post("/login", json={"username": "test", "password": "pass"})
     assert response.status_code == 200
             """,
-            file_path="test_auth.py"
+            file_path="test_auth.py",
         )
     ]
 
@@ -132,22 +133,19 @@ def test_e2e_login():
         prompt="Test authentication system",
         mode="standard",
         parsed_response=ParsedResponse(code_blocks=code_blocks, test_coverage=100.0),
-        raw_output="E2E integration tests, SQL injection security tests, edge cases covered"
+        raw_output="E2E integration tests, SQL injection security tests, edge cases covered",
     )
 
 
 # Base Agent Tests
+
 
 class TestAgentBase:
     """Test base agent functionality"""
 
     def test_agent_context_creation(self):
         """Test AgentContext dataclass"""
-        context = AgentContext(
-            prompt="Test prompt",
-            mode="standard",
-            raw_output="Test output"
-        )
+        context = AgentContext(prompt="Test prompt", mode="standard", raw_output="Test output")
         assert context.prompt == "Test prompt"
         assert context.mode == "standard"
         assert context.violations == []
@@ -161,7 +159,7 @@ class TestAgentBase:
             reason="All checks passed",
             suggestions=["Add more tests"],
             next_agent="tester",
-            confidence=0.95
+            confidence=0.95,
         )
         assert decision.agent_name == "test_agent"
         assert decision.approved is True
@@ -186,6 +184,7 @@ class TestAgentBase:
 
 
 # Orchestrator Tests
+
 
 class TestOrchestrator:
     """Test orchestrator routing and orchestration"""
@@ -279,9 +278,7 @@ class TestOrchestrator:
 
         # Context that will fail architect validation
         failing_context = AgentContext(
-            prompt="Vague request",  # No clear requirements
-            mode="strict",
-            raw_output="Some output"
+            prompt="Vague request", mode="strict", raw_output="Some output"  # No clear requirements
         )
 
         decisions = await orchestrator.orchestrate(failing_context, start_agent="architect")
@@ -297,8 +294,7 @@ class TestOrchestrator:
         await orchestrator.load_agents()
 
         decisions = await orchestrator.orchestrate(
-            AgentContext(prompt="Test", mode="standard", raw_output="Test"),
-            start_agent="architect"
+            AgentContext(prompt="Test", mode="standard", raw_output="Test"), start_agent="architect"
         )
 
         # Should not exceed max iterations
@@ -306,6 +302,7 @@ class TestOrchestrator:
 
 
 # Individual Agent Tests
+
 
 class TestArchitectAgent:
     """Test architect agent validation"""
@@ -323,11 +320,7 @@ class TestArchitectAgent:
     @pytest.mark.asyncio
     async def test_architect_rejects_vague_requirements(self, config):
         """Test architect rejects vague requirements"""
-        context = AgentContext(
-            prompt="Make something",
-            mode="standard",
-            raw_output="Vague design"
-        )
+        context = AgentContext(prompt="Make something", mode="standard", raw_output="Vague design")
 
         agent = ArchitectAgent(config)
         decision = await agent.evaluate(context)
@@ -342,7 +335,7 @@ class TestArchitectAgent:
             prompt="Design a web app",
             mode="standard",
             parsed_response=ParsedResponse(code_blocks=[]),
-            raw_output="Only frontend design"
+            raw_output="Only frontend design",
         )
 
         agent = ArchitectAgent(config)
@@ -371,9 +364,15 @@ class TestCoderAgent:
             prompt="Implement authentication",
             mode="standard",
             raw_output="Entire file rewritten",
-            parsed_response=ParsedResponse(code_blocks=[
-                CodeBlock(language="python", content="# Full file content...\n" * 100, file_path="auth.py")
-            ])
+            parsed_response=ParsedResponse(
+                code_blocks=[
+                    CodeBlock(
+                        language="python",
+                        content="# Full file content...\n" * 100,
+                        file_path="auth.py",
+                    )
+                ]
+            ),
         )
 
         agent = CoderAgent(config)
@@ -388,10 +387,14 @@ class TestCoderAgent:
         context = AgentContext(
             prompt="Implement feature",
             mode="standard",
-            parsed_response=ParsedResponse(code_blocks=[
-                CodeBlock(language="python", content="def feature(): pass", file_path="feature.py")
-            ]),
-            raw_output="Implementation without tests"
+            parsed_response=ParsedResponse(
+                code_blocks=[
+                    CodeBlock(
+                        language="python", content="def feature(): pass", file_path="feature.py"
+                    )
+                ]
+            ),
+            raw_output="Implementation without tests",
         )
 
         agent = CoderAgent(config)
@@ -420,7 +423,7 @@ class TestTesterAgent:
             prompt="Test authentication",
             mode="standard",
             parsed_response=ParsedResponse(test_coverage=85.0),
-            raw_output="Tests with 85% coverage"
+            raw_output="Tests with 85% coverage",
         )
 
         agent = TesterAgent(config)
@@ -435,10 +438,14 @@ class TestTesterAgent:
         context = AgentContext(
             prompt="Test API",
             mode="standard",
-            parsed_response=ParsedResponse(code_blocks=[
-                CodeBlock(language="python", content="def test_unit(): pass", file_path="test.py")
-            ]),
-            raw_output="Only unit tests"
+            parsed_response=ParsedResponse(
+                code_blocks=[
+                    CodeBlock(
+                        language="python", content="def test_unit(): pass", file_path="test.py"
+                    )
+                ]
+            ),
+            raw_output="Only unit tests",
         )
 
         agent = TesterAgent(config)
@@ -461,7 +468,7 @@ class TestSecOpsAgent:
             JWT token authentication
             Parameterized SQL queries
             Environment variables for secrets: os.getenv('API_KEY')
-            """
+            """,
         )
 
         agent = SecOpsAgent(config)
@@ -474,15 +481,15 @@ class TestSecOpsAgent:
     async def test_secops_requires_input_validation(self, config):
         """Test secops requires input validation"""
         context = AgentContext(
-            prompt="Implement API",
-            mode="standard",
-            raw_output="API endpoint without validation"
+            prompt="Implement API", mode="standard", raw_output="API endpoint without validation"
         )
 
         agent = SecOpsAgent(config)
         decision = await agent.evaluate(context)
 
-        assert any("validation" in s.lower() or "sanitize" in s.lower() for s in decision.suggestions)
+        assert any(
+            "validation" in s.lower() or "sanitize" in s.lower() for s in decision.suggestions
+        )
 
     @pytest.mark.asyncio
     async def test_secops_prevents_hardcoded_secrets(self, config):
@@ -490,7 +497,7 @@ class TestSecOpsAgent:
         context = AgentContext(
             prompt="Configure API",
             mode="standard",
-            raw_output='api_key = "hardcoded-secret-key-123"'
+            raw_output='api_key = "hardcoded-secret-key-123"',
         )
 
         agent = SecOpsAgent(config)
@@ -508,11 +515,15 @@ class TestEvaluatorAgent:
         context = AgentContext(
             prompt="Complete feature",
             mode="standard",
-            parsed_response=ParsedResponse(code_blocks=[
-                CodeBlock(language="python", content="def feature(): pass", file_path="feature.py")
-            ]),
+            parsed_response=ParsedResponse(
+                code_blocks=[
+                    CodeBlock(
+                        language="python", content="def feature(): pass", file_path="feature.py"
+                    )
+                ]
+            ),
             violations=[],
-            failures=[]
+            failures=[],
         )
 
         agent = EvaluatorAgent(config)
@@ -527,14 +538,16 @@ class TestEvaluatorAgent:
         context = AgentContext(
             prompt="Feature",
             mode="standard",
-            violations=[Violation(
-                guardrail_type="security",
-                rule="SQL injection prevention",
-                severity="critical",
-                description="SQL injection vulnerability detected",
-                suggestion="Use parameterized queries"
-            )],
-            parsed_response=ParsedResponse(code_blocks=[])
+            violations=[
+                Violation(
+                    guardrail_type="security",
+                    rule="SQL injection prevention",
+                    severity="critical",
+                    description="SQL injection vulnerability detected",
+                    suggestion="Use parameterized queries",
+                )
+            ],
+            parsed_response=ParsedResponse(code_blocks=[]),
         )
 
         agent = EvaluatorAgent(config)
@@ -545,6 +558,7 @@ class TestEvaluatorAgent:
 
 
 # Integration Tests
+
 
 class TestAgentIntegration:
     """Test full agent chain integration"""
@@ -560,7 +574,9 @@ class TestAgentIntegration:
             mode="standard",
             parsed_response=ParsedResponse(
                 code_blocks=[
-                    CodeBlock(language="python", content="""
+                    CodeBlock(
+                        language="python",
+                        content="""
 def authenticate(username: str, password: str) -> User:
     user = db.query("SELECT * FROM users WHERE username = ?", username)
     if verify_password(password, user.password_hash):
@@ -570,9 +586,11 @@ def authenticate(username: str, password: str) -> User:
 def test_authenticate():
     user = authenticate("test", "pass")
     assert user.username == "test"
-                    """, file_path="auth.py")
+                    """,
+                        file_path="auth.py",
+                    )
                 ],
-                test_coverage=100.0
+                test_coverage=100.0,
             ),
             raw_output="""
             Three-layer design: PostgreSQL + FastAPI + React
@@ -581,7 +599,7 @@ def test_authenticate():
             Error handling: try/except with logging
             Tests: 100% coverage with E2E and security tests
             Monitoring: Prometheus metrics and alerts
-            """
+            """,
         )
 
         decisions = await orchestrator.orchestrate(context, start_agent="architect")
@@ -601,7 +619,7 @@ def test_authenticate():
         context = AgentContext(
             prompt="Vague task",  # Will fail architect
             mode="strict",
-            raw_output="Incomplete design"
+            raw_output="Incomplete design",
         )
 
         decisions = await orchestrator.orchestrate(context)

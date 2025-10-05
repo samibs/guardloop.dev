@@ -20,7 +20,7 @@ def config():
         database=DatabaseConfig(path=":memory:"),
         logging=LoggingConfig(level="DEBUG", file=None),
         tool="claude",
-        strict=False
+        strict=False,
     )
 
 
@@ -32,7 +32,7 @@ def strict_config():
         database=DatabaseConfig(path=":memory:"),
         logging=LoggingConfig(level="DEBUG", file=None),
         tool="claude",
-        strict=True
+        strict=True,
     )
 
 
@@ -105,7 +105,7 @@ def login(username: str, password: str) -> bool:
         logger.error(f"Authentication failed: {e}")
         raise
             """,
-            file_path="auth.py"
+            file_path="auth.py",
         ),
         CodeBlock(
             language="python",
@@ -117,8 +117,8 @@ def test_login_failure():
     with pytest.raises(AuthenticationError):
         login("invalid", "wrong")
             """,
-            file_path="test_auth.py"
-        )
+            file_path="test_auth.py",
+        ),
     ]
 
     return ParsedResponse(
@@ -127,7 +127,7 @@ def test_login_failure():
         commands=[],
         explanations=["Implementation with authentication and tests"],
         test_coverage=100.0,
-        metadata={"security": "MFA + Azure AD"}
+        metadata={"security": "MFA + Azure AD"},
     )
 
 
@@ -142,7 +142,7 @@ def sample_violations():
             description="Missing input sanitization",
             suggestion="Add input validation and sanitization",
             line_number=5,
-            file_path="auth.py"
+            file_path="auth.py",
         ),
         Violation(
             guardrail_type="standards",
@@ -151,8 +151,8 @@ def sample_violations():
             description="Missing type annotations",
             suggestion="Add type hints to function signature",
             line_number=10,
-            file_path="auth.py"
-        )
+            file_path="auth.py",
+        ),
     ]
 
 
@@ -167,7 +167,7 @@ def sample_failures():
             severity="high",
             context="User authentication",
             suggestion="Check token validation logic",
-            tool="claude"
+            tool="claude",
         ),
         DetectedFailure(
             category="File Overwrite",
@@ -176,8 +176,8 @@ def sample_failures():
             severity="medium",
             context="Full file rewrite detected",
             suggestion="Use incremental edits instead",
-            tool="claude"
-        )
+            tool="claude",
+        ),
     ]
 
 
@@ -200,7 +200,8 @@ def sample_guardrail_files(temp_guardrail_dir):
     """Sample guardrail markdown files"""
     # BPSBS guardrail
     bpsbs_file = temp_guardrail_dir / "guardrails" / "bpsbs.md"
-    bpsbs_file.write_text("""
+    bpsbs_file.write_text(
+        """
 # BPSBS Guardrail
 
 ## Rules
@@ -208,11 +209,13 @@ def sample_guardrail_files(temp_guardrail_dir):
 2. Never use Write tool for full file rewrites
 3. Include tests with every implementation
 4. 100% test coverage required
-""")
+"""
+    )
 
     # Security guardrail
     security_file = temp_guardrail_dir / "guardrails" / "security.md"
-    security_file.write_text("""
+    security_file.write_text(
+        """
 # Security Guardrail
 
 ## Rules
@@ -220,12 +223,10 @@ def sample_guardrail_files(temp_guardrail_dir):
 2. Input validation and sanitization
 3. No SQL injection vulnerabilities
 4. No hardcoded secrets
-""")
+"""
+    )
 
-    return {
-        "bpsbs": bpsbs_file,
-        "security": security_file
-    }
+    return {"bpsbs": bpsbs_file, "security": security_file}
 
 
 @pytest.fixture
@@ -234,7 +235,8 @@ def sample_agent_instructions(temp_guardrail_dir):
     agents_dir = temp_guardrail_dir / "guardrails" / "agents"
 
     architect_file = agents_dir / "architect.md"
-    architect_file.write_text("""
+    architect_file.write_text(
+        """
 # Architect Agent Instructions
 
 ## Validation Criteria
@@ -242,7 +244,8 @@ def sample_agent_instructions(temp_guardrail_dir):
 2. Three-layer architecture
 3. Security measures
 4. Scalability design
-""")
+"""
+    )
 
     return {"architect": architect_file}
 
@@ -250,6 +253,7 @@ def sample_agent_instructions(temp_guardrail_dir):
 @pytest.fixture
 def mock_db_session(monkeypatch):
     """Mock database session for testing"""
+
     class MockSession:
         def __init__(self):
             self.data = {}

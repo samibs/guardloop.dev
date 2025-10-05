@@ -84,11 +84,15 @@ class TestGuardrailValidator:
     async def test_ai_guardrails_checks(self, validator_standard):
         """Test AI guardrails"""
         text_incomplete = "Here's the code"
-        text_complete = "Unit tests and E2E tests included with proper error handling using try/catch blocks"
+        text_complete = (
+            "Unit tests and E2E tests included with proper error handling using try/catch blocks"
+        )
 
         parsed = ParsedResponse()
 
-        violations_incomplete = await validator_standard._check_ai_guardrails(parsed, text_incomplete)
+        violations_incomplete = await validator_standard._check_ai_guardrails(
+            parsed, text_incomplete
+        )
         violations_complete = await validator_standard._check_ai_guardrails(parsed, text_complete)
 
         assert len(violations_incomplete) > len(violations_complete)

@@ -149,9 +149,7 @@ class TestGuardrailDaemon:
 
         daemon.context_manager.build_context = MagicMock(return_value="context")
         mock_adapter = AsyncMock()
-        mock_adapter.execute = AsyncMock(
-            return_value=AIResponse("output", 1000, exit_code=0)
-        )
+        mock_adapter.execute = AsyncMock(return_value=AIResponse("output", 1000, exit_code=0))
         daemon.get_adapter = MagicMock(return_value=mock_adapter)
 
         daemon.parser.parse = MagicMock(return_value=ParsedResponse())
@@ -185,9 +183,7 @@ class TestGuardrailDaemon:
 
         daemon.context_manager.build_context = MagicMock(return_value="context")
         mock_adapter = AsyncMock()
-        mock_adapter.execute = AsyncMock(
-            return_value=AIResponse("output", 1000, exit_code=0)
-        )
+        mock_adapter.execute = AsyncMock(return_value=AIResponse("output", 1000, exit_code=0))
         daemon.get_adapter = MagicMock(return_value=mock_adapter)
 
         daemon.parser.parse = MagicMock(return_value=ParsedResponse())
@@ -202,9 +198,7 @@ class TestGuardrailDaemon:
             )
         ]
         daemon.validator.validate = AsyncMock(return_value=critical_violations)
-        daemon.validator.get_critical_violations = MagicMock(
-            return_value=critical_violations
-        )
+        daemon.validator.get_critical_violations = MagicMock(return_value=critical_violations)
         daemon.failure_detector.scan = MagicMock(return_value=[])
         daemon._log_session = AsyncMock()
 
@@ -300,9 +294,7 @@ class TestGuardrailDaemon:
         violations = []
         failures = []
 
-        await daemon._log_session(
-            request, response, parsed, violations, failures, True, 1500
-        )
+        await daemon._log_session(request, response, parsed, violations, failures, True, 1500)
 
         # Should complete without errors
         # Actual database logging is mocked
@@ -365,9 +357,7 @@ Test coverage: 100%
 """
 
             mock_adapter = AsyncMock()
-            mock_adapter.execute = AsyncMock(
-                return_value=AIResponse(ai_output, 1200, exit_code=0)
-            )
+            mock_adapter.execute = AsyncMock(return_value=AIResponse(ai_output, 1200, exit_code=0))
             daemon.get_adapter = MagicMock(return_value=mock_adapter)
 
             # Mock parser

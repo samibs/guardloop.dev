@@ -89,23 +89,18 @@ class TestUserSpecifiedAgent:
 
     def test_user_agent_override(self, optimizer):
         chain = optimizer.select_chain(
-            task_type="implement_feature",
-            user_specified_agent="ruthless_coder"
+            task_type="implement_feature", user_specified_agent="ruthless_coder"
         )
         assert chain == ["ruthless_coder"]
 
     def test_user_agent_normalization(self, optimizer):
         # Test with old agent name
-        chain = optimizer.select_chain(
-            task_type="implement_feature",
-            user_specified_agent="coder"
-        )
+        chain = optimizer.select_chain(task_type="implement_feature", user_specified_agent="coder")
         assert chain == ["ruthless_coder"]
 
     def test_user_agent_hyphenated(self, optimizer):
         chain = optimizer.select_chain(
-            task_type="implement_feature",
-            user_specified_agent="cold-blooded-architect"
+            task_type="implement_feature", user_specified_agent="cold-blooded-architect"
         )
         assert chain == ["cold_blooded_architect"]
 

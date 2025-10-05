@@ -369,8 +369,7 @@ class GuardrailValidator:
                                 rule=rule_name,
                                 severity=severity.value,
                                 description=(
-                                    f"{rule_config['description']}: "
-                                    f"{', '.join(matches[:3])}"
+                                    f"{rule_config['description']}: " f"{', '.join(matches[:3])}"
                                 ),
                                 suggestion=rule_config["suggestion"],
                             )

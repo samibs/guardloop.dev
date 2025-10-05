@@ -8,7 +8,7 @@ from guardloop.utils.config import (
     LoggingConfig,
     ToolConfig,
     GuardrailsConfig,
-    TeamConfig
+    TeamConfig,
 )
 
 
@@ -56,21 +56,14 @@ class TestToolConfig:
 
     def test_claude_config(self):
         """Test Claude tool configuration"""
-        tool_config = ToolConfig(
-            cli_path="claude",
-            enabled=True,
-            timeout=120
-        )
+        tool_config = ToolConfig(cli_path="claude", enabled=True, timeout=120)
         assert tool_config.cli_path == "claude"
         assert tool_config.enabled is True
         assert tool_config.timeout == 120
 
     def test_disabled_tool(self):
         """Test disabled tool"""
-        tool_config = ToolConfig(
-            cli_path="gemini",
-            enabled=False
-        )
+        tool_config = ToolConfig(cli_path="gemini", enabled=False)
         assert tool_config.enabled is False
 
 
@@ -86,8 +79,7 @@ class TestGuardrailsConfig:
     def test_custom_paths(self):
         """Test custom guardrails paths"""
         guardrails_config = GuardrailsConfig(
-            base_path="/custom/guardrails",
-            agents_path="/custom/agents"
+            base_path="/custom/guardrails", agents_path="/custom/agents"
         )
         assert guardrails_config.base_path == Path("/custom/guardrails")
         assert guardrails_config.agents_path == Path("/custom/agents")
@@ -108,7 +100,7 @@ class TestTeamConfig:
             enabled=True,
             sync_repo="git@github.com:org/guardrails.git",
             sync_interval_hours=6,
-            branch="develop"
+            branch="develop",
         )
         assert team_config.enabled is True
         assert team_config.sync_repo == "git@github.com:org/guardrails.git"
@@ -138,7 +130,7 @@ class TestConfig:
         config = Config(
             tools={
                 "claude": ToolConfig(cli_path="claude", enabled=True),
-                "gemini": ToolConfig(cli_path="gemini", enabled=False)
+                "gemini": ToolConfig(cli_path="gemini", enabled=False),
             }
         )
         assert "claude" in config.tools
@@ -149,10 +141,7 @@ class TestConfig:
     def test_guardrails_configuration(self):
         """Test guardrails configuration"""
         config = Config(
-            default_agent="architect",
-            guardrails=GuardrailsConfig(
-                base_path="/custom/guardrails"
-            )
+            default_agent="architect", guardrails=GuardrailsConfig(base_path="/custom/guardrails")
         )
         assert config.default_agent == "architect"
         assert config.guardrails.base_path == Path("/custom/guardrails")
@@ -160,33 +149,27 @@ class TestConfig:
     def test_team_sync(self):
         """Test team sync configuration"""
         config = Config(
-            team=TeamConfig(
-                enabled=True,
-                sync_repo="git@github.com:org/guardrails.git"
-            )
+            team=TeamConfig(enabled=True, sync_repo="git@github.com:org/guardrails.git")
         )
         assert config.team.enabled is True
         assert config.team.sync_repo == "git@github.com:org/guardrails.git"
 
     def test_database_config(self):
         """Test database configuration"""
-        config = Config(
-            database=DatabaseConfig(path=":memory:")
-        )
+        config = Config(database=DatabaseConfig(path=":memory:"))
         assert config.database.path == Path(":memory:")
 
     def test_logging_config(self):
         """Test logging configuration"""
-        config = Config(
-            logging=LoggingConfig(level="DEBUG", file="/tmp/guardrail.log")
-        )
+        config = Config(logging=LoggingConfig(level="DEBUG", file="/tmp/guardrail.log"))
         assert config.logging.level == "DEBUG"
         assert config.logging.file == Path("/tmp/guardrail.log")
 
     def test_load_from_file(self, tmp_path):
         """Test loading configuration from file"""
         config_file = tmp_path / "config.yaml"
-        config_file.write_text("""
+        config_file.write_text(
+            """
 version: "1.0"
 mode: strict
 default_agent: architect
@@ -204,7 +187,8 @@ tools:
     cli_path: claude
     enabled: true
     timeout: 120
-""")
+"""
+        )
 
         config = Config.from_file(str(config_file))
         assert config.mode == "strict"

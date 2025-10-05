@@ -138,9 +138,7 @@ class TestSemanticMatcher:
         """Test that threshold filters low similarity results"""
         # Mock model with low similarity scores
         mock_model = MagicMock()
-        mock_model.encode.return_value = np.array(
-            [[0.1, 0.0]]
-        )  # Very different from guardrails
+        mock_model.encode.return_value = np.array([[0.1, 0.0]])  # Very different from guardrails
         mock_transformer.return_value = mock_model
 
         # Pre-set embeddings

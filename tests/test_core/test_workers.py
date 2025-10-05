@@ -118,9 +118,7 @@ class TestAnalysisWorker:
 
         # Should generate insight for JWT/Auth
         assert len(insights) > 0
-        jwt_insight = next(
-            (i for i in insights if i.get("category") == "JWT/Auth"), None
-        )
+        jwt_insight = next((i for i in insights if i.get("category") == "JWT/Auth"), None)
         assert jwt_insight is not None
         assert jwt_insight["type"] == "spike"
         assert jwt_insight["count"] == 15

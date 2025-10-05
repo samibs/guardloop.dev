@@ -16,18 +16,13 @@ async def test_full_flow_standard_mode(config, sample_ai_response):
     daemon = GuardrailDaemon(config)
 
     request = AIRequest(
-        tool="claude",
-        prompt="create a login function with tests",
-        agent="coder",
-        mode="standard"
+        tool="claude", prompt="create a login function with tests", agent="coder", mode="standard"
     )
 
     # Mock AI CLI execution
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
         mock_execute.return_value = AIResponse(
-            raw_output=sample_ai_response,
-            execution_time_ms=1000,
-            success=True
+            raw_output=sample_ai_response, execution_time_ms=1000, success=True
         )
 
         result = await daemon.process_request(request)
@@ -48,12 +43,7 @@ async def test_full_flow_strict_mode(strict_config):
     """Test complete flow with strict validation"""
     daemon = GuardrailDaemon(strict_config)
 
-    request = AIRequest(
-        tool="claude",
-        prompt="create a function",
-        agent="architect",
-        mode="strict"
-    )
+    request = AIRequest(tool="claude", prompt="create a function", agent="architect", mode="strict")
 
     # Mock response with violations
     bad_response = """
@@ -67,9 +57,7 @@ No tests provided.
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
         mock_execute.return_value = AIResponse(
-            raw_output=bad_response,
-            execution_time_ms=800,
-            success=True
+            raw_output=bad_response, execution_time_ms=800, success=True
         )
 
         result = await daemon.process_request(request)
@@ -85,6 +73,7 @@ async def test_agent_chain_execution(config):
 
     # Load agents
     from guardloop.agents.orchestrator import OrchestratorAgent
+
     orchestrator = OrchestratorAgent(config)
     await orchestrator.load_agents()
 
@@ -92,7 +81,7 @@ async def test_agent_chain_execution(config):
         tool="claude",
         prompt="Design and implement a user authentication system with database",
         agent="architect",
-        mode="standard"
+        mode="standard",
     )
 
     response_text = """
@@ -133,9 +122,7 @@ Monitoring: Prometheus metrics configured
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
         mock_execute.return_value = AIResponse(
-            raw_output=response_text,
-            execution_time_ms=1500,
-            success=True
+            raw_output=response_text, execution_time_ms=1500, success=True
         )
 
         result = await daemon.process_request(request)
@@ -153,10 +140,7 @@ async def test_failure_detection(config):
     daemon = GuardrailDaemon(config)
 
     request = AIRequest(
-        tool="claude",
-        prompt="fix authentication bug",
-        agent="debug_hunter",
-        mode="standard"
+        tool="claude", prompt="fix authentication bug", agent="debug_hunter", mode="standard"
     )
 
     # Response with failure patterns
@@ -168,9 +152,7 @@ Database query failed: Connection timeout
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
         mock_execute.return_value = AIResponse(
-            raw_output=response_with_failures,
-            execution_time_ms=900,
-            success=True
+            raw_output=response_with_failures, execution_time_ms=900, success=True
         )
 
         result = await daemon.process_request(request)
@@ -192,31 +174,26 @@ async def test_guardrail_injection(config, tmp_path):
     guardrail_dir.mkdir(parents=True)
 
     test_guardrail = guardrail_dir / "test-guardrail.md"
-    test_guardrail.write_text("""
+    test_guardrail.write_text(
+        """
 # Test Guardrail
 
 ## Rules
 1. Always include error handling
 2. Add comprehensive logging
 3. Use type annotations
-""")
+"""
+    )
 
     config.agents.base_path = guardrail_dir.parent
 
     daemon = GuardrailDaemon(config)
 
-    request = AIRequest(
-        tool="claude",
-        prompt="create a function",
-        agent="coder",
-        mode="standard"
-    )
+    request = AIRequest(tool="claude", prompt="create a function", agent="coder", mode="standard")
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
         mock_execute.return_value = AIResponse(
-            raw_output="def func(): pass",
-            execution_time_ms=500,
-            success=True
+            raw_output="def func(): pass", execution_time_ms=500, success=True
         )
 
         await daemon.process_request(request)
@@ -233,17 +210,12 @@ async def test_context_preservation(config):
 
     # First request
     request1 = AIRequest(
-        tool="claude",
-        prompt="create a User model",
-        agent="coder",
-        mode="standard"
+        tool="claude", prompt="create a User model", agent="coder", mode="standard"
     )
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
         mock_execute.return_value = AIResponse(
-            raw_output="class User: pass",
-            execution_time_ms=500,
-            success=True
+            raw_output="class User: pass", execution_time_ms=500, success=True
         )
 
         result1 = await daemon.process_request(request1)
@@ -254,14 +226,12 @@ async def test_context_preservation(config):
         prompt="add authentication to User model",
         agent="coder",
         mode="standard",
-        parent_request_id=result1.request_id
+        parent_request_id=result1.request_id,
     )
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
         mock_execute.return_value = AIResponse(
-            raw_output="# Updated User model with auth",
-            execution_time_ms=600,
-            success=True
+            raw_output="# Updated User model with auth", execution_time_ms=600, success=True
         )
 
         result2 = await daemon.process_request(request2)
@@ -279,20 +249,13 @@ async def test_multi_tool_support(config):
     tools = ["claude", "gemini", "codex"]
 
     for tool in tools:
-        request = AIRequest(
-            tool=tool,
-            prompt="create a function",
-            agent="coder",
-            mode="standard"
-        )
+        request = AIRequest(tool=tool, prompt="create a function", agent="coder", mode="standard")
 
         adapter_class = f"guardrail.adapters.{tool}.{tool.capitalize()}Adapter"
 
         with patch(f"{adapter_class}.execute") as mock_execute:
             mock_execute.return_value = AIResponse(
-                raw_output="def func(): pass",
-                execution_time_ms=500,
-                success=True
+                raw_output="def func(): pass", execution_time_ms=500, success=True
             )
 
             result = await daemon.process_request(request)
@@ -307,10 +270,7 @@ async def test_violation_thresholds(config):
     daemon = GuardrailDaemon(config)
 
     request = AIRequest(
-        tool="claude",
-        prompt="create insecure code",
-        agent="secops",
-        mode="standard"
+        tool="claude", prompt="create insecure code", agent="secops", mode="standard"
     )
 
     # Response with security violations
@@ -325,9 +285,7 @@ def login(user, pass):
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
         mock_execute.return_value = AIResponse(
-            raw_output=insecure_response,
-            execution_time_ms=700,
-            success=True
+            raw_output=insecure_response, execution_time_ms=700, success=True
         )
 
         result = await daemon.process_request(request)
@@ -350,18 +308,11 @@ async def test_background_worker_integration(config):
     await daemon.start()
 
     try:
-        request = AIRequest(
-            tool="claude",
-            prompt="background task",
-            agent="coder",
-            mode="standard"
-        )
+        request = AIRequest(tool="claude", prompt="background task", agent="coder", mode="standard")
 
         with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
             mock_execute.return_value = AIResponse(
-                raw_output="def background_task(): pass",
-                execution_time_ms=400,
-                success=True
+                raw_output="def background_task(): pass", execution_time_ms=400, success=True
             )
 
             result = await daemon.process_request(request)
@@ -377,18 +328,11 @@ async def test_performance_metrics(config):
     """Test performance metrics collection"""
     daemon = GuardrailDaemon(config)
 
-    request = AIRequest(
-        tool="claude",
-        prompt="measure performance",
-        agent="coder",
-        mode="standard"
-    )
+    request = AIRequest(tool="claude", prompt="measure performance", agent="coder", mode="standard")
 
     with patch("guardrail.adapters.claude.ClaudeAdapter.execute") as mock_execute:
         mock_execute.return_value = AIResponse(
-            raw_output="def measured_func(): pass",
-            execution_time_ms=1200,
-            success=True
+            raw_output="def measured_func(): pass", execution_time_ms=1200, success=True
         )
 
         result = await daemon.process_request(request)
@@ -398,4 +342,4 @@ async def test_performance_metrics(config):
         assert result.execution_time_ms > 0
 
         # Should track parsing time
-        assert hasattr(result, 'parsing_time_ms') or result.parsed is not None
+        assert hasattr(result, "parsing_time_ms") or result.parsed is not None
