@@ -3,6 +3,7 @@
 from typing import Dict, List, Optional
 
 from guardrail.agents.base import AgentContext, AgentDecision, BaseAgent
+from guardrail.agents.chain_optimizer import AgentChainOptimizer
 from guardrail.utils.config import Config
 
 
@@ -20,6 +21,7 @@ class OrchestratorAgent(BaseAgent):
         )
         self.config = config
         self.agents: Dict[str, BaseAgent] = {}
+        self.chain_optimizer = AgentChainOptimizer()
 
     def register_agent(self, name: str, agent: BaseAgent) -> None:
         """Register an agent with the orchestrator
@@ -183,43 +185,60 @@ class OrchestratorAgent(BaseAgent):
         return "architect"
 
     async def orchestrate(
-        self, context: AgentContext, start_agent: Optional[str] = None
+        self,
+        context: AgentContext,
+        task_type: str = "implement_function",
+        mode: str = "standard",
+        user_agent: Optional[str] = None,
     ) -> List[AgentDecision]:
-        """Execute agent chain
+        """Execute optimal agent chain
 
         Args:
             context: Agent context
-            start_agent: Starting agent name (auto-detect if None)
+            task_type: Type of task being performed
+            mode: Operating mode (standard or strict)
+            user_agent: User-specified agent (optional)
 
         Returns:
             List of agent decisions in execution order
         """
+        # Get optimal chain from optimizer
+        chain = self.chain_optimizer.select_chain(
+            task_type=task_type, mode=mode, user_specified_agent=user_agent
+        )
+
+        # Log chain selection
+        complexity = self.chain_optimizer.get_complexity(task_type)
+        logger.info(
+            f"Selected {len(chain)} agents for {complexity.value} task",
+            agents=chain,
+            task_type=task_type,
+            mode=mode,
+        )
+
+        # Execute chain
         decisions = []
-        current_agent_name = start_agent or await self.route(context.prompt)
+        for agent_name in chain:
+            # Get agent (normalize name for lookup)
+            if agent_name not in self.agents:
+                logger.warning(f"Agent not registered: {agent_name}")
+                continue
 
-        # Maximum chain length to prevent infinite loops
-        max_iterations = 10
-        iterations = 0
-
-        while current_agent_name and iterations < max_iterations:
-            # Get agent
-            if current_agent_name not in self.agents:
-                # Agent not registered, stop chain
-                break
-
-            agent = self.agents[current_agent_name]
+            agent = self.agents[agent_name]
 
             # Evaluate
             decision = await agent.evaluate(context)
             decisions.append(decision)
 
-            # Stop chain if not approved in strict mode
-            if context.mode == "strict" and not decision.approved:
+            # Stop if agent blocks
+            if not decision.approved:
+                logger.warning(
+                    f"Chain stopped by {agent_name}", reason=decision.reason
+                )
                 break
 
-            # Move to next agent
-            current_agent_name = decision.next_agent
-            iterations += 1
+            # Update context with findings
+            context.violations.extend(decision.violations)
 
         return decisions
 
