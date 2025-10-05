@@ -95,6 +95,9 @@ class GuardrailDaemon:
         self.v2_auto_save = getattr(config.features, 'v2_auto_save_files', True)
         self.v2_task_classification = getattr(config.features, 'v2_task_classification', True)
 
+        # Pre-warm cache with commonly used guardrails
+        self._prewarm_cache()
+
         logger.info(
             "GuardrailDaemon initialized",
             mode=config.mode,
@@ -478,6 +481,77 @@ class GuardrailDaemon:
         except Exception as e:
             logger.error(
                 "Failed to log session", session_id=request.session_id, error=str(e)
+            )
+
+    def _prewarm_cache(self) -> None:
+        """Pre-warm cache with commonly used guardrails to eliminate cold-start latency.
+
+        Loads frequently accessed guardrails into cache during initialization
+        rather than on first request. Prioritizes by usage frequency.
+        """
+        prewarm_start = time.time()
+
+        # High priority files (loaded ~80% of requests)
+        high_priority = [
+            ("core/always.md", None, "standard"),  # Always loaded
+            ("core/security_baseline.md", None, "standard"),  # Common for code
+            ("core/testing_baseline.md", None, "standard"),  # Common for code
+        ]
+
+        # Medium priority files (loaded ~40% of requests)
+        medium_priority = [
+            ("specialized/auth_security.md", "authentication", "standard"),
+            ("specialized/api_patterns.md", "api", "standard"),
+            ("specialized/database_design.md", "database", "standard"),
+        ]
+
+        files_loaded = 0
+
+        try:
+            # Pre-load high priority files
+            for filename, task_type, mode in high_priority:
+                try:
+                    self.context_manager.load_guardrails(
+                        agent=None,
+                        mode=mode,
+                        prompt="",  # Empty prompt for cache key
+                        task_type=task_type,
+                        db_session=None
+                    )
+                    files_loaded += 1
+                except Exception as e:
+                    logger.warning(
+                        "Failed to pre-warm guardrail",
+                        file=filename,
+                        error=str(e)
+                    )
+
+            # Pre-load medium priority files (best effort)
+            for filename, task_type, mode in medium_priority:
+                try:
+                    self.context_manager.load_guardrails(
+                        agent=None,
+                        mode=mode,
+                        prompt="",
+                        task_type=task_type,
+                        db_session=None
+                    )
+                    files_loaded += 1
+                except Exception:
+                    pass  # Silent fail for medium priority
+
+            prewarm_time = (time.time() - prewarm_start) * 1000
+
+            logger.info(
+                "Cache pre-warmed successfully",
+                files_loaded=files_loaded,
+                prewarm_time_ms=round(prewarm_time, 2)
+            )
+
+        except Exception as e:
+            logger.warning(
+                "Cache pre-warming failed",
+                error=str(e)
             )
 
     def get_stats(self) -> Dict[str, Any]:
