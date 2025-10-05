@@ -133,6 +133,7 @@ class AdaptiveGuardrailGenerator:
         min_confidence: float = 0.6,
         prompt: Optional[str] = None,
         max_rules: int = 5,
+        use_semantic_matching: bool = False,
     ) -> List[DynamicGuardrailModel]:
         """Get active guardrails for context injection with relevance scoring
 
@@ -141,6 +142,7 @@ class AdaptiveGuardrailGenerator:
             min_confidence: Minimum confidence threshold
             prompt: User prompt for relevance scoring (optional)
             max_rules: Maximum number of rules to return (default: 5)
+            use_semantic_matching: Use embeddings for semantic similarity (default: False)
 
         Returns:
             List of active guardrails, sorted by relevance
@@ -158,15 +160,52 @@ class AdaptiveGuardrailGenerator:
 
         guardrails = query.all()
 
-        # Apply relevance scoring if prompt provided
-        if prompt and guardrails:
+        # Use semantic matching if enabled and prompt provided
+        if use_semantic_matching and prompt and guardrails:
+            import asyncio
+            from guardrail.core.semantic_matcher import SemanticGuardrailMatcher
+
+            # Run async semantic matching
+            matcher = SemanticGuardrailMatcher()
+            loop = asyncio.get_event_loop()
+
+            # Index guardrails
+            loop.run_until_complete(matcher.index_guardrails(guardrails))
+
+            # Find relevant with semantic similarity
+            relevant_pairs = loop.run_until_complete(
+                matcher.find_relevant(
+                    prompt=prompt,
+                    guardrails=guardrails,
+                    top_k=max_rules,
+                    threshold=0.3,
+                )
+            )
+
+            # Store semantic similarity scores in metadata
+            for guardrail, similarity in relevant_pairs:
+                if not guardrail.rule_metadata:
+                    guardrail.rule_metadata = {}
+                guardrail.rule_metadata["semantic_similarity"] = similarity
+
+            # Return only semantically matched guardrails
+            guardrails = [g for g, _ in relevant_pairs]
+
+            logger.info(
+                "Semantic matching applied",
+                original_count=len(query.all()),
+                matched_count=len(guardrails),
+            )
+
+        # Apply keyword relevance scoring if prompt provided (fallback or supplement)
+        elif prompt and guardrails:
             guardrails = self._score_by_relevance(guardrails, prompt, task_type)
 
-        # Sort by score (relevance + confidence + recency + success)
-        guardrails.sort(key=lambda gr: self._calculate_priority_score(gr, task_type), reverse=True)
+            # Sort by score (relevance + confidence + recency + success)
+            guardrails.sort(key=lambda gr: self._calculate_priority_score(gr, task_type), reverse=True)
 
-        # Limit to top N most relevant
-        guardrails = guardrails[:max_rules]
+            # Limit to top N most relevant
+            guardrails = guardrails[:max_rules]
 
         logger.debug(
             "Retrieved active guardrails",
@@ -174,6 +213,7 @@ class AdaptiveGuardrailGenerator:
             task_type=task_type,
             min_confidence=min_confidence,
             max_rules=max_rules,
+            semantic_matching=use_semantic_matching,
         )
 
         return guardrails
