@@ -75,8 +75,8 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/samibs/guardrail.dev.git
-cd guardrail.dev
+git clone https://github.com/samibs/guardloop.dev.git
+cd guardloop.dev
 
 # Create virtual environment
 python3 -m venv venv
@@ -208,7 +208,7 @@ See [ROADMAP.md](ROADMAP.md) for detailed development plan.
 - **v2.2** (8 weeks): Semantic matching, performance benchmarking
 - **v3.0** (Future): Enterprise features, VS Code extension
 
-**Want to influence priorities?** [Open an issue](https://github.com/samibs/guardrail.dev/issues) or [start a discussion](https://github.com/samibs/guardrail.dev/discussions)!
+**Want to influence priorities?** [Open an issue](https://github.com/samibs/guardloop.dev/issues) or [start a discussion](https://github.com/samibs/guardloop.dev/discussions)!
 
 ---
 
@@ -245,7 +245,7 @@ pytest tests/core/test_pattern_analyzer.py
 ### Project Structure
 
 ```
-guardrail.dev/
+guardloop.dev/
 ├── src/guardrail/
 │   ├── core/           # Core orchestration engine
 │   ├── adapters/       # LLM tool adapters (Claude, Gemini, etc.)
@@ -302,4 +302,4 @@ MIT License - see [LICENSE](LICENSE) file.
 
 **Built by developers, for developers. Shaped by the community.**
 
-*Questions? [Open an issue](https://github.com/samibs/guardrail.dev/issues) | [Join discussions](https://github.com/samibs/guardrail.dev/discussions)*
+*Questions? [Open an issue](https://github.com/samibs/guardloop.dev/issues) | [Join discussions](https://github.com/samibs/guardloop.dev/discussions)*

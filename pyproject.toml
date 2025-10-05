@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
-    {name = "guardrail.dev", email = "contact@guardrail.dev"}
+    {name = "guardloop.dev", email = "contact@guardloop.dev"}
 ]
 keywords = ["ai", "llm", "guardrails", "claude", "gemini", "codex", "governance"]
 classifiers = [
@@ -50,10 +50,10 @@ guardrail = "guardrail.__main__:cli"
 guardrail-wrapper = "guardrail.cli.wrapper:main"
 
 [project.urls]
-Homepage = "https://guardrail.dev"
-Repository = "https://github.com/guardrail-dev/guardrail"
-Documentation = "https://docs.guardrail.dev"
-Issues = "https://github.com/guardrail-dev/guardrail/issues"
+Homepage = "https://guardloop.dev"
+Repository = "https://github.com/samibs/guardloop.dev"
+Documentation = "https://docs.guardloop.dev"
+Issues = "https://github.com/samibs/guardloop.dev/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]

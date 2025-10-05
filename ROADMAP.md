@@ -266,7 +266,7 @@
    - ⭐ Star features you need most
 
 2. **Propose New Features**
-   - Open [feature request](https://github.com/samibs/guardrail.dev/issues/new?template=feature_request.md)
+   - Open [feature request](https://github.com/samibs/guardloop.dev/issues/new?template=feature_request.md)
    - Explain the problem and use case
    - Suggest implementation approach
 
@@ -364,7 +364,7 @@ See our [CONTRIBUTING.md](CONTRIBUTING.md) for how to get started.
 - 📚 Improve documentation with examples
 - 🐛 Fix known bugs (see [CRITICAL.md](CRITICAL.md))
 
-**Questions about the roadmap?** [Start a discussion](https://github.com/samibs/guardrail.dev/discussions)
+**Questions about the roadmap?** [Start a discussion](https://github.com/samibs/guardloop.dev/discussions)
 
 ---
 

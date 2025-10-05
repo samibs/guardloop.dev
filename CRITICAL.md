@@ -212,8 +212,8 @@ guardrail run claude "your command here"
 
 ### Community Support
 
-- 🐛 **Found a bug?** [Open an issue](https://github.com/samibs/guardrail.dev/issues)
-- 💬 **Questions?** [Start a discussion](https://github.com/samibs/guardrail.dev/discussions)
+- 🐛 **Found a bug?** [Open an issue](https://github.com/samibs/guardloop.dev/issues)
+- 💬 **Questions?** [Start a discussion](https://github.com/samibs/guardloop.dev/discussions)
 - 🤝 **Want to contribute?** See [CONTRIBUTING.md](CONTRIBUTING.md)
 - 📧 **Security issue?** Email security@guardrail.dev (if set up)
 

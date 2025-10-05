@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Setup configuration for guardrail.dev"""
+"""Setup configuration for guardloop.dev"""
 
 from setuptools import setup
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Guardrail.dev Installation Script
+# GuardLoop.dev Installation Script
 
 set -e  # Exit on error
 
@@ -16,7 +16,7 @@ CONFIG_FILE="$INSTALL_DIR/config.yaml"
 VENV_DIR="$INSTALL_DIR/venv"
 
 echo -e "${BLUE}╔═══════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║   Guardrail.dev Installation Script  ║${NC}"
+echo -e "${BLUE}║   GuardLoop.dev Installation Script  ║${NC}"
 echo -e "${BLUE}║   AI Safety Layer for Code Tools     ║${NC}"
 echo -e "${BLUE}╚═══════════════════════════════════════╝${NC}"
 echo ""
@@ -206,8 +206,8 @@ main() {
     echo -e "  ${YELLOW}gr gemini --agent architect 'design user service'${NC}"
     echo -e "  ${YELLOW}guardrail codex --strict 'implement JWT auth'${NC}"
     echo ""
-    echo -e "${BLUE}Documentation:${NC} https://docs.guardrail.dev"
-    echo -e "${BLUE}Issues:${NC} https://github.com/guardrail-dev/guardrail/issues"
+    echo -e "${BLUE}Documentation:${NC} https://docs.guardloop.dev"
+    echo -e "${BLUE}Issues:${NC} https://github.com/samibs/guardloop.dev/issues"
     echo ""
 }
 
