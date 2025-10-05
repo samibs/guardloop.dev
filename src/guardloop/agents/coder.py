@@ -82,9 +82,11 @@ class CoderAgent(BaseAgent):
         return AgentDecision(
             agent_name=self.name,
             approved=approved,
-            reason="Code implementation validated"
-            if approved
-            else "Code incomplete or missing critical elements",
+            reason=(
+                "Code implementation validated"
+                if approved
+                else "Code incomplete or missing critical elements"
+            ),
             suggestions=suggestions,
             next_agent=next_agent,
             confidence=confidence,

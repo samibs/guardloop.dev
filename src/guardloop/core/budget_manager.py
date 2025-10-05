@@ -170,9 +170,7 @@ class ContextBudgetManager:
 
         # Default
         else:
-            logger.warning(
-                "Unknown model, using default budget", model=model, default="default"
-            )
+            logger.warning("Unknown model, using default budget", model=model, default="default")
             return "default"
 
     def get_model_info(self, model: str) -> Dict[str, any]:
@@ -209,9 +207,7 @@ class ContextBudgetManager:
         """
         return len(text) // chars_per_token
 
-    def validate_allocation(
-        self, allocation: Dict[str, int], total_budget: int
-    ) -> bool:
+    def validate_allocation(self, allocation: Dict[str, int], total_budget: int) -> bool:
         """Validate that allocation doesn't exceed budget.
 
         Args:

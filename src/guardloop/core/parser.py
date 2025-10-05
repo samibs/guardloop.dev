@@ -36,9 +36,7 @@ class ResponseParser:
     """Parser for AI tool responses"""
 
     # Code block patterns
-    CODE_BLOCK_PATTERN = re.compile(
-        r"```(\w+)?\n(.*?)```", re.DOTALL | re.MULTILINE
-    )
+    CODE_BLOCK_PATTERN = re.compile(r"```(\w+)?\n(.*?)```", re.DOTALL | re.MULTILINE)
     INLINE_CODE_PATTERN = re.compile(r"`([^`]+)`")
 
     # File path patterns
@@ -46,12 +44,8 @@ class ResponseParser:
         re.compile(r"(?:^|\s)([a-zA-Z]:/[^\s]+)"),  # Windows absolute
         re.compile(r"(?:^|\s)(/[^\s]+\.[a-zA-Z0-9]+)"),  # Unix absolute
         re.compile(r"(?:^|\s)(\.{1,2}/[^\s]+)"),  # Relative paths
-        re.compile(
-            r"(?:File|Path|Location):\s*([^\n]+)"
-        ),  # Explicit file mentions
-        re.compile(
-            r"in\s+`?([a-zA-Z_][a-zA-Z0-9_/\\\.]+\.[a-zA-Z0-9]+)`?"
-        ),  # "in file.py"
+        re.compile(r"(?:File|Path|Location):\s*([^\n]+)"),  # Explicit file mentions
+        re.compile(r"in\s+`?([a-zA-Z_][a-zA-Z0-9_/\\\.]+\.[a-zA-Z0-9]+)`?"),  # "in file.py"
     ]
 
     # Command patterns
@@ -248,11 +242,7 @@ class ResponseParser:
         paragraphs = [p.strip() for p in text_without_code.split("\n\n")]
 
         # Filter out empty and very short paragraphs
-        explanations = [
-            p
-            for p in paragraphs
-            if p and len(p) > 20 and not self._is_command_like(p)
-        ]
+        explanations = [p for p in paragraphs if p and len(p) > 20 and not self._is_command_like(p)]
 
         logger.debug("Extracted explanations", count=len(explanations))
         return explanations
@@ -283,7 +273,9 @@ class ResponseParser:
 
         # Count technical terms
         metadata["has_security_mentions"] = bool(
-            re.search(r"\b(security|authentication|authorization|encryption)\b", text, re.IGNORECASE)
+            re.search(
+                r"\b(security|authentication|authorization|encryption)\b", text, re.IGNORECASE
+            )
         )
         metadata["has_test_mentions"] = bool(
             re.search(r"\b(test|testing|unit test|e2e|integration test)\b", text, re.IGNORECASE)

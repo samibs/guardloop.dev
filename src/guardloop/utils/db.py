@@ -103,9 +103,7 @@ class FailureModeModel(Base):
 
     __table_args__ = (
         CheckConstraint(tool.in_(["claude", "gemini", "codex"]), name="check_tool"),
-        CheckConstraint(
-            severity.in_(["low", "medium", "high", "critical"]), name="check_severity"
-        ),
+        CheckConstraint(severity.in_(["low", "medium", "high", "critical"]), name="check_severity"),
     )
 
 
@@ -133,9 +131,7 @@ class ViolationModel(Base):
             guardrail_type.in_(["bpsbs", "ai", "ux_ui", "agent"]),
             name="check_guardrail_type",
         ),
-        CheckConstraint(
-            severity.in_(["low", "medium", "high", "critical"]), name="check_severity"
-        ),
+        CheckConstraint(severity.in_(["low", "medium", "high", "critical"]), name="check_severity"),
     )
 
 
@@ -375,9 +371,7 @@ class DatabaseManager:
             echo=False,
             connect_args={"check_same_thread": False},
         )
-        self.SessionLocal = sessionmaker(
-            autocommit=False, autoflush=False, bind=self.engine
-        )
+        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
     def init_db(self) -> None:
         """Initialize database with schema"""

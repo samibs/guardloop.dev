@@ -64,9 +64,7 @@ class BusinessAnalystAgent(BaseAgent):
 
     def _has_user_story_format(self, prompt: str) -> bool:
         """Check for user story format"""
-        return self._contains_keywords(
-            prompt, ["as a", "i want", "so that", "user story"]
-        )
+        return self._contains_keywords(prompt, ["as a", "i want", "so that", "user story"])
 
     def _has_acceptance_criteria(self, context: AgentContext) -> bool:
         """Check for acceptance criteria"""

@@ -117,13 +117,9 @@ class BaseAgent(ABC):
         """
         if not parsed or not parsed.code_blocks:
             return False
-        return any(
-            block.language.lower() == language.lower() for block in parsed.code_blocks
-        )
+        return any(block.language.lower() == language.lower() for block in parsed.code_blocks)
 
-    def _calculate_confidence(
-        self, approved: bool, issues_count: int, total_checks: int
-    ) -> float:
+    def _calculate_confidence(self, approved: bool, issues_count: int, total_checks: int) -> float:
         """Calculate decision confidence
 
         Args:

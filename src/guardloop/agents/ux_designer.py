@@ -20,7 +20,9 @@ class UXDesignerAgent(BaseAgent):
         # Check accessibility
         if not self._has_accessibility(context):
             issues_count += 1
-            suggestions.append("Add WCAG 2.1 accessibility features: ARIA labels, keyboard navigation")
+            suggestions.append(
+                "Add WCAG 2.1 accessibility features: ARIA labels, keyboard navigation"
+            )
 
         # Check responsive design
         if not self._has_responsive_design(context):

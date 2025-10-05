@@ -163,9 +163,7 @@ class TaskClassifier:
         features = {
             "code_keywords": self._score_keywords(prompt_lower, self.CODE_KEYWORDS),
             "content_keywords": self._score_keywords(prompt_lower, self.CONTENT_KEYWORDS),
-            "creative_keywords": self._score_keywords(
-                prompt_lower, self.CREATIVE_KEYWORDS
-            ),
+            "creative_keywords": self._score_keywords(prompt_lower, self.CREATIVE_KEYWORDS),
             "code_patterns": self._score_patterns(prompt, self.CODE_PATTERNS),
             "file_extensions": self._score_extensions(prompt_lower),
         }

@@ -279,9 +279,7 @@ class ContextManager:
             return content
 
         except Exception as e:
-            logger.error(
-                "Error loading guardrail file", file_path=str(file_path), error=str(e)
-            )
+            logger.error("Error loading guardrail file", file_path=str(file_path), error=str(e))
             return None
 
     def _load_agent_instructions(self, agent: str, version: str = "summary") -> Optional[str]:

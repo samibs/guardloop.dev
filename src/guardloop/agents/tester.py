@@ -45,9 +45,7 @@ class TesterAgent(BaseAgent):
         if coverage < 100:
             approved = False
             issues_count += 1
-            suggestions.append(
-                f"Test coverage is {coverage}%. Must be 100% for all critical paths"
-            )
+            suggestions.append(f"Test coverage is {coverage}%. Must be 100% for all critical paths")
 
         # Check 2: E2E tests
         total_checks += 1

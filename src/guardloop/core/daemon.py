@@ -88,9 +88,9 @@ class GuardrailDaemon:
         self.file_executor = None  # Initialized per request with project_root
 
         # Check if v2 features enabled (will add to config later)
-        self.v2_enabled = getattr(config.features, 'v2_adaptive_learning', True)
-        self.v2_auto_save = getattr(config.features, 'v2_auto_save_files', True)
-        self.v2_task_classification = getattr(config.features, 'v2_task_classification', True)
+        self.v2_enabled = getattr(config.features, "v2_adaptive_learning", True)
+        self.v2_auto_save = getattr(config.features, "v2_auto_save_files", True)
+        self.v2_task_classification = getattr(config.features, "v2_task_classification", True)
 
         # Pre-warm cache with commonly used guardrails
         self._prewarm_cache()
@@ -199,8 +199,7 @@ class GuardrailDaemon:
             # 2. Execute AI CLI with optional streaming
             adapter = self.get_adapter(request.tool)
             ai_response: AIResponse = await adapter.execute(
-                context,
-                stream_callback=request.stream_callback
+                context, stream_callback=request.stream_callback
             )
 
             if ai_response.error:
@@ -239,9 +238,7 @@ class GuardrailDaemon:
                 "Validation completed",
                 session_id=request.session_id,
                 violations=len(violations),
-                critical_violations=len(
-                    self.validator.get_critical_violations(violations)
-                ),
+                critical_violations=len(self.validator.get_critical_violations(violations)),
             )
 
             # 5. Detect failures
@@ -251,9 +248,7 @@ class GuardrailDaemon:
                 "Failure detection completed",
                 session_id=request.session_id,
                 failures=len(failures),
-                critical_failures=len(
-                    [f for f in failures if f.severity == "critical"]
-                ),
+                critical_failures=len([f for f in failures if f.severity == "critical"]),
             )
 
             # 6. Determine approval
@@ -269,9 +264,7 @@ class GuardrailDaemon:
             # v2 STEP 7: File Execution (if enabled and safe)
             file_operations = []
             if self.v2_enabled and self.v2_auto_save and request.project_root:
-                self.file_executor = FileExecutor(
-                    request.project_root, auto_save_enabled=True
-                )
+                self.file_executor = FileExecutor(request.project_root, auto_save_enabled=True)
                 operations = self.file_executor.extract_operations(ai_response.raw_output)
 
                 if operations:
@@ -302,9 +295,7 @@ class GuardrailDaemon:
                     request.conversation_id,
                     "assistant",
                     ai_response.raw_output,
-                    tokens_used=self.conversation_manager.estimate_tokens(
-                        ai_response.raw_output
-                    ),
+                    tokens_used=self.conversation_manager.estimate_tokens(ai_response.raw_output),
                 )
 
             # 9. Log session (async, non-blocking)
@@ -476,9 +467,7 @@ class GuardrailDaemon:
                 )
 
         except Exception as e:
-            logger.error(
-                "Failed to log session", session_id=request.session_id, error=str(e)
-            )
+            logger.error("Failed to log session", session_id=request.session_id, error=str(e))
 
     def _prewarm_cache(self) -> None:
         """Pre-warm cache with commonly used guardrails to eliminate cold-start latency.
@@ -513,25 +502,17 @@ class GuardrailDaemon:
                         mode=mode,
                         prompt="",  # Empty prompt for cache key
                         task_type=task_type,
-                        db_session=None
+                        db_session=None,
                     )
                     files_loaded += 1
                 except Exception as e:
-                    logger.warning(
-                        "Failed to pre-warm guardrail",
-                        file=filename,
-                        error=str(e)
-                    )
+                    logger.warning("Failed to pre-warm guardrail", file=filename, error=str(e))
 
             # Pre-load medium priority files (best effort)
             for filename, task_type, mode in medium_priority:
                 try:
                     self.context_manager.load_guardrails(
-                        agent=None,
-                        mode=mode,
-                        prompt="",
-                        task_type=task_type,
-                        db_session=None
+                        agent=None, mode=mode, prompt="", task_type=task_type, db_session=None
                     )
                     files_loaded += 1
                 except Exception:
@@ -542,14 +523,11 @@ class GuardrailDaemon:
             logger.info(
                 "Cache pre-warmed successfully",
                 files_loaded=files_loaded,
-                prewarm_time_ms=round(prewarm_time, 2)
+                prewarm_time_ms=round(prewarm_time, 2),
             )
 
         except Exception as e:
-            logger.warning(
-                "Cache pre-warming failed",
-                error=str(e)
-            )
+            logger.warning("Cache pre-warming failed", error=str(e))
 
     def get_stats(self) -> Dict[str, Any]:
         """Get daemon statistics
@@ -559,9 +537,7 @@ class GuardrailDaemon:
         """
         return {
             "mode": self.config.mode,
-            "enabled_tools": [
-                tool for tool, cfg in self.config.tools.items() if cfg.enabled
-            ],
+            "enabled_tools": [tool for tool, cfg in self.config.tools.items() if cfg.enabled],
             "context_manager": self.context_manager.get_stats(),
             "validator_mode": self.validator.mode,
             "failure_detector": self.failure_detector.get_stats(),

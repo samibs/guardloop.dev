@@ -46,7 +46,9 @@ class StandardsOracleAgent(BaseAgent):
         if context.parsed_response and context.parsed_response.code_blocks:
             for block in context.parsed_response.code_blocks:
                 # Check for bad patterns
-                if self._contains_keywords(block.content, ["var ", "temp1", "data2", "foo", "test1"]):
+                if self._contains_keywords(
+                    block.content, ["var ", "temp1", "data2", "foo", "test1"]
+                ):
                     return False
         return True
 
@@ -58,6 +60,8 @@ class StandardsOracleAgent(BaseAgent):
         # Check for some indicators of good design
         if context.parsed_response and context.parsed_response.code_blocks:
             for block in context.parsed_response.code_blocks:
-                if self._contains_keywords(block.content, ["class", "def ", "function", "interface"]):
+                if self._contains_keywords(
+                    block.content, ["class", "def ", "function", "interface"]
+                ):
                     return True
         return True  # Simplified for MVP

@@ -140,9 +140,7 @@ class FileExecutor:
         for match in re.finditer(pattern3, llm_output):
             file_path = match.group(1).strip()
             # Look for code block before this
-            code_match = re.search(
-                r"```(?:\w+)?\n(.*?)```", llm_output[: match.start()], re.DOTALL
-            )
+            code_match = re.search(r"```(?:\w+)?\n(.*?)```", llm_output[: match.start()], re.DOTALL)
             if code_match:
                 operations.append(
                     FileOperation(
@@ -160,8 +158,8 @@ class FileExecutor:
             # Look for code block near this statement (before or after)
             code_match = re.search(
                 r"```(?:\w+)?\n(.*?)```",
-                llm_output[max(0, match.start() - 5000):match.end() + 1000],
-                re.DOTALL
+                llm_output[max(0, match.start() - 5000) : match.end() + 1000],
+                re.DOTALL,
             )
             if code_match:
                 operations.append(
@@ -242,9 +240,7 @@ class FileExecutor:
         operation.warnings = warnings
         operation.validated = True
 
-        is_safe = safety_score >= 0.5 and not any(
-            "System path" in w for w in warnings
-        )
+        is_safe = safety_score >= 0.5 and not any("System path" in w for w in warnings)
 
         logger.debug(
             "Operation validated",
@@ -275,9 +271,7 @@ class FileExecutor:
 
         # Check auto-save eligibility
         can_auto_save = (
-            self.auto_save_enabled
-            and operation.safety_score >= 0.8
-            and not operation.warnings
+            self.auto_save_enabled and operation.safety_score >= 0.8 and not operation.warnings
         )
 
         if confirm and not can_auto_save:
@@ -352,9 +346,7 @@ class FileExecutor:
                 results["skipped"] += 1
             else:
                 results["failed"] += 1
-                results["errors"].append(
-                    {"file": operation.file_path, "error": error}
-                )
+                results["errors"].append({"file": operation.file_path, "error": error})
 
         logger.info(
             "Batch execution complete",
@@ -386,9 +378,7 @@ class FileExecutor:
             is_safe, warnings = self.validate_operation(op)
 
             status = "✅" if is_safe else "⚠️"
-            lines.append(
-                f"{status} {op.operation_type.upper()}: {op.file_path}"
-            )
+            lines.append(f"{status} {op.operation_type.upper()}: {op.file_path}")
 
             if warnings:
                 for warning in warnings:

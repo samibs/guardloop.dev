@@ -74,9 +74,7 @@ def run(tool: str, prompt: str, agent: Optional[str], mode: str, verbose: bool):
             daemon = GuardrailDaemon(config)
 
             # Create request
-            request = AIRequest(
-                tool=tool, prompt=prompt, agent=agent or "auto", mode=mode
-            )
+            request = AIRequest(tool=tool, prompt=prompt, agent=agent or "auto", mode=mode)
 
             # Show spinner
             with Progress(
@@ -84,9 +82,7 @@ def run(tool: str, prompt: str, agent: Optional[str], mode: str, verbose: bool):
                 TextColumn("[progress.description]{task.description}"),
                 console=console,
             ) as progress:
-                progress.add_task(
-                    f"[cyan]Running {tool} with guardrails...", total=None
-                )
+                progress.add_task(f"[cyan]Running {tool} with guardrails...", total=None)
 
                 # Execute request
                 result = await daemon.process_request(request)
@@ -132,16 +128,18 @@ def run(tool: str, prompt: str, agent: Optional[str], mode: str, verbose: bool):
                         failure.category,
                         failure.pattern,
                         failure.severity,
-                        failure.context[:50] + "..." if len(failure.context) > 50 else failure.context,
+                        (
+                            failure.context[:50] + "..."
+                            if len(failure.context) > 50
+                            else failure.context
+                        ),
                     )
 
                 console.print("\n")
                 console.print(failures_table)
 
             # Show execution time
-            console.print(
-                f"\n⏱️  Execution time: [cyan]{result.execution_time_ms}ms[/cyan]"
-            )
+            console.print(f"\n⏱️  Execution time: [cyan]{result.execution_time_ms}ms[/cyan]")
             console.print(f"🆔 Session ID: [dim]{result.session_id}[/dim]")
 
         except Exception as e:
@@ -184,6 +182,7 @@ def init():
 
     # Find package guardrails directory
     import guardloop
+
     package_dir = Path(guardloop.__file__).parent.parent
     source_guardrails = package_dir / "guardrails"
 
@@ -280,18 +279,10 @@ def status():
         features_branch.add(
             f"{'✅' if config.features.background_analysis else '❌'} Background Analysis"
         )
-        features_branch.add(
-            f"{'✅' if config.features.analysis_worker else '❌'} Analysis Worker"
-        )
-        features_branch.add(
-            f"{'✅' if config.features.metrics_worker else '❌'} Metrics Worker"
-        )
-        features_branch.add(
-            f"{'✅' if config.features.markdown_export else '❌'} Markdown Export"
-        )
-        features_branch.add(
-            f"{'✅' if config.features.cleanup_worker else '❌'} Cleanup Worker"
-        )
+        features_branch.add(f"{'✅' if config.features.analysis_worker else '❌'} Analysis Worker")
+        features_branch.add(f"{'✅' if config.features.metrics_worker else '❌'} Metrics Worker")
+        features_branch.add(f"{'✅' if config.features.markdown_export else '❌'} Markdown Export")
+        features_branch.add(f"{'✅' if config.features.cleanup_worker else '❌'} Cleanup Worker")
 
         console.print(config_tree)
 
@@ -389,7 +380,9 @@ def daemon(background: bool):
 
     if background:
         # TODO: Implement proper daemonization
-        console.print("[yellow]Background mode not yet implemented. Running in foreground...[/yellow]")
+        console.print(
+            "[yellow]Background mode not yet implemented. Running in foreground...[/yellow]"
+        )
 
     asyncio.run(run_daemon())
 
@@ -406,11 +399,13 @@ def config():
         # Convert to dict and display as YAML
         config_dict = cfg.model_dump()
 
-        console.print(Panel(
-            yaml.dump(config_dict, default_flow_style=False, sort_keys=False),
-            title=f"Config: {config_manager.config_path}",
-            border_style="cyan"
-        ))
+        console.print(
+            Panel(
+                yaml.dump(config_dict, default_flow_style=False, sort_keys=False),
+                title=f"Config: {config_manager.config_path}",
+                border_style="cyan",
+            )
+        )
 
     except Exception as e:
         console.print(f"\n[red bold]Error:[/red bold] {str(e)}", style="red")
@@ -503,7 +498,10 @@ def interactive():
                     for i, cb in enumerate(result.parsed.code_blocks, 1):
                         console.print(f"\n[dim]Block {i} ({cb.language}):[/dim]")
                         from rich.syntax import Syntax
-                        syntax = Syntax(cb.code, cb.language or "text", theme="monokai", line_numbers=True)
+
+                        syntax = Syntax(
+                            cb.code, cb.language or "text", theme="monokai", line_numbers=True
+                        )
                         console.print(syntax)
                     console.print()
 
@@ -531,30 +529,22 @@ def interactive():
 
                 # Show violations with details
                 if result.guardrails_applied and result.violations:
-                    console.print(
-                        f"\n[yellow]⚠️  Violations: {len(result.violations)}[/yellow]"
-                    )
+                    console.print(f"\n[yellow]⚠️  Violations: {len(result.violations)}[/yellow]")
                     # Show top 3 violations
                     for v in result.violations[:3]:
-                        console.print(
-                            f"   [{v.severity}] {v.guardrail_type}: {v.description}"
-                        )
+                        console.print(f"   [{v.severity}] {v.guardrail_type}: {v.description}")
                     if len(result.violations) > 3:
                         console.print(f"   [dim]... and {len(result.violations) - 3} more[/dim]")
 
                 # Show failures
                 if result.failures:
-                    console.print(
-                        f"\n[red]🚨 Failures: {len(result.failures)}[/red]"
-                    )
+                    console.print(f"\n[red]🚨 Failures: {len(result.failures)}[/red]")
                     for f in result.failures[:3]:
                         console.print(f"   • {f.category}: {f.issue}")
 
                 # Show execution time
                 if result.execution_time_ms:
-                    console.print(
-                        f"\n[dim]⏱️  {result.execution_time_ms}ms[/dim]"
-                    )
+                    console.print(f"\n[dim]⏱️  {result.execution_time_ms}ms[/dim]")
 
                 console.print()
 

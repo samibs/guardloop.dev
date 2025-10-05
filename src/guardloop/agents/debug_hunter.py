@@ -54,7 +54,7 @@ class DebugHunterAgent(BaseAgent):
         if context.parsed_response:
             return self._contains_keywords(
                 " ".join([b.code for b in context.parsed_response.code_blocks]),
-                ["test_", "it(", "regression", "reproduce"]
+                ["test_", "it(", "regression", "reproduce"],
             )
         return False
 
@@ -62,6 +62,6 @@ class DebugHunterAgent(BaseAgent):
         if context.parsed_response:
             return self._contains_keywords(
                 " ".join([b.code for b in context.parsed_response.code_blocks]),
-                ["logger", "logging", "log.", "console.log", "print("]
+                ["logger", "logging", "log.", "console.log", "print("],
             )
         return False

@@ -326,9 +326,7 @@ class MarkdownExporter(BackgroundWorker):
                 tool = failure.get("tool", "N/A")
                 context = failure.get("context", "")[:50]  # Truncate context
 
-                lines.append(
-                    f"| {timestamp} | {category} | {severity} | {tool} | {context}... |"
-                )
+                lines.append(f"| {timestamp} | {category} | {severity} | {tool} | {context}... |")
 
         lines.extend(["", "---", "", "**Powered by Guardrail.dev**"])
 
@@ -419,7 +417,9 @@ class WorkerManager:
             self.workers.append(CleanupWorker(config, db))
 
         logger.info(
-            "WorkerManager initialized", worker_count=len(self.workers), workers=[w.worker_name for w in self.workers]
+            "WorkerManager initialized",
+            worker_count=len(self.workers),
+            workers=[w.worker_name for w in self.workers],
         )
 
     async def start_all(self) -> None:
@@ -446,7 +446,5 @@ class WorkerManager:
         """
         return {
             "total_workers": len(self.workers),
-            "workers": [
-                {"name": w.worker_name, "running": w.running} for w in self.workers
-            ],
+            "workers": [{"name": w.worker_name, "running": w.running} for w in self.workers],
         }

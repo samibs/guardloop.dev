@@ -13,9 +13,7 @@ class ArchitectAgent(BaseAgent):
         Args:
             config: Guardrail configuration
         """
-        super().__init__(
-            "architect", "~/.guardrail/guardrails/agents/cold-blooded-architect.md"
-        )
+        super().__init__("architect", "~/.guardrail/guardrails/agents/cold-blooded-architect.md")
         self.config = config
 
     async def evaluate(self, context: AgentContext) -> AgentDecision:
@@ -47,33 +45,25 @@ class ArchitectAgent(BaseAgent):
             if not self._has_three_layers(context.parsed_response):
                 approved = False
                 issues_count += 1
-                suggestions.append(
-                    "Must include 3-layer design: Database + Backend + Frontend"
-                )
+                suggestions.append("Must include 3-layer design: Database + Backend + Frontend")
 
         # Check 3: Security considerations
         total_checks += 1
         if not self._mentions_security(context):
             issues_count += 1
-            suggestions.append(
-                "Include security measures: MFA + Azure AD + RBAC in design"
-            )
+            suggestions.append("Include security measures: MFA + Azure AD + RBAC in design")
 
         # Check 4: Scalability considerations
         total_checks += 1
         if not self._mentions_scalability(context):
             issues_count += 1
-            suggestions.append(
-                "Consider scalability: caching, load balancing, horizontal scaling"
-            )
+            suggestions.append("Consider scalability: caching, load balancing, horizontal scaling")
 
         # Check 5: Error handling strategy
         total_checks += 1
         if context.parsed_response and not self._has_error_handling_design(context):
             issues_count += 1
-            suggestions.append(
-                "Define error handling strategy and fallback mechanisms"
-            )
+            suggestions.append("Define error handling strategy and fallback mechanisms")
 
         # Determine next agent
         next_agent = "dba" if approved else None
@@ -84,9 +74,11 @@ class ArchitectAgent(BaseAgent):
         return AgentDecision(
             agent_name=self.name,
             approved=approved,
-            reason="Architecture validation complete"
-            if approved
-            else "Architecture incomplete or missing critical elements",
+            reason=(
+                "Architecture validation complete"
+                if approved
+                else "Architecture incomplete or missing critical elements"
+            ),
             suggestions=suggestions,
             next_agent=next_agent,
             confidence=confidence,
@@ -120,13 +112,9 @@ class ArchitectAgent(BaseAgent):
                 ],
             ),
             # Behavior specifications
-            self._contains_keywords(
-                prompt, ["should", "must", "will", "when", "if", "then"]
-            ),
+            self._contains_keywords(prompt, ["should", "must", "will", "when", "if", "then"]),
             # Data/model mentions
-            self._contains_keywords(
-                prompt, ["model", "schema", "table", "entity", "data"]
-            ),
+            self._contains_keywords(prompt, ["model", "schema", "table", "entity", "data"]),
         ]
 
         # Require at least 2 specificity indicators
@@ -146,16 +134,16 @@ class ArchitectAgent(BaseAgent):
 
         # Check for database layer
         has_db = any(
-            self._contains_keywords(
-                block.content, ["create table", "schema", "migration", "model"]
-            )
+            self._contains_keywords(block.content, ["create table", "schema", "migration", "model"])
             or block.language in ["sql", "postgresql", "mysql"]
             for block in parsed.code_blocks
         )
 
         # Check for backend layer
         has_backend = any(
-            self._contains_keywords(block.content, ["router", "controller", "api", "endpoint", "service"])
+            self._contains_keywords(
+                block.content, ["router", "controller", "api", "endpoint", "service"]
+            )
             or block.language in ["python", "javascript", "typescript", "go", "java"]
             for block in parsed.code_blocks
         )

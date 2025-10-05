@@ -95,9 +95,7 @@ class SemanticGuardrailMatcher:
             # Get or compute guardrail embedding
             if guardrail.id not in self.guardrail_embeddings:
                 # Compute on-demand if not cached
-                g_embedding = self.model.encode(
-                    [guardrail.rule_text], show_progress_bar=False
-                )[0]
+                g_embedding = self.model.encode([guardrail.rule_text], show_progress_bar=False)[0]
                 self.guardrail_embeddings[guardrail.id] = g_embedding
             else:
                 g_embedding = self.guardrail_embeddings[guardrail.id]

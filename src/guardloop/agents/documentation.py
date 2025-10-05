@@ -42,10 +42,14 @@ class DocumentationAgent(BaseAgent):
         )
 
     def _has_readme(self, context):
-        return self._contains_keywords(context.raw_output, ["readme", "# ", "## ", "getting started"])
+        return self._contains_keywords(
+            context.raw_output, ["readme", "# ", "## ", "getting started"]
+        )
 
     def _has_api_docs(self, context):
-        return self._contains_keywords(context.raw_output, ["@param", "@returns", "Args:", "Returns:", "/**"])
+        return self._contains_keywords(
+            context.raw_output, ["@param", "@returns", "Args:", "Returns:", "/**"]
+        )
 
     def _has_examples(self, context):
         return self._contains_keywords(context.raw_output, ["example", "usage", "sample", "```"])

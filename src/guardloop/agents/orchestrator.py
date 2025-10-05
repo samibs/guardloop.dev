@@ -20,9 +20,7 @@ class OrchestratorAgent(BaseAgent):
         Args:
             config: Guardrail configuration
         """
-        super().__init__(
-            "orchestrator", "~/.guardrail/guardrails/agents/orchestrator.md"
-        )
+        super().__init__("orchestrator", "~/.guardrail/guardrails/agents/orchestrator.md")
         self.config = config
         self.agents: Dict[str, BaseAgent] = {}
         self.chain_optimizer = AgentChainOptimizer()
@@ -175,9 +173,7 @@ class OrchestratorAgent(BaseAgent):
         # Score each agent based on keyword matches
         scores = {}
         for agent_name, agent_keywords in keywords.items():
-            score = sum(
-                1 for keyword in agent_keywords if keyword in prompt_lower
-            )
+            score = sum(1 for keyword in agent_keywords if keyword in prompt_lower)
             if score > 0:
                 scores[agent_name] = score
 
@@ -236,9 +232,7 @@ class OrchestratorAgent(BaseAgent):
 
             # Stop if agent blocks
             if not decision.approved:
-                logger.warning(
-                    f"Chain stopped by {agent_name}", reason=decision.reason
-                )
+                logger.warning(f"Chain stopped by {agent_name}", reason=decision.reason)
                 break
 
             # Update context with findings
@@ -269,9 +263,7 @@ class OrchestratorAgent(BaseAgent):
             approved=all_approved,
             reason=f"Orchestrated {len(decisions)} agent(s)",
             suggestions=all_suggestions,
-            confidence=sum(d.confidence for d in decisions) / len(decisions)
-            if decisions
-            else 1.0,
+            confidence=sum(d.confidence for d in decisions) / len(decisions) if decisions else 1.0,
         )
 
     def get_agent_chain(self, start_agent: str) -> List[str]:

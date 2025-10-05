@@ -287,9 +287,7 @@ class ConfigManager:
 
         # Features
         if os.getenv("GUARDRAIL_BACKGROUND_ANALYSIS"):
-            self.config.features.background_analysis = (
-                self.settings.guardrail_background_analysis
-            )
+            self.config.features.background_analysis = self.settings.guardrail_background_analysis
 
     def save(self) -> None:
         """Save configuration to file"""

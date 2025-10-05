@@ -8,6 +8,7 @@ from datetime import datetime
 from typing import List, Optional
 
 import structlog
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from guardloop.utils.db import DynamicGuardrailModel, LearnedPatternModel, RuleEffectivenessModel
@@ -203,7 +204,9 @@ class AdaptiveGuardrailGenerator:
             guardrails = self._score_by_relevance(guardrails, prompt, task_type)
 
             # Sort by score (relevance + confidence + recency + success)
-            guardrails.sort(key=lambda gr: self._calculate_priority_score(gr, task_type), reverse=True)
+            guardrails.sort(
+                key=lambda gr: self._calculate_priority_score(gr, task_type), reverse=True
+            )
 
             # Limit to top N most relevant
             guardrails = guardrails[:max_rules]
@@ -244,7 +247,9 @@ class AdaptiveGuardrailGenerator:
             lines.append(f"\n## {category.replace('_', ' ').title()}\n")
 
             for rule in rules:
-                severity_icon = self._get_severity_icon(rule.rule_metadata.get("severity", "medium") if rule.rule_metadata else "medium")
+                severity_icon = self._get_severity_icon(
+                    rule.rule_metadata.get("severity", "medium") if rule.rule_metadata else "medium"
+                )
                 lines.append(f"- {severity_icon} **{rule.rule_text}**")
 
                 if rule.enforcement_mode == "block":
@@ -351,9 +356,7 @@ class AdaptiveGuardrailGenerator:
         )
 
         if not effectiveness:
-            effectiveness = RuleEffectivenessModel(
-                rule_id=rule_id, date=datetime.utcnow()
-            )
+            effectiveness = RuleEffectivenessModel(rule_id=rule_id, date=datetime.utcnow())
             self.session.add(effectiveness)
 
         # Update metrics

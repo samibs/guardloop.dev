@@ -49,7 +49,11 @@ class GuardrailValidator:
     # BPSBS validation patterns
     BPSBS_PATTERNS = {
         "three_layer": {
-            "patterns": [r"\b(database|db)\b", r"\b(backend|api|server)\b", r"\b(frontend|ui|client)\b"],
+            "patterns": [
+                r"\b(database|db)\b",
+                r"\b(backend|api|server)\b",
+                r"\b(frontend|ui|client)\b",
+            ],
             "severity": Severity.HIGH,
             "description": "Missing 3-layer architecture (DB + Backend + Frontend)",
             "suggestion": "Implement all three layers: Database, Backend API, and Frontend",
@@ -436,12 +440,19 @@ class GuardrailValidator:
             by_severity[v.severity].append(v)
 
         # Sort by severity (critical first)
-        severity_order = [Severity.CRITICAL.value, Severity.HIGH.value, Severity.MEDIUM.value, Severity.LOW.value]
+        severity_order = [
+            Severity.CRITICAL.value,
+            Severity.HIGH.value,
+            Severity.MEDIUM.value,
+            Severity.LOW.value,
+        ]
 
         for sev in severity_order:
             if sev in by_severity:
                 icon = {"critical": "🔴", "high": "🟠", "medium": "🟡", "low": "🔵"}
-                report_lines.append(f"\n{icon[sev]} {sev.upper()} ({len(by_severity[sev])} issues):")
+                report_lines.append(
+                    f"\n{icon[sev]} {sev.upper()} ({len(by_severity[sev])} issues):"
+                )
 
                 for v in by_severity[sev]:
                     report_lines.append(f"  • [{v.guardrail_type}] {v.description}")

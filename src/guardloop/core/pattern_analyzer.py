@@ -133,9 +133,7 @@ class PatternAnalyzer:
 
         self.session.commit()
 
-        logger.info(
-            "Pattern analysis complete", patterns_found=len(learned_patterns), days=days
-        )
+        logger.info("Pattern analysis complete", patterns_found=len(learned_patterns), days=days)
 
         return learned_patterns
 
@@ -153,9 +151,7 @@ class PatternAnalyzer:
         """
         cutoff_date = datetime.utcnow() - timedelta(days=days)
 
-        query = self.session.query(ViolationModel).filter(
-            ViolationModel.timestamp >= cutoff_date
-        )
+        query = self.session.query(ViolationModel).filter(ViolationModel.timestamp >= cutoff_date)
 
         if guardrail_types:
             query = query.filter(ViolationModel.guardrail_type.in_(guardrail_types))
@@ -218,9 +214,7 @@ class PatternAnalyzer:
                     first_seen=min(v.timestamp for v in violation_list),
                     last_seen=max(v.timestamp for v in violation_list),
                     confidence_score=confidence,
-                    example_sessions=[
-                        str(v.session_id) for v in violation_list[:5]
-                    ],
+                    example_sessions=[str(v.session_id) for v in violation_list[:5]],
                     metadata={
                         "guardrail_type": gtype,
                         "rule": rule,
@@ -235,9 +229,7 @@ class PatternAnalyzer:
 
         self.session.commit()
 
-        logger.info(
-            "Violation analysis complete", patterns_found=len(learned_patterns), days=days
-        )
+        logger.info("Violation analysis complete", patterns_found=len(learned_patterns), days=days)
 
         return learned_patterns
 

@@ -195,6 +195,7 @@ class BaseAdapter(ABC):
 
             # Stream output if callback provided
             if stream_callback:
+
                 async def read_stream(stream, is_stderr=False):
                     while True:
                         line = await stream.readline()
@@ -211,17 +212,14 @@ class BaseAdapter(ABC):
                 # Read both streams concurrently
                 await asyncio.wait_for(
                     asyncio.gather(
-                        read_stream(process.stdout),
-                        read_stream(process.stderr, is_stderr=True)
+                        read_stream(process.stdout), read_stream(process.stderr, is_stderr=True)
                     ),
-                    timeout=timeout
+                    timeout=timeout,
                 )
                 await process.wait()
             else:
                 # Original non-streaming behavior
-                stdout, stderr = await asyncio.wait_for(
-                    process.communicate(), timeout=timeout
-                )
+                stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=timeout)
                 stdout_lines = [stdout.decode("utf-8", errors="replace")]
                 stderr_lines = [stderr.decode("utf-8", errors="replace")]
 

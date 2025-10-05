@@ -358,9 +358,7 @@ class FailureDetector:
             "total_patterns": len(self.PATTERNS),
             "categories": list(self.PATTERNS.keys()),
             "severity_distribution": {
-                "critical": sum(
-                    1 for p in self.PATTERNS.values() if p["severity"] == "critical"
-                ),
+                "critical": sum(1 for p in self.PATTERNS.values() if p["severity"] == "critical"),
                 "high": sum(1 for p in self.PATTERNS.values() if p["severity"] == "high"),
                 "medium": sum(1 for p in self.PATTERNS.values() if p["severity"] == "medium"),
                 "low": sum(1 for p in self.PATTERNS.values() if p["severity"] == "low"),

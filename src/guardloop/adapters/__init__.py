@@ -31,9 +31,7 @@ class AdapterFactory:
     }
 
     @classmethod
-    def get_adapter(
-        cls, tool: str, cli_path: str = None, timeout: int = 30
-    ) -> BaseAdapter:
+    def get_adapter(cls, tool: str, cli_path: str = None, timeout: int = 30) -> BaseAdapter:
         """Get an adapter for the specified tool
 
         Args:
@@ -51,9 +49,7 @@ class AdapterFactory:
 
         if tool_lower not in cls._adapters:
             available = ", ".join(cls._adapters.keys())
-            raise ValueError(
-                f"Unsupported AI tool: {tool}. Available tools: {available}"
-            )
+            raise ValueError(f"Unsupported AI tool: {tool}. Available tools: {available}")
 
         adapter_class = cls._adapters[tool_lower]
 
@@ -99,9 +95,7 @@ class AdapterFactory:
                 results[tool_name] = adapter.validate_installation()
 
             except Exception as e:
-                logger.error(
-                    "Error validating tool", tool=tool_name, error=str(e)
-                )
+                logger.error("Error validating tool", tool=tool_name, error=str(e))
                 results[tool_name] = False
 
         return results

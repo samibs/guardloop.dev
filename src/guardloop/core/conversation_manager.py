@@ -64,9 +64,7 @@ class ConversationManager:
         logger.info("Conversation started", session_id=session_id)
         return session_id
 
-    def add_message(
-        self, session_id: str, role: str, content: str, tokens_used: int = 0
-    ) -> None:
+    def add_message(self, session_id: str, role: str, content: str, tokens_used: int = 0) -> None:
         """Add message to conversation
 
         Args:
@@ -104,9 +102,7 @@ class ConversationManager:
             tokens=tokens_used,
         )
 
-    def get_history(
-        self, session_id: str, include_system: bool = False
-    ) -> List[Message]:
+    def get_history(self, session_id: str, include_system: bool = False) -> List[Message]:
         """Get conversation history
 
         Args:
@@ -127,9 +123,7 @@ class ConversationManager:
 
         return messages
 
-    def build_context(
-        self, session_id: str, current_prompt: str
-    ) -> str:
+    def build_context(self, session_id: str, current_prompt: str) -> str:
         """Build conversation context for LLM
 
         Args:
@@ -230,9 +224,7 @@ class ConversationManager:
                 removed = messages.pop(0)
                 total_tokens -= removed.tokens_used
 
-            logger.debug(
-                "Pruned by token limit", kept=len(messages), total_tokens=total_tokens
-            )
+            logger.debug("Pruned by token limit", kept=len(messages), total_tokens=total_tokens)
 
         return messages
 
