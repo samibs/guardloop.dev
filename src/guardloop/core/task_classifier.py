@@ -311,7 +311,8 @@ class TaskClassifier:
                 "mixed",
                 max_score,
                 True,  # Apply guardrails when uncertain
-                f"Mixed task type (code: {code_score:.2f}, creative: {creative_score:.2f}, content: {content_score:.2f}), applying guardrails",
+                f"Mixed task type (code: {code_score:.2f}, creative: {creative_score:.2f}, "
+                f"content: {content_score:.2f}), applying guardrails",
             )
 
         # Unknown - default to requiring guardrails (safe default)

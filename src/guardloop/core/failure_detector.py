@@ -29,19 +29,19 @@ class FailureDetector:
     # Comprehensive failure patterns based on real-world AI issues
     PATTERNS: Dict[str, Dict] = {
         "JWT/Auth": {
-            "regex": r"\b(jwt|token|unauthorized|expired|authentication\s+failed|invalid\s+token|bearer)\b",
+            "regex": r"\b(jwt|token|unauthorized|expired|authentication\s+failed|invalid\s+token|bearer)\b",  # noqa: E501
             "severity": "high",
             "suggestion": "Ensure MFA + Azure AD is configured. Check token validation logic.",
             "context_words": 50,
         },
         ".NET Code": {
-            "regex": r"\b(csproj|dependency\s+injection|di\s+error|async\s+issue|broken\s+reference|nuget)\b",
+            "regex": r"\b(csproj|dependency\s+injection|di\s+error|async\s+issue|broken\s+reference|nuget)\b",  # noqa: E501
             "severity": "medium",
             "suggestion": "Review .NET dependency injection configuration and project references.",
             "context_words": 50,
         },
         "Angular DI": {
-            "regex": r"\b(translateservice|apiservice|provider\s+not\s+found|no\s+provider\s+for|nullinjectorerror)\b",
+            "regex": r"\b(translateservice|apiservice|provider\s+not\s+found|no\s+provider\s+for|nullinjectorerror)\b",  # noqa: E501
             "severity": "medium",
             "suggestion": "Check Angular TestBed providers and module imports.",
             "context_words": 50,
@@ -49,101 +49,101 @@ class FailureDetector:
         "File Overwrite": {
             "regex": r"(\)\)\)\)\)+|0{10,}|#{10,}|={10,}|\*{10,})",
             "severity": "critical",
-            "suggestion": "AI corrupted file with repetitive characters - restore from backup immediately!",
+            "suggestion": "AI corrupted file with repetitive characters - restore from backup immediately!",  # noqa: E501
             "context_words": 20,
         },
         "Environment": {
-            "regex": r"\b(node|npm|version|dependency\s+conflict|python\s+version|incompatible|missing\s+package)\b",
+            "regex": r"\b(node|npm|version|dependency\s+conflict|python\s+version|incompatible|missing\s+package)\b",  # noqa: E501
             "severity": "medium",
             "suggestion": "Check environment compatibility and dependency versions.",
             "context_words": 50,
         },
         "Pipeline": {
-            "regex": r"\b(coverage|sonarqube|lint|pipeline\s+failed|build\s+error|ci\s+failed|test\s+failed)\b",
+            "regex": r"\b(coverage|sonarqube|lint|pipeline\s+failed|build\s+error|ci\s+failed|test\s+failed)\b",  # noqa: E501
             "severity": "high",
             "suggestion": "Review CI/CD configuration and fix failing pipeline steps.",
             "context_words": 50,
         },
         "Security": {
-            "regex": r"\b(mfa|azure\s+ad|rbac|audit\s+log|panic\s+button|security\s+vulnerability|sql\s+injection|xss|csrf)\b",
+            "regex": r"\b(mfa|azure\s+ad|rbac|audit\s+log|panic\s+button|security\s+vulnerability|sql\s+injection|xss|csrf)\b",  # noqa: E501
             "severity": "critical",
             "suggestion": "Address security requirements immediately. Follow OWASP guidelines.",
             "context_words": 50,
         },
         "UI/UX": {
-            "regex": r"\b(button|tooltip|dark\s+mode|export\s+missing|vague\s+label|accessibility\s+issue)\b",
+            "regex": r"\b(button|tooltip|dark\s+mode|export\s+missing|vague\s+label|accessibility\s+issue)\b",  # noqa: E501
             "severity": "low",
             "suggestion": "Apply UX/UI guardrails for better user experience.",
             "context_words": 40,
         },
         "Compliance": {
-            "regex": r"\b(gdpr|iso|27001|27002|retention|compliance\s+gap|data\s+privacy|regulation)\b",
+            "regex": r"\b(gdpr|iso|27001|27002|retention|compliance\s+gap|data\s+privacy|regulation)\b",  # noqa: E501
             "severity": "high",
             "suggestion": "Review compliance requirements (GDPR, ISO 27001/27002).",
             "context_words": 50,
         },
         "Looping": {
-            "regex": r"\b(retrying|loop\s+detected|infinite|recursion|stack\s+overflow|maximum\s+recursion)\b",
+            "regex": r"\b(retrying|loop\s+detected|infinite|recursion|stack\s+overflow|maximum\s+recursion)\b",  # noqa: E501
             "severity": "critical",
             "suggestion": "AI entered infinite loop - abort and retry with different prompt.",
             "context_words": 30,
         },
         "Database": {
-            "regex": r"\b(connection\s+failed|timeout|deadlock|migration\s+failed|constraint\s+violation|duplicate\s+key)\b",
+            "regex": r"\b(connection\s+failed|timeout|deadlock|migration\s+failed|constraint\s+violation|duplicate\s+key)\b",  # noqa: E501
             "severity": "high",
             "suggestion": "Check database connection, schema, and query optimization.",
             "context_words": 50,
         },
         "Type Errors": {
-            "regex": r"\b(type\s+error|undefined|null\s+reference|cannot\s+read\s+property|typeerror)\b",
+            "regex": r"\b(type\s+error|undefined|null\s+reference|cannot\s+read\s+property|typeerror)\b",  # noqa: E501
             "severity": "medium",
             "suggestion": "Add type checking and null safety guards.",
             "context_words": 40,
         },
         "Memory Issues": {
-            "regex": r"\b(out\s+of\s+memory|memory\s+leak|heap\s+overflow|allocation\s+failed)\b",
+            "regex": r"\b(out\s+of\s+memory|memory\s+leak|heap\s+overflow|allocation\s+failed)\b",  # noqa: E501
             "severity": "critical",
             "suggestion": "Investigate memory usage and potential leaks.",
             "context_words": 40,
         },
         "API Errors": {
-            "regex": r"\b(400|401|403|404|500|502|503|504|bad\s+request|not\s+found|server\s+error)\b",
+            "regex": r"\b(400|401|403|404|500|502|503|504|bad\s+request|not\s+found|server\s+error)\b",  # noqa: E501
             "severity": "high",
             "suggestion": "Check API endpoint configuration and error handling.",
             "context_words": 50,
         },
         "Configuration": {
-            "regex": r"\b(missing\s+config|invalid\s+configuration|env\s+variable|config\s+error|settings\s+not\s+found)\b",
+            "regex": r"\b(missing\s+config|invalid\s+configuration|env\s+variable|config\s+error|settings\s+not\s+found)\b",  # noqa: E501
             "severity": "medium",
             "suggestion": "Verify configuration files and environment variables.",
             "context_words": 50,
         },
         "Import Errors": {
-            "regex": r"\b(cannot\s+find\s+module|import\s+error|module\s+not\s+found|no\s+module\s+named)\b",
+            "regex": r"\b(cannot\s+find\s+module|import\s+error|module\s+not\s+found|no\s+module\s+named)\b",  # noqa: E501
             "severity": "medium",
             "suggestion": "Check import paths and installed packages.",
             "context_words": 40,
         },
         "Test Failures": {
-            "regex": r"\b(test\s+failed|assertion\s+failed|expected.*but\s+got|test\s+suite\s+failed)\b",
+            "regex": r"\b(test\s+failed|assertion\s+failed|expected.*but\s+got|test\s+suite\s+failed)\b",  # noqa: E501
             "severity": "medium",
             "suggestion": "Review test assertions and implementation.",
             "context_words": 50,
         },
         "Performance": {
-            "regex": r"\b(slow|performance\s+issue|bottleneck|n\+1\s+query|inefficient|optimization)\b",
+            "regex": r"\b(slow|performance\s+issue|bottleneck|n\+1\s+query|inefficient|optimization)\b",  # noqa: E501
             "severity": "medium",
             "suggestion": "Profile and optimize performance bottlenecks.",
             "context_words": 50,
         },
         "Race Condition": {
-            "regex": r"\b(race\s+condition|concurrent|synchronization|mutex|deadlock|thread\s+safety)\b",
+            "regex": r"\b(race\s+condition|concurrent|synchronization|mutex|deadlock|thread\s+safety)\b",  # noqa: E501
             "severity": "high",
             "suggestion": "Add proper synchronization and thread safety mechanisms.",
             "context_words": 50,
         },
         "Deployment": {
-            "regex": r"\b(deployment\s+failed|rollback|downtime|service\s+unavailable|container\s+error)\b",
+            "regex": r"\b(deployment\s+failed|rollback|downtime|service\s+unavailable|container\s+error)\b",  # noqa: E501
             "severity": "high",
             "suggestion": "Check deployment configuration and service health.",
             "context_words": 50,

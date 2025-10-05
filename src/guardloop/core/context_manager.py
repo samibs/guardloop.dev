@@ -170,7 +170,8 @@ class ContextManager:
             agent_content = self._load_agent_instructions(agent, version=agent_version)
             if agent_content:
                 guardrails_content.append(
-                    f"# Agent-Specific Instructions: {agent.upper()} ({agent_version})\n\n{agent_content}"
+                    f"# Agent-Specific Instructions: {agent.upper()} "
+                    f"({agent_version})\n\n{agent_content}"
                 )
 
         # Combine all content
@@ -225,7 +226,8 @@ class ContextManager:
             "</guardrails>",
             "",
             "<system_instructions>",
-            "You have FULL PERMISSION to create, modify, and delete files as requested by the user.",
+            "You have FULL PERMISSION to create, modify, and delete files as requested "
+            "by the user.",
             "When the user asks you to create a file, you should:",
             "1. Include the complete code in a ```language\\n...``` code block",
             "2. State that you created the file (e.g., 'Created `filename.ext`')",

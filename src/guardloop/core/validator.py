@@ -349,7 +349,10 @@ class GuardrailValidator:
                             guardrail_type=GuardrailType.UX_UI.value,
                             rule=rule_name,
                             severity=severity.value,
-                            description=f"{rule_config['description']}: {total_count} found, max {limit}",
+                            description=(
+                                f"{rule_config['description']}: {total_count} found, "
+                                f"max {limit}"
+                            ),
                             suggestion=rule_config["suggestion"],
                         )
                     )
@@ -365,7 +368,10 @@ class GuardrailValidator:
                                 guardrail_type=GuardrailType.UX_UI.value,
                                 rule=rule_name,
                                 severity=severity.value,
-                                description=f"{rule_config['description']}: {', '.join(matches[:3])}",
+                                description=(
+                                    f"{rule_config['description']}: "
+                                    f"{', '.join(matches[:3])}"
+                                ),
                                 suggestion=rule_config["suggestion"],
                             )
                         )
