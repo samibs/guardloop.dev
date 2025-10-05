@@ -1,4 +1,4 @@
-"""Database models and utilities for guardrail.dev"""
+"""Database models and utilities for guardloop.dev"""
 
 import uuid
 from datetime import datetime

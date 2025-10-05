@@ -1,4 +1,4 @@
-"""Configuration management for guardrail.dev"""
+"""Configuration management for guardloop.dev"""
 
 import os
 from pathlib import Path
@@ -187,7 +187,7 @@ class Settings(BaseSettings):
 
 
 class ConfigManager:
-    """Configuration manager for guardrail.dev"""
+    """Configuration manager for guardloop.dev"""
 
     def __init__(self, config_path: Optional[str] = None):
         self.config_path = (

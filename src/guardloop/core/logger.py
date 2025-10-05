@@ -1,4 +1,4 @@
-"""Structured logging configuration for guardrail.dev"""
+"""Structured logging configuration for guardloop.dev"""
 
 import sys
 from pathlib import Path
@@ -12,7 +12,7 @@ from guardloop.utils.config import get_config
 
 def add_app_context(logger: any, method_name: str, event_dict: EventDict) -> EventDict:
     """Add application context to log events"""
-    event_dict["app"] = "guardrail.dev"
+    event_dict["app"] = "guardloop.dev"
     return event_dict
 
 

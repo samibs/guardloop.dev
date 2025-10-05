@@ -1,4 +1,4 @@
-"""AI tool adapters for guardrail.dev"""
+"""AI tool adapters for guardloop.dev"""
 
 from typing import Dict, Type
 
