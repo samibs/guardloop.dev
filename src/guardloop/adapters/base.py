@@ -43,7 +43,9 @@ class BaseAdapter(ABC):
         )
 
     @abstractmethod
-    async def execute(self, prompt: str, timeout: Optional[int] = None, stream_callback=None) -> AIResponse:
+    async def execute(
+        self, prompt: str, timeout: Optional[int] = None, stream_callback=None
+    ) -> AIResponse:
         """Execute the AI tool with the given prompt
 
         Args:
@@ -161,7 +163,9 @@ class BaseAdapter(ABC):
             raw_output="", execution_time_ms=0, error=last_error, exit_code=1, stdout="", stderr=""
         )
 
-    async def _execute_subprocess(self, prompt: str, timeout: int, stream_callback=None) -> AIResponse:
+    async def _execute_subprocess(
+        self, prompt: str, timeout: int, stream_callback=None
+    ) -> AIResponse:
         """Execute subprocess and capture output with optional streaming
 
         Args:

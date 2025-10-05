@@ -17,7 +17,9 @@ class ClaudeAdapter(BaseAdapter):
         super().__init__(cli_path, timeout)
         self.tool_name = "Claude"
 
-    async def execute(self, prompt: str, timeout: Optional[int] = None, stream_callback=None) -> AIResponse:
+    async def execute(
+        self, prompt: str, timeout: Optional[int] = None, stream_callback=None
+    ) -> AIResponse:
         """Execute Claude with the given prompt
 
         Args:

@@ -84,7 +84,7 @@ def run(tool: str, prompt: str, agent: Optional[str], mode: str, verbose: bool):
                 TextColumn("[progress.description]{task.description}"),
                 console=console,
             ) as progress:
-                task = progress.add_task(
+                progress.add_task(
                     f"[cyan]Running {tool} with guardrails...", total=None
                 )
 
@@ -325,8 +325,8 @@ def export(output: str, limit: int):
     console.print(f"\n📤 [bold]Exporting failures to {output}...[/bold]\n")
 
     try:
-        config = get_config()
-        db = DatabaseManager(str(config.database.path))
+        get_config()
+        # db = DatabaseManager(str(config.database.path))  # TODO: Use for actual queries
 
         # Get recent failures
         # This would query the failure_modes table
@@ -367,7 +367,7 @@ def daemon(background: bool):
         db = DatabaseManager(str(config.database.path))
 
         # Initialize daemon and workers
-        daemon_instance = GuardrailDaemon(config)
+        # daemon_instance = GuardrailDaemon(config)  # TODO: Use for request processing
         worker_manager = WorkerManager(config, db)
 
         # Handle shutdown signals
