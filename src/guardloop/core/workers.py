@@ -8,9 +8,9 @@ from typing import Dict, Any, List
 
 import structlog
 
-from guardrail.core.logger import get_logger
-from guardrail.utils.config import Config
-from guardrail.utils.db import DatabaseManager
+from guardloop.core.logger import get_logger
+from guardloop.utils.config import Config
+from guardloop.utils.db import DatabaseManager
 
 logger = get_logger(__name__)
 

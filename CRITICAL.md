@@ -142,7 +142,7 @@ These features are tested and reliable:
 
 5. **Concurrent File Access** (Severity: Low)
    - **Issue**: Multiple Guardrail instances may conflict on same files
-   - **Trigger**: Running multiple `guardrail run` commands simultaneously
+   - **Trigger**: Running multiple `guardloop run` commands simultaneously
    - **Workaround**: Avoid parallel runs on same project
    - **Status**: File locking mechanism planned
 
@@ -199,13 +199,13 @@ When opening an issue, include:
 # System info
 python --version
 claude --version
-guardrail --version
+guardloop --version
 
 # Logs
 tail -50 ~/.guardrail/logs/guardrail.log
 
 # Command that failed
-guardrail run claude "your command here"
+guardloop run claude "your command here"
 
 # Expected vs actual behavior
 ```

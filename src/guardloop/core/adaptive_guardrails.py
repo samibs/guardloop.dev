@@ -10,7 +10,7 @@ from typing import List, Optional
 import structlog
 from sqlalchemy.orm import Session
 
-from guardrail.utils.db import DynamicGuardrailModel, LearnedPatternModel, RuleEffectivenessModel
+from guardloop.utils.db import DynamicGuardrailModel, LearnedPatternModel, RuleEffectivenessModel
 
 logger = structlog.get_logger(__name__)
 
@@ -163,7 +163,7 @@ class AdaptiveGuardrailGenerator:
         # Use semantic matching if enabled and prompt provided
         if use_semantic_matching and prompt and guardrails:
             import asyncio
-            from guardrail.core.semantic_matcher import SemanticGuardrailMatcher
+            from guardloop.core.semantic_matcher import SemanticGuardrailMatcher
 
             # Run async semantic matching
             matcher = SemanticGuardrailMatcher()

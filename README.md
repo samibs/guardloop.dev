@@ -1,4 +1,4 @@
-# 🛡️ GuardLoop v2 [Experimental]
+# 🛡️ GuardLoop v2.2 [Experimental]
 **Exploring Self-Learning AI Governance**
 
 ![Status](https://img.shields.io/badge/status-experimental-orange)
@@ -86,17 +86,17 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -e .
 
 # Initialize guardrail
-guardrail init
+guardloop init
 
 # Verify installation
-guardrail --version
+guardloop --version
 ```
 
 ### First Run
 
 ```bash
 # Test with a simple command
-guardrail run claude "create a hello world function"
+guardloop run claude "create a hello world function"
 
 # Expected: Should work with basic guardrails
 # If it fails: Check logs at ~/.guardrail/logs/
@@ -114,7 +114,7 @@ After multiple failures with similar issues, GuardLoop learns:
 
 ```bash
 # After 5 sessions where Claude forgot error handling
-$ guardrail analyze --days 7
+$ guardloop analyze --days 7
 
 📊 Pattern Detected:
    - Missing try-catch blocks in async functions

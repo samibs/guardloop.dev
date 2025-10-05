@@ -2,7 +2,7 @@
 
 import pytest
 from pathlib import Path
-from guardrail.utils.config import (
+from guardloop.utils.config import (
     Config,
     DatabaseConfig,
     LoggingConfig,

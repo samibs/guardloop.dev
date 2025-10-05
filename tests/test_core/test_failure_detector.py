@@ -1,7 +1,7 @@
 """Unit tests for FailureDetector"""
 
 import pytest
-from guardrail.core.failure_detector import FailureDetector, DetectedFailure
+from guardloop.core.failure_detector import FailureDetector, DetectedFailure
 
 
 class TestFailureDetector:

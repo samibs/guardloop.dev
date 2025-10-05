@@ -2,7 +2,7 @@
 
 import pytest
 from pathlib import Path
-from guardrail.core.context_manager import ContextManager, GuardrailCache
+from guardloop.core.context_manager import ContextManager, GuardrailCache
 
 
 class TestGuardrailCache:

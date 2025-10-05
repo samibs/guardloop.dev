@@ -45,7 +45,7 @@ class TestContextSizeReduction:
     @pytest.mark.asyncio
     async def test_smart_selection_reduces_context(self, test_config):
         """Verify smart selection reduces context size significantly."""
-        from guardrail.core.context_manager import ContextManager
+        from guardloop.core.context_manager import ContextManager
 
         context_manager = ContextManager(cache_ttl=300)
 
@@ -90,7 +90,7 @@ class TestContextSizeReduction:
     @pytest.mark.asyncio
     async def test_creative_task_minimal_context(self, test_config):
         """Verify creative tasks use minimal context."""
-        from guardrail.core.context_manager import ContextManager
+        from guardloop.core.context_manager import ContextManager
 
         context_manager = ContextManager(cache_ttl=300)
 
@@ -114,7 +114,7 @@ class TestResponseTimeImprovement:
     @pytest.mark.asyncio
     async def test_agent_chain_reduces_execution_time(self):
         """Verify optimized agent chains execute faster."""
-        from guardrail.agents.chain_optimizer import AgentChainOptimizer
+        from guardloop.agents.chain_optimizer import AgentChainOptimizer
 
         optimizer = AgentChainOptimizer()
 
@@ -152,7 +152,7 @@ class TestResponseTimeImprovement:
     @pytest.mark.asyncio
     async def test_budget_manager_calculates_quickly(self):
         """Verify budget calculations are performant."""
-        from guardrail.core.budget_manager import ContextBudgetManager
+        from guardloop.core.budget_manager import ContextBudgetManager
 
         manager = ContextBudgetManager()
 
@@ -180,7 +180,7 @@ class TestCreativeTaskSkip:
     @pytest.mark.asyncio
     async def test_creative_tasks_skip_guardrails(self):
         """Verify creative tasks bypass guardrail validation."""
-        from guardrail.core.task_classifier import TaskClassifier
+        from guardloop.core.task_classifier import TaskClassifier
 
         classifier = TaskClassifier()
 
@@ -213,7 +213,7 @@ class TestCreativeTaskSkip:
     @pytest.mark.asyncio
     async def test_code_tasks_require_guardrails(self):
         """Verify code tasks still get guardrails."""
-        from guardrail.core.task_classifier import TaskClassifier
+        from guardloop.core.task_classifier import TaskClassifier
 
         classifier = TaskClassifier()
 
@@ -242,7 +242,7 @@ class TestAgentChainOptimization:
 
     def test_simple_task_minimal_agents(self):
         """Verify simple tasks use minimal agents."""
-        from guardrail.agents.chain_optimizer import AgentChainOptimizer
+        from guardloop.agents.chain_optimizer import AgentChainOptimizer
 
         optimizer = AgentChainOptimizer()
 
@@ -263,7 +263,7 @@ class TestAgentChainOptimization:
 
     def test_medium_task_focused_chain(self):
         """Verify medium tasks use focused chains."""
-        from guardrail.agents.chain_optimizer import AgentChainOptimizer
+        from guardloop.agents.chain_optimizer import AgentChainOptimizer
 
         optimizer = AgentChainOptimizer()
 
@@ -284,7 +284,7 @@ class TestAgentChainOptimization:
 
     def test_critical_task_full_validation(self):
         """Verify critical tasks get full validation."""
-        from guardrail.agents.chain_optimizer import AgentChainOptimizer
+        from guardloop.agents.chain_optimizer import AgentChainOptimizer
 
         optimizer = AgentChainOptimizer()
 
@@ -332,7 +332,7 @@ class TestSemanticMatching:
             guardrails.append(g)
 
         # Test semantic matching speed
-        from guardrail.core.semantic_matcher import SemanticGuardrailMatcher
+        from guardloop.core.semantic_matcher import SemanticGuardrailMatcher
 
         matcher = SemanticGuardrailMatcher()
 
@@ -365,7 +365,7 @@ class TestBudgetAllocation:
 
     def test_budget_allocation_within_limits(self):
         """Verify budget allocations stay within limits."""
-        from guardrail.core.budget_manager import ContextBudgetManager
+        from guardloop.core.budget_manager import ContextBudgetManager
 
         manager = ContextBudgetManager()
 
@@ -393,7 +393,7 @@ class TestBudgetAllocation:
 
     def test_model_budgets_appropriate(self):
         """Verify model budgets are appropriate for context limits."""
-        from guardrail.core.budget_manager import ContextBudgetManager
+        from guardloop.core.budget_manager import ContextBudgetManager
 
         manager = ContextBudgetManager()
 
@@ -430,7 +430,7 @@ class TestRegressionSuite:
     @pytest.mark.asyncio
     async def test_no_regression_in_context_size(self):
         """Ensure context size doesn't regress."""
-        from guardrail.core.context_manager import ContextManager
+        from guardloop.core.context_manager import ContextManager
 
         context_manager = ContextManager()
 
@@ -453,7 +453,7 @@ class TestRegressionSuite:
 
     def test_no_regression_in_agent_chains(self):
         """Ensure agent chains don't regress."""
-        from guardrail.agents.chain_optimizer import AgentChainOptimizer
+        from guardloop.agents.chain_optimizer import AgentChainOptimizer
 
         optimizer = AgentChainOptimizer()
 

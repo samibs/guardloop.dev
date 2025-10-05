@@ -151,8 +151,8 @@ init_database() {
     echo -e "${YELLOW}→${NC} Initializing database..."
 
     python3 -c "
-from guardrail.utils.db import DatabaseManager
-from guardrail.utils.config import get_config
+from guardloop.utils.db import DatabaseManager
+from guardloop.utils.config import get_config
 
 config = get_config()
 db = DatabaseManager(config.database.path)
@@ -196,15 +196,15 @@ main() {
     echo -e "     ${YELLOW}source ~/.bashrc${NC}  # or ~/.zshrc for zsh"
     echo ""
     echo -e "  3. Test the installation:"
-    echo -e "     ${YELLOW}guardrail --help${NC}"
+    echo -e "     ${YELLOW}guardloop --help${NC}"
     echo ""
     echo -e "  4. Configure your AI tools in:"
     echo -e "     ${YELLOW}$CONFIG_FILE${NC}"
     echo ""
     echo -e "${BLUE}Usage examples:${NC}"
-    echo -e "  ${YELLOW}guardrail claude 'create a login form'${NC}"
+    echo -e "  ${YELLOW}guardloop claude 'create a login form'${NC}"
     echo -e "  ${YELLOW}gr gemini --agent architect 'design user service'${NC}"
-    echo -e "  ${YELLOW}guardrail codex --strict 'implement JWT auth'${NC}"
+    echo -e "  ${YELLOW}guardloop codex --strict 'implement JWT auth'${NC}"
     echo ""
     echo -e "${BLUE}Documentation:${NC} https://docs.guardloop.dev"
     echo -e "${BLUE}Issues:${NC} https://github.com/samibs/guardloop.dev/issues"

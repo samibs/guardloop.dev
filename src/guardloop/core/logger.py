@@ -7,7 +7,7 @@ from typing import Optional
 import structlog
 from structlog.types import EventDict, Processor
 
-from guardrail.utils.config import get_config
+from guardloop.utils.config import get_config
 
 
 def add_app_context(logger: any, method_name: str, event_dict: EventDict) -> EventDict:

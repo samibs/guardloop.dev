@@ -1,7 +1,7 @@
 """Tests for ContextBudgetManager"""
 
 import pytest
-from guardrail.core.budget_manager import ContextBudgetManager
+from guardloop.core.budget_manager import ContextBudgetManager
 
 
 class TestBudgetCalculation:

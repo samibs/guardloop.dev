@@ -1,7 +1,7 @@
 """Architect agent for system design validation"""
 
-from guardrail.agents.base import AgentContext, AgentDecision, BaseAgent
-from guardrail.utils.config import Config
+from guardloop.agents.base import AgentContext, AgentDecision, BaseAgent
+from guardloop.utils.config import Config
 
 
 class ArchitectAgent(BaseAgent):

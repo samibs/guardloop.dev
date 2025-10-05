@@ -11,7 +11,7 @@ from typing import List, Optional
 import structlog
 from sqlalchemy.orm import Session
 
-from guardrail.utils.db import ConversationHistoryModel
+from guardloop.utils.db import ConversationHistoryModel
 
 logger = structlog.get_logger(__name__)
 

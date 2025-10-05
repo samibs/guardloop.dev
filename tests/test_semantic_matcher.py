@@ -28,7 +28,7 @@ class TestSemanticMatcher:
     @pytest.fixture
     def matcher(self):
         """Create matcher instance"""
-        from guardrail.core.semantic_matcher import SemanticGuardrailMatcher
+        from guardloop.core.semantic_matcher import SemanticGuardrailMatcher
 
         return SemanticGuardrailMatcher()
 

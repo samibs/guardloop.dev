@@ -1,7 +1,7 @@
 """Documentation agent for documentation validation"""
 
-from guardrail.agents.base import AgentContext, AgentDecision, BaseAgent
-from guardrail.utils.config import Config
+from guardloop.agents.base import AgentContext, AgentDecision, BaseAgent
+from guardloop.utils.config import Config
 
 
 class DocumentationAgent(BaseAgent):

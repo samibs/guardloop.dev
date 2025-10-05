@@ -4,24 +4,24 @@ import pytest
 from pathlib import Path
 from typing import List
 
-from guardrail.agents.base import AgentContext, AgentDecision, BaseAgent
-from guardrail.agents.orchestrator import OrchestratorAgent
-from guardrail.agents.architect import ArchitectAgent
-from guardrail.agents.coder import CoderAgent
-from guardrail.agents.tester import TesterAgent
-from guardrail.agents.business_analyst import BusinessAnalystAgent
-from guardrail.agents.ux_designer import UXDesignerAgent
-from guardrail.agents.dba import DBAAgent
-from guardrail.agents.debug_hunter import DebugHunterAgent
-from guardrail.agents.secops import SecOpsAgent
-from guardrail.agents.sre import SREAgent
-from guardrail.agents.standards_oracle import StandardsOracleAgent
-from guardrail.agents.evaluator import EvaluatorAgent
-from guardrail.agents.documentation import DocumentationAgent
-from guardrail.core.parser import ParsedResponse, CodeBlock
-from guardrail.core.validator import Violation
-from guardrail.core.failure_detector import DetectedFailure
-from guardrail.utils.config import Config
+from guardloop.agents.base import AgentContext, AgentDecision, BaseAgent
+from guardloop.agents.orchestrator import OrchestratorAgent
+from guardloop.agents.architect import ArchitectAgent
+from guardloop.agents.coder import CoderAgent
+from guardloop.agents.tester import TesterAgent
+from guardloop.agents.business_analyst import BusinessAnalystAgent
+from guardloop.agents.ux_designer import UXDesignerAgent
+from guardloop.agents.dba import DBAAgent
+from guardloop.agents.debug_hunter import DebugHunterAgent
+from guardloop.agents.secops import SecOpsAgent
+from guardloop.agents.sre import SREAgent
+from guardloop.agents.standards_oracle import StandardsOracleAgent
+from guardloop.agents.evaluator import EvaluatorAgent
+from guardloop.agents.documentation import DocumentationAgent
+from guardloop.core.parser import ParsedResponse, CodeBlock
+from guardloop.core.validator import Violation
+from guardloop.core.failure_detector import DetectedFailure
+from guardloop.utils.config import Config
 
 
 # Fixtures

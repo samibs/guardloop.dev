@@ -3,7 +3,7 @@
 import pytest
 from pathlib import Path
 
-from guardrail.core.smart_selector import SmartGuardrailSelector
+from guardloop.core.smart_selector import SmartGuardrailSelector
 
 
 @pytest.fixture

@@ -18,7 +18,7 @@ def count_tokens(text: str) -> int:
 
 def benchmark_context_size() -> Dict[str, float]:
     """Benchmark context size reduction."""
-    from guardrail.core.context_manager import ContextManager
+    from guardloop.core.context_manager import ContextManager
 
     context_manager = ContextManager()
 
@@ -47,7 +47,7 @@ def benchmark_context_size() -> Dict[str, float]:
 
 def benchmark_agent_chains() -> Dict[str, int]:
     """Benchmark agent chain optimization."""
-    from guardrail.agents.chain_optimizer import AgentChainOptimizer
+    from guardloop.agents.chain_optimizer import AgentChainOptimizer
 
     optimizer = AgentChainOptimizer()
 
@@ -79,7 +79,7 @@ def benchmark_agent_chains() -> Dict[str, int]:
 
 def benchmark_semantic_matching() -> Dict[str, float]:
     """Benchmark semantic matching performance."""
-    from guardrail.core.semantic_matcher import SemanticGuardrailMatcher
+    from guardloop.core.semantic_matcher import SemanticGuardrailMatcher
     from unittest.mock import Mock
 
     matcher = SemanticGuardrailMatcher()
@@ -129,7 +129,7 @@ def benchmark_semantic_matching() -> Dict[str, float]:
 
 def benchmark_budget_allocation() -> Dict[str, float]:
     """Benchmark budget calculation performance."""
-    from guardrail.core.budget_manager import ContextBudgetManager
+    from guardloop.core.budget_manager import ContextBudgetManager
 
     manager = ContextBudgetManager()
 

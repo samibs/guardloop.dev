@@ -16,11 +16,11 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.tree import Tree
 
-from guardrail.core.daemon import AIRequest, GuardrailDaemon
-from guardrail.core.logger import configure_logging
-from guardrail.core.workers import WorkerManager
-from guardrail.utils.config import Config, ConfigManager, get_config
-from guardrail.utils.db import DatabaseManager
+from guardloop.core.daemon import AIRequest, GuardrailDaemon
+from guardloop.core.logger import configure_logging
+from guardloop.core.workers import WorkerManager
+from guardloop.utils.config import Config, ConfigManager, get_config
+from guardloop.utils.db import DatabaseManager
 
 console = Console()
 

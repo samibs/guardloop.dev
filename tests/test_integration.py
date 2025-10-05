@@ -4,10 +4,10 @@ import pytest
 from unittest.mock import patch, MagicMock, AsyncMock
 from pathlib import Path
 
-from guardrail.core.daemon import GuardrailDaemon, AIRequest
-from guardrail.core.parser import ParsedResponse, CodeBlock
-from guardrail.adapters.base import AIResponse
-from guardrail.utils.config import Config, DatabaseConfig
+from guardloop.core.daemon import GuardrailDaemon, AIRequest
+from guardloop.core.parser import ParsedResponse, CodeBlock
+from guardloop.adapters.base import AIResponse
+from guardloop.utils.config import Config, DatabaseConfig
 
 
 @pytest.mark.asyncio
@@ -84,7 +84,7 @@ async def test_agent_chain_execution(config):
     daemon = GuardrailDaemon(config)
 
     # Load agents
-    from guardrail.agents.orchestrator import OrchestratorAgent
+    from guardloop.agents.orchestrator import OrchestratorAgent
     orchestrator = OrchestratorAgent(config)
     await orchestrator.load_agents()
 

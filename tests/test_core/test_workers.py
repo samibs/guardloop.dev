@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, MagicMock, patch, mock_open
 from pathlib import Path
 from datetime import datetime
 
-from guardrail.core.workers import (
+from guardloop.core.workers import (
     BackgroundWorker,
     AnalysisWorker,
     MetricsWorker,
@@ -14,7 +14,7 @@ from guardrail.core.workers import (
     CleanupWorker,
     WorkerManager,
 )
-from guardrail.utils.config import Config
+from guardloop.utils.config import Config
 
 
 class TestBackgroundWorker:

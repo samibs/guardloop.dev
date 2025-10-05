@@ -1,8 +1,8 @@
 """Unit tests for GuardrailValidator"""
 
 import pytest
-from guardrail.core.validator import GuardrailValidator, Violation, Severity, GuardrailType
-from guardrail.core.parser import ParsedResponse, CodeBlock
+from guardloop.core.validator import GuardrailValidator, Violation, Severity, GuardrailType
+from guardloop.core.parser import ParsedResponse, CodeBlock
 
 
 class TestGuardrailValidator:

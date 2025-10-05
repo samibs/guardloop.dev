@@ -2,9 +2,9 @@
 
 from typing import Dict, List, Optional
 
-from guardrail.agents.base import AgentContext, AgentDecision, BaseAgent
-from guardrail.agents.chain_optimizer import AgentChainOptimizer
-from guardrail.utils.config import Config
+from guardloop.agents.base import AgentContext, AgentDecision, BaseAgent
+from guardloop.agents.chain_optimizer import AgentChainOptimizer
+from guardloop.utils.config import Config
 
 
 class OrchestratorAgent(BaseAgent):
@@ -34,18 +34,18 @@ class OrchestratorAgent(BaseAgent):
 
     async def load_agents(self) -> None:
         """Load all specialized agents"""
-        from guardrail.agents.architect import ArchitectAgent
-        from guardrail.agents.business_analyst import BusinessAnalystAgent
-        from guardrail.agents.coder import CoderAgent
-        from guardrail.agents.dba import DBAAgent
-        from guardrail.agents.debug_hunter import DebugHunterAgent
-        from guardrail.agents.documentation import DocumentationAgent
-        from guardrail.agents.evaluator import EvaluatorAgent
-        from guardrail.agents.secops import SecOpsAgent
-        from guardrail.agents.sre import SREAgent
-        from guardrail.agents.standards_oracle import StandardsOracleAgent
-        from guardrail.agents.tester import TesterAgent
-        from guardrail.agents.ux_designer import UXDesignerAgent
+        from guardloop.agents.architect import ArchitectAgent
+        from guardloop.agents.business_analyst import BusinessAnalystAgent
+        from guardloop.agents.coder import CoderAgent
+        from guardloop.agents.dba import DBAAgent
+        from guardloop.agents.debug_hunter import DebugHunterAgent
+        from guardloop.agents.documentation import DocumentationAgent
+        from guardloop.agents.evaluator import EvaluatorAgent
+        from guardloop.agents.secops import SecOpsAgent
+        from guardloop.agents.sre import SREAgent
+        from guardloop.agents.standards_oracle import StandardsOracleAgent
+        from guardloop.agents.tester import TesterAgent
+        from guardloop.agents.ux_designer import UXDesignerAgent
 
         self.agents = {
             "architect": ArchitectAgent(self.config),

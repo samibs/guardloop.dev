@@ -1,7 +1,7 @@
 """Coder agent for implementation validation"""
 
-from guardrail.agents.base import AgentContext, AgentDecision, BaseAgent
-from guardrail.utils.config import Config
+from guardloop.agents.base import AgentContext, AgentDecision, BaseAgent
+from guardloop.utils.config import Config
 
 
 class CoderAgent(BaseAgent):

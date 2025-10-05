@@ -7,8 +7,8 @@ from typing import Dict, List, Optional, Tuple
 
 import structlog
 
-from guardrail.core.smart_selector import SmartGuardrailSelector
-from guardrail.utils.config import get_config
+from guardloop.core.smart_selector import SmartGuardrailSelector
+from guardloop.utils.config import get_config
 
 logger = structlog.get_logger(__name__)
 
@@ -145,7 +145,7 @@ class ContextManager:
         # v2: Load dynamic (learned) guardrails from DB
         if db_session and task_type:
             try:
-                from guardrail.core.adaptive_guardrails import AdaptiveGuardrailGenerator
+                from guardloop.core.adaptive_guardrails import AdaptiveGuardrailGenerator
 
                 adaptive_gen = AdaptiveGuardrailGenerator(db_session)
                 dynamic_guardrails = adaptive_gen.get_active_guardrails(

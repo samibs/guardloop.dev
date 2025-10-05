@@ -2,7 +2,7 @@
 
 import pytest
 
-from guardrail.agents.chain_optimizer import AgentChainOptimizer, TaskComplexity
+from guardloop.agents.chain_optimizer import AgentChainOptimizer, TaskComplexity
 
 
 @pytest.fixture

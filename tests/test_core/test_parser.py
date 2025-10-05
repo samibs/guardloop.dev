@@ -1,7 +1,7 @@
 """Unit tests for ResponseParser"""
 
 import pytest
-from guardrail.core.parser import ResponseParser, CodeBlock, ParsedResponse
+from guardloop.core.parser import ResponseParser, CodeBlock, ParsedResponse
 
 
 class TestResponseParser:

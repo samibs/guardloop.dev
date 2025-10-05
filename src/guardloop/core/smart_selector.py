@@ -180,7 +180,7 @@ class SmartGuardrailSelector:
         """
         # Dynamic budget calculation if model and complexity provided
         if model and task_complexity:
-            from guardrail.core.budget_manager import ContextBudgetManager
+            from guardloop.core.budget_manager import ContextBudgetManager
 
             budget_manager = ContextBudgetManager()
             token_budget = budget_manager.get_budget(model, task_complexity)

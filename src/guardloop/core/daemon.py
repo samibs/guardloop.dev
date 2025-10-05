@@ -10,19 +10,19 @@ from typing import List, Optional, Dict, Any
 
 import structlog
 
-from guardrail.adapters import AdapterFactory, AIResponse
-from guardrail.core.adaptive_guardrails import AdaptiveGuardrailGenerator
-from guardrail.core.context_manager import ContextManager
-from guardrail.core.conversation_manager import ConversationManager
-from guardrail.core.failure_detector import FailureDetector, DetectedFailure
-from guardrail.core.file_executor import FileExecutor
-from guardrail.core.logger import get_logger
-from guardrail.core.parser import ParsedResponse, ResponseParser
-from guardrail.core.pattern_analyzer import PatternAnalyzer
-from guardrail.core.task_classifier import TaskClassifier
-from guardrail.core.validator import GuardrailValidator, Violation
-from guardrail.utils.config import Config
-from guardrail.utils.db import DatabaseManager
+from guardloop.adapters import AdapterFactory, AIResponse
+from guardloop.core.adaptive_guardrails import AdaptiveGuardrailGenerator
+from guardloop.core.context_manager import ContextManager
+from guardloop.core.conversation_manager import ConversationManager
+from guardloop.core.failure_detector import FailureDetector, DetectedFailure
+from guardloop.core.file_executor import FileExecutor
+from guardloop.core.logger import get_logger
+from guardloop.core.parser import ParsedResponse, ResponseParser
+from guardloop.core.pattern_analyzer import PatternAnalyzer
+from guardloop.core.task_classifier import TaskClassifier
+from guardloop.core.validator import GuardrailValidator, Violation
+from guardloop.utils.config import Config
+from guardloop.utils.db import DatabaseManager
 
 logger = get_logger(__name__)
 
@@ -440,7 +440,7 @@ class GuardrailDaemon:
             }
 
             # Store in database
-            from guardrail.utils.db import SessionModel
+            from guardloop.utils.db import SessionModel
 
             with self.db.get_session() as db_session:
                 session = SessionModel(

@@ -2,17 +2,17 @@
 
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
-from guardrail.core.daemon import (
+from guardloop.core.daemon import (
     GuardrailDaemon,
     AIRequest,
     AIResult,
     AIExecutionError,
 )
-from guardrail.adapters import AIResponse
-from guardrail.core.parser import ParsedResponse, CodeBlock
-from guardrail.core.validator import Violation
-from guardrail.core.failure_detector import DetectedFailure
-from guardrail.utils.config import Config
+from guardloop.adapters import AIResponse
+from guardloop.core.parser import ParsedResponse, CodeBlock
+from guardloop.core.validator import Violation
+from guardloop.core.failure_detector import DetectedFailure
+from guardloop.utils.config import Config
 from datetime import datetime
 
 

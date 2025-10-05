@@ -5,9 +5,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
 
-from guardrail.core.failure_detector import DetectedFailure
-from guardrail.core.parser import ParsedResponse
-from guardrail.core.validator import Violation
+from guardloop.core.failure_detector import DetectedFailure
+from guardloop.core.parser import ParsedResponse
+from guardloop.core.validator import Violation
 
 
 @dataclass

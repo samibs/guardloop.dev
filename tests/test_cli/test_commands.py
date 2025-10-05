@@ -5,10 +5,10 @@ from click.testing import CliRunner
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from guardrail.cli.commands import cli
-from guardrail.core.daemon import AIResult
-from guardrail.core.parser import ParsedResponse
-from guardrail.utils.config import Config
+from guardloop.cli.commands import cli
+from guardloop.core.daemon import AIResult
+from guardloop.core.parser import ParsedResponse
+from guardloop.utils.config import Config
 
 
 class TestCLI:

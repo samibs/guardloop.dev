@@ -13,7 +13,7 @@ import structlog
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 
-from guardrail.utils.db import (
+from guardloop.utils.db import (
     DynamicGuardrailModel,
     FailureModeModel,
     LearnedPatternModel,

@@ -2,7 +2,7 @@
 
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
-from guardrail.adapters import (
+from guardloop.adapters import (
     AIResponse,
     BaseAdapter,
     ClaudeAdapter,
