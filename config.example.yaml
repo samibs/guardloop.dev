@@ -1,5 +1,5 @@
-# Guardrail.dev Configuration Example
-# Copy this file to ~/.guardrail/config.yaml and customize for your environment
+# GuardLoop.dev Configuration Example
+# Copy this file to ~/.guardloop/config.yaml and customize for your environment
 
 version: "1.0"
 
@@ -27,23 +27,23 @@ tools:
 
 # Guardrail document paths
 guardrails:
-  base_path: "~/.guardrail/guardrails"
+  base_path: "~/.guardloop/guardrails"
   files:
     - "BPSBS.md"
     - "AI_Guardrails.md"
     - "UX_UI_Guardrails.md"
-  agents_path: "~/.guardrail/guardrails/agents"
+  agents_path: "~/.guardloop/guardrails/agents"
 
 # Database configuration
 database:
-  path: "~/.guardrail/data/guardrail.db"
+  path: "~/.guardloop/data/guardloop.db"
   backup_enabled: true
   backup_interval_hours: 24
 
 # Logging configuration
 logging:
   level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
-  file: "~/.guardrail/logs/guardrail.log"
+  file: "~/.guardloop/logs/guardloop.log"
   max_size_mb: 100
   backup_count: 5
 
