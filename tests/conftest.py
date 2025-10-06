@@ -18,9 +18,7 @@ def config():
     return Config(
         mode="standard",
         database=DatabaseConfig(path=":memory:"),
-        logging=LoggingConfig(level="DEBUG", file=None),
-        tool="claude",
-        strict=False,
+        logging=LoggingConfig(level="DEBUG"),
     )
 
 
@@ -30,9 +28,7 @@ def strict_config():
     return Config(
         mode="strict",
         database=DatabaseConfig(path=":memory:"),
-        logging=LoggingConfig(level="DEBUG", file=None),
-        tool="claude",
-        strict=True,
+        logging=LoggingConfig(level="DEBUG"),
     )
 
 

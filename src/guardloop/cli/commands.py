@@ -31,9 +31,9 @@ def cli():
 
     \b
     Commands:
-      run         Execute single AI request with guardrails
+      run         Execute single AI request with policies
       interactive Start interactive session (for conversations)
-      init        Initialize guardrail configuration
+      init        Initialize GuardLoop configuration
       status      Show system status
       config      View configuration
       analyze     Analyze violations and failures
@@ -63,7 +63,7 @@ def cli():
 )
 @click.option("--verbose", "-v", is_flag=True, help="Show detailed output")
 def run(tool: str, prompt: str, agent: Optional[str], mode: str, verbose: bool):
-    """Execute AI tool with guardrails"""
+    """Execute AI tool with policies"""
 
     async def execute():
         try:
@@ -82,7 +82,7 @@ def run(tool: str, prompt: str, agent: Optional[str], mode: str, verbose: bool):
                 TextColumn("[progress.description]{task.description}"),
                 console=console,
             ) as progress:
-                progress.add_task(f"[cyan]Running {tool} with guardrails...", total=None)
+                progress.add_task(f"[cyan]Running {tool} with policies...", total=None)
 
                 # Execute request
                 result = await daemon.process_request(request)
@@ -151,7 +151,7 @@ def run(tool: str, prompt: str, agent: Optional[str], mode: str, verbose: bool):
 
 @cli.command()
 def init():
-    """Initialize guardrail configuration"""
+    """Initialize GuardLoop configuration"""
     console.print("\n🛡️  [bold]Initializing GuardLoop...[/bold]\n")
 
     # Create config manager
@@ -176,11 +176,11 @@ def init():
     db.init_db()
     console.print(f"   Database initialized at: [cyan]{config.database.path}[/cyan]")
 
-    # Copy guardrail files from package to user directory
+    # Copy policy files from package to user directory
     guardrails_path = Path(config.guardrails.base_path)
-    console.print(f"📋 Guardrails directory: [cyan]{guardrails_path}[/cyan]")
+    console.print(f"📋 Policies directory: [cyan]{guardrails_path}[/cyan]")
 
-    # Find package guardrails directory
+    # Find package policies directory
     import guardloop
 
     package_dir = Path(guardloop.__file__).parent.parent
@@ -189,7 +189,7 @@ def init():
     if source_guardrails.exists():
         import shutil
 
-        # Copy guardrail files if they don't exist
+        # Copy policy files if they don't exist
         if not guardrails_path.exists() or not list(guardrails_path.glob("*.md")):
             guardrails_path.mkdir(parents=True, exist_ok=True)
 
@@ -215,8 +215,8 @@ def init():
             console.print("   ℹ️  Guardrail files already exist")
     else:
         guardrails_path.mkdir(parents=True, exist_ok=True)
-        console.print("   ⚠️  No template guardrails found in package")
-        console.print("   Note: Place your guardrail files in this directory")
+        console.print("   ⚠️  No template policies found in package")
+        console.print("   Note: Place your policy files in this directory")
 
     console.print("\n✅ [green bold]Initialization complete![/green bold]\n")
     console.print("Next steps:")
@@ -259,7 +259,7 @@ def analyze(tool: Optional[str], days: int):
 
 @cli.command()
 def status():
-    """Show guardrail system status"""
+    """Show GuardLoop system status"""
     console.print("\n🛡️  [bold]GuardLoop System Status[/bold]\n")
 
     try:
@@ -351,7 +351,7 @@ _(Failures would be listed here in table format)_
 @cli.command()
 @click.option("--background", "-b", is_flag=True, help="Run in background")
 def daemon(background: bool):
-    """Start guardrail daemon with background workers"""
+    """Start GuardLoop daemon with background workers"""
 
     async def run_daemon():
         config = get_config()
@@ -414,7 +414,7 @@ def config():
 
 @cli.command()
 def interactive():
-    """Interactive guardrail session"""
+    """Interactive GuardLoop session"""
     console.print("\n🛡️  [bold]Interactive GuardLoop Session[/bold]\n")
     console.print("Type 'exit' or 'quit' to end session\n")
 

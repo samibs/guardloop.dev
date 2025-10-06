@@ -84,7 +84,7 @@ class TestGuardrailDaemon:
     @pytest.fixture
     def daemon(self, config):
         """Create daemon instance"""
-        with patch("guardrail.core.daemon.DatabaseManager"):
+        with patch("guardloop.core.daemon.DatabaseManager"):
             return GuardrailDaemon(config)
 
     def test_initialization(self, daemon, config):
@@ -97,7 +97,7 @@ class TestGuardrailDaemon:
 
     def test_get_adapter_success(self, daemon):
         """Test getting adapter for enabled tool"""
-        with patch("guardrail.core.daemon.AdapterFactory.get_adapter") as mock_factory:
+        with patch("guardloop.core.daemon.AdapterFactory.get_adapter") as mock_factory:
             mock_factory.return_value = MagicMock()
             adapter = daemon.get_adapter("claude")
             assert adapter is not None
@@ -331,7 +331,7 @@ class TestDaemonIntegration:
     @pytest.mark.asyncio
     async def test_full_flow_with_code_generation(self, config):
         """Test full flow with code generation and validation"""
-        with patch("guardrail.core.daemon.DatabaseManager"):
+        with patch("guardloop.core.daemon.DatabaseManager"):
             daemon = GuardrailDaemon(config)
 
             request = AIRequest(

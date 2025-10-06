@@ -192,7 +192,7 @@ class TestBaseAdapter:
         adapter = ClaudeAdapter(timeout=1)
 
         # Mock a long-running process that will timeout
-        async def mock_long_process(prompt, timeout):
+        async def mock_long_process(prompt, timeout, stream_callback=None):
             import asyncio
 
             # Simulate timeout by raising TimeoutError
@@ -216,7 +216,7 @@ class TestBaseAdapter:
 
         call_count = 0
 
-        async def mock_failing_execute(prompt, timeout):
+        async def mock_failing_execute(prompt, timeout, stream_callback=None):
             nonlocal call_count
             call_count += 1
             if call_count < 3:

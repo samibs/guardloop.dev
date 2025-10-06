@@ -267,7 +267,7 @@ class ContextManager:
         """
         try:
             if not file_path.exists():
-                logger.warning("Guardrail file not found", file_path=str(file_path))
+                logger.warning("Policy file not found", file_path=str(file_path))
                 return None
 
             with open(file_path, "r", encoding="utf-8") as f:
