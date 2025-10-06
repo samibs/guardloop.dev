@@ -80,7 +80,9 @@ class TestContextManager:
         cm = ContextManager()
 
         # Mock guardrail loading to return empty string
-        cm.load_guardrails = lambda agent=None, mode="standard", prompt="", task_type=None, db_session=None: "# Test Guardrails"
+        cm.load_guardrails = (
+            lambda agent=None, mode="standard", prompt="", task_type=None, db_session=None: "# Test Guardrails"
+        )
 
         context = cm.build_context("Test prompt", agent="architect", mode="standard")
 

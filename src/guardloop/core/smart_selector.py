@@ -355,9 +355,7 @@ class SmartGuardrailSelector:
 
         selected_list = sorted(selected, key=lambda x: self.guardrail_files[x].priority)
 
-        budget_pct = (
-            round(total_tokens / token_budget * 100, 1) if token_budget > 0 else 0
-        )
+        budget_pct = round(total_tokens / token_budget * 100, 1) if token_budget > 0 else 0
         logger.info(
             "GuardLoop selection complete",
             selected_count=len(selected_list),

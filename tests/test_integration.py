@@ -187,6 +187,7 @@ async def test_guardrail_injection(config, tmp_path):
 
     # Update config to use test guardrail directory
     from guardloop.utils.config import GuardrailsConfig
+
     config.guardrails = GuardrailsConfig(base_path=str(guardrail_dir))
 
     daemon = GuardrailDaemon(config)

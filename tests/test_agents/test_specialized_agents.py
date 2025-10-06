@@ -213,9 +213,7 @@ class TestUXDesignerAgent:
 
     async def test_evaluate_missing_ux(self, config):
         agent = UXDesignerAgent(config)
-        context = AgentContext(
-            prompt="Make UI", mode="standard", raw_output="<div>Content</div>"
-        )
+        context = AgentContext(prompt="Make UI", mode="standard", raw_output="<div>Content</div>")
         decision = await agent.evaluate(context)
         assert decision.approved is True
         assert len(decision.suggestions) > 0

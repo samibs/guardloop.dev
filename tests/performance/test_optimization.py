@@ -53,12 +53,54 @@ class TestContextSizeReduction:
         # Old: Would load all 3 main files + all agents (~24K tokens total)
         # Each guardrail file is ~500-1000 lines of markdown with detailed rules and examples
         old_guardrails = [
-            "# Core Always Guardrails\n" + ("## Rule: " + "x" * 400 + "\n" + "Details: " + "y" * 600 + "\n" + "Example: " + "z" * 500 + "\n\n") * 15,  # ~22K chars
-            "# Security Baseline\n" + ("## Security: " + "x" * 400 + "\n" + "Example: " + "y" * 600 + "\n" + "Code: " + "z" * 500 + "\n\n") * 12,  # ~18K chars
-            "# Testing Baseline\n" + ("## Test: " + "x" * 400 + "\n" + "Coverage: " + "y" * 600 + "\n" + "Assert: " + "z" * 500 + "\n\n") * 12,  # ~18K chars
-            "# Auth Security\n" + ("## Auth pattern: " + "x" * 400 + "\n" + "Implementation: " + "y" * 600 + "\n\n") * 10,  # ~10K chars
-            "# Database Design\n" + ("## DB rule: " + "x" * 400 + "\n" + "Schema: " + "y" * 600 + "\n\n") * 10,  # ~10K chars
-            "# API Patterns\n" + ("## API guideline: " + "x" * 400 + "\n" + "Endpoint: " + "y" * 600 + "\n\n") * 12,  # ~12K chars
+            "# Core Always Guardrails\n"
+            + (
+                "## Rule: "
+                + "x" * 400
+                + "\n"
+                + "Details: "
+                + "y" * 600
+                + "\n"
+                + "Example: "
+                + "z" * 500
+                + "\n\n"
+            )
+            * 15,  # ~22K chars
+            "# Security Baseline\n"
+            + (
+                "## Security: "
+                + "x" * 400
+                + "\n"
+                + "Example: "
+                + "y" * 600
+                + "\n"
+                + "Code: "
+                + "z" * 500
+                + "\n\n"
+            )
+            * 12,  # ~18K chars
+            "# Testing Baseline\n"
+            + (
+                "## Test: "
+                + "x" * 400
+                + "\n"
+                + "Coverage: "
+                + "y" * 600
+                + "\n"
+                + "Assert: "
+                + "z" * 500
+                + "\n\n"
+            )
+            * 12,  # ~18K chars
+            "# Auth Security\n"
+            + ("## Auth pattern: " + "x" * 400 + "\n" + "Implementation: " + "y" * 600 + "\n\n")
+            * 10,  # ~10K chars
+            "# Database Design\n"
+            + ("## DB rule: " + "x" * 400 + "\n" + "Schema: " + "y" * 600 + "\n\n")
+            * 10,  # ~10K chars
+            "# API Patterns\n"
+            + ("## API guideline: " + "x" * 400 + "\n" + "Endpoint: " + "y" * 600 + "\n\n")
+            * 12,  # ~12K chars
         ]
         old_context = "\n\n".join(old_guardrails)
         old_tokens = count_tokens(old_context)
