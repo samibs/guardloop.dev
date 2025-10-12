@@ -20,97 +20,34 @@ class TaskComplexity(Enum):
 class AgentChainOptimizer:
     """Select minimal agent chain for task."""
 
-    # Task → Agent Chain Mapping
+    # Task → Agent Chain Mapping (using simple names)
     TASK_AGENT_CHAINS = {
-        # Simple tasks - single agent
+        # Simple tasks
         "fix_typo": ["standards_oracle"],
-        "update_docs": ["documentation_codifier"],
+        "update_docs": ["documentation"],
         "format_code": ["standards_oracle"],
-        # Medium tasks - focused chain
-        "implement_function": ["cold_blooded_architect", "ruthless_coder", "ruthless_tester"],
-        "add_tests": ["ruthless_tester"],
-        "fix_bug": ["support_debug_hunter", "ruthless_tester"],
-        "refactor": ["cold_blooded_architect", "ruthless_coder", "ruthless_tester"],
-        # Complex tasks - extended chain
-        "implement_feature": [
-            "business_analyst",
-            "cold_blooded_architect",
-            "ruthless_coder",
-            "ruthless_tester",
-            "merciless_evaluator",
-        ],
-        "implement_auth": [
-            "cold_blooded_architect",
-            "secops_engineer",
-            "ruthless_coder",
-            "ruthless_tester",
-            "merciless_evaluator",
-        ],
-        "database_design": [
-            "cold_blooded_architect",
-            "dba",
-            "ruthless_coder",
-            "ruthless_tester",
-        ],
-        # Critical tasks - full chain + compliance
-        "build_auth_system": [
-            "business_analyst",
-            "cold_blooded_architect",
-            "secops_engineer",
-            "dba",
-            "ruthless_coder",
-            "ruthless_tester",
-            "sre_ops",
-            "standards_oracle",
-            "merciless_evaluator",
-        ],
-        "implement_payment": [
-            "business_analyst",
-            "cold_blooded_architect",
-            "secops_engineer",
-            "dba",
-            "ruthless_coder",
-            "ruthless_tester",
-            "standards_oracle",
-            "sre_ops",
-            "merciless_evaluator",
-        ],
-        "compliance_feature": [
-            "business_analyst",
-            "cold_blooded_architect",
-            "secops_engineer",
-            "ruthless_coder",
-            "ruthless_tester",
-            "standards_oracle",
-            "merciless_evaluator",
-            "documentation_codifier",
-        ],
+        # Medium tasks
+        "implement_function": ["architect", "coder", "tester"],
+        "add_tests": ["tester"],
+        "fix_bug": ["debug_hunter", "tester"],
+        "refactor": ["architect", "coder", "tester"],
+        # Complex tasks
+        "implement_feature": ["business_analyst", "architect", "coder", "tester", "evaluator"],
+        "implement_auth": ["architect", "secops", "coder", "tester", "evaluator"],
+        "database_design": ["architect", "dba", "coder", "tester"],
+        # Critical tasks
+        "build_auth_system": ["business_analyst", "architect", "secops", "dba", "coder", "tester", "sre", "standards_oracle", "evaluator"],
+        "implement_payment": ["business_analyst", "architect", "secops", "dba", "coder", "tester", "standards_oracle", "sre", "evaluator"],
+        "compliance_feature": ["business_analyst", "architect", "secops", "coder", "tester", "standards_oracle", "evaluator", "documentation"],
         # UI/UX tasks
-        "implement_ui": [
-            "ux_ui_designer",
-            "ruthless_coder",
-            "ruthless_tester",
-        ],
-        "improve_accessibility": [
-            "ux_ui_designer",
-            "ruthless_coder",
-            "ruthless_tester",
-        ],
+        "implement_ui": ["ux_designer", "coder", "tester"],
+        "improve_accessibility": ["ux_designer", "coder", "tester"],
         # API tasks
-        "implement_api": [
-            "cold_blooded_architect",
-            "ruthless_coder",
-            "ruthless_tester",
-        ],
-        "api_security": [
-            "cold_blooded_architect",
-            "secops_engineer",
-            "ruthless_coder",
-            "ruthless_tester",
-        ],
+        "implement_api": ["architect", "coder", "tester"],
+        "api_security": ["architect", "secops", "coder", "tester"],
     }
 
-    # Agent name normalization mapping (old → new)
+    # Agent name normalization mapping (simple name → full class name)
     AGENT_NAME_MAP = {
         "architect": "cold_blooded_architect",
         "coder": "ruthless_coder",
@@ -121,6 +58,10 @@ class AgentChainOptimizer:
         "evaluator": "merciless_evaluator",
         "documentation": "documentation_codifier",
         "ux_designer": "ux_ui_designer",
+        "business_analyst": "business_analyst",
+        "dba": "dba",
+        "standards_oracle": "standards_oracle",
+        # Add other simple names if they exist
     }
 
     def __init__(self):
@@ -244,7 +185,7 @@ class AgentChainOptimizer:
 
         if chain_length <= 2:
             complexity = TaskComplexity.SIMPLE
-        elif chain_length <= 5:
+        elif chain_length <= 4:
             complexity = TaskComplexity.MEDIUM
         elif chain_length <= 8:
             complexity = TaskComplexity.COMPLEX

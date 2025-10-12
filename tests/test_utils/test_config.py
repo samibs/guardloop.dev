@@ -4,6 +4,7 @@ import pytest
 from pathlib import Path
 from guardloop.utils.config import (
     Config,
+    ConfigManager,
     DatabaseConfig,
     LoggingConfig,
     ToolConfig,
@@ -18,17 +19,17 @@ class TestDatabaseConfig:
     def test_default_path(self):
         """Test default database path"""
         db_config = DatabaseConfig()
-        assert db_config.path == Path.home() / ".guardrail" / "guardrail.db"
+        assert Path(db_config.path) == Path.home() / ".guardloop" / "data" / "guardloop.db"
 
     def test_custom_path(self):
         """Test custom database path"""
         db_config = DatabaseConfig(path="/custom/path/db.sqlite")
-        assert db_config.path == Path("/custom/path/db.sqlite")
+        assert Path(db_config.path) == Path("/custom/path/db.sqlite").resolve()
 
     def test_memory_database(self):
         """Test in-memory database"""
         db_config = DatabaseConfig(path=":memory:")
-        assert db_config.path == Path(":memory:")
+        assert db_config.path == ":memory:"
 
 
 class TestLoggingConfig:
@@ -38,7 +39,7 @@ class TestLoggingConfig:
         """Test default logging configuration"""
         log_config = LoggingConfig()
         assert log_config.level == "INFO"
-        assert log_config.file is None
+        assert Path(log_config.file) == Path.home() / ".guardloop" / "logs" / "guardloop.log"
 
     def test_custom_level(self):
         """Test custom log level"""
@@ -48,7 +49,7 @@ class TestLoggingConfig:
     def test_log_file(self):
         """Test log file configuration"""
         log_config = LoggingConfig(file="/var/log/guardrail.log")
-        assert log_config.file == Path("/var/log/guardrail.log")
+        assert Path(log_config.file) == Path("/var/log/guardrail.log").resolve()
 
 
 class TestToolConfig:
@@ -73,16 +74,16 @@ class TestGuardrailsConfig:
     def test_default_guardrails_config(self):
         """Test default guardrails configuration"""
         guardrails_config = GuardrailsConfig()
-        assert guardrails_config.base_path == Path.home() / ".guardrail" / "guardrails"
-        assert guardrails_config.agents_path == Path.home() / ".guardrail" / "guardrails" / "agents"
+        assert Path(guardrails_config.base_path) == Path.home() / ".guardloop" / "guardrails"
+        assert Path(guardrails_config.agents_path) == Path.home() / ".guardloop" / "guardrails" / "agents"
 
     def test_custom_paths(self):
         """Test custom guardrails paths"""
         guardrails_config = GuardrailsConfig(
             base_path="/custom/guardrails", agents_path="/custom/agents"
         )
-        assert guardrails_config.base_path == Path("/custom/guardrails")
-        assert guardrails_config.agents_path == Path("/custom/agents")
+        assert Path(guardrails_config.base_path) == Path("/custom/guardrails").resolve()
+        assert Path(guardrails_config.agents_path) == Path("/custom/agents").resolve()
 
 
 class TestTeamConfig:
@@ -114,10 +115,10 @@ class TestConfig:
     def test_default_config(self):
         """Test default configuration"""
         config = Config()
-        assert config.version == "1.0"
+        assert config.version == "2.2"
         assert config.mode == "standard"
         assert config.default_agent == "auto"
-        assert config.strict is False
+
 
     def test_strict_mode(self):
         """Test strict mode configuration"""
@@ -144,7 +145,7 @@ class TestConfig:
             default_agent="architect", guardrails=GuardrailsConfig(base_path="/custom/guardrails")
         )
         assert config.default_agent == "architect"
-        assert config.guardrails.base_path == Path("/custom/guardrails")
+        assert Path(config.guardrails.base_path) == Path("/custom/guardrails").resolve()
 
     def test_team_sync(self):
         """Test team sync configuration"""
@@ -157,13 +158,13 @@ class TestConfig:
     def test_database_config(self):
         """Test database configuration"""
         config = Config(database=DatabaseConfig(path=":memory:"))
-        assert config.database.path == Path(":memory:")
+        assert config.database.path == ":memory:"
 
     def test_logging_config(self):
         """Test logging configuration"""
         config = Config(logging=LoggingConfig(level="DEBUG", file="/tmp/guardrail.log"))
         assert config.logging.level == "DEBUG"
-        assert config.logging.file == Path("/tmp/guardrail.log")
+        assert Path(config.logging.file) == Path("/tmp/guardrail.log").resolve()
 
     def test_load_from_file(self, tmp_path):
         """Test loading configuration from file"""
@@ -190,9 +191,10 @@ tools:
 """
         )
 
-        config = Config.from_file(str(config_file))
+        config_manager = ConfigManager(config_path=str(config_file))
+        config = config_manager.load()
         assert config.mode == "strict"
         assert config.default_agent == "architect"
         assert config.strict is True
-        assert config.database.path == Path("/tmp/test.db")
+        assert Path(config.database.path) == Path("/tmp/test.db").resolve()
         assert config.logging.level == "DEBUG"

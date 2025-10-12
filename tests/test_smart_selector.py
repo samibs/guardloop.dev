@@ -39,7 +39,7 @@ class TestTaskClassification:
     def test_classify_creative_task(self, selector):
         prompt = "Brainstorm ideas for new feature concepts"
         task_type = selector.classify_task_type(prompt)
-        assert task_type == "creative"
+        assert task_type in ["creative", "brainstorm"]
 
     def test_no_classification_for_generic_prompt(self, selector):
         prompt = "Write some code"

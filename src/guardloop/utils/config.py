@@ -26,10 +26,10 @@ class GuardrailsConfig(BaseModel):
     )
     agents_path: str = "~/.guardloop/guardrails/agents"
 
-    @field_validator("base_path", "agents_path")
-    @classmethod
-    def expand_path(cls, v: str) -> str:
-        return str(Path(v).expanduser().resolve())
+    def __init__(self, **data):
+        super().__init__(**data)
+        self.base_path = str(Path(self.base_path).expanduser().resolve())
+        self.agents_path = str(Path(self.agents_path).expanduser().resolve())
 
 
 class DatabaseConfig(BaseModel):
@@ -39,10 +39,10 @@ class DatabaseConfig(BaseModel):
     backup_enabled: bool = True
     backup_interval_hours: int = 24
 
-    @field_validator("path")
-    @classmethod
-    def expand_path(cls, v: str) -> str:
-        return str(Path(v).expanduser().resolve())
+    def __init__(self, **data):
+        super().__init__(**data)
+        if self.path != ":memory:":
+            self.path = str(Path(self.path).expanduser().resolve())
 
 
 class LoggingConfig(BaseModel):
@@ -53,6 +53,10 @@ class LoggingConfig(BaseModel):
     max_size_mb: int = 100
     backup_count: int = 5
 
+    def __init__(self, **data):
+        super().__init__(**data)
+        self.file = str(Path(self.file).expanduser().resolve())
+
     @field_validator("level")
     @classmethod
     def validate_level(cls, v: str) -> str:
@@ -61,11 +65,6 @@ class LoggingConfig(BaseModel):
         if v_upper not in valid_levels:
             raise ValueError(f"Invalid log level. Must be one of: {valid_levels}")
         return v_upper
-
-    @field_validator("file")
-    @classmethod
-    def expand_path(cls, v: str) -> str:
-        return str(Path(v).expanduser().resolve())
 
 
 class FeaturesConfig(BaseModel):

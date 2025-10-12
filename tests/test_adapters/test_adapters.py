@@ -89,6 +89,23 @@ class TestGeminiAdapter:
         assert adapter.timeout == 30
         assert adapter.tool_name == "Gemini"
 
+    @pytest.mark.asyncio
+    async def test_execute_with_mock(self, adapter):
+        """Test execute with mocked subprocess"""
+        mock_response = AIResponse(
+            raw_output="Test response from Gemini",
+            execution_time_ms=1200,
+            exit_code=0,
+            stdout="Test response from Gemini",
+        )
+
+        adapter._execute_with_retry = AsyncMock(return_value=mock_response)
+
+        response = await adapter.execute("Test prompt")
+
+        assert response.raw_output == "Test response from Gemini"
+        assert response.execution_time_ms == 1200
+
 
 class TestCodexAdapter:
     """Test Codex adapter"""
@@ -192,7 +209,7 @@ class TestBaseAdapter:
         adapter = ClaudeAdapter(timeout=1)
 
         # Mock a long-running process that will timeout
-        async def mock_long_process(prompt, timeout):
+        async def mock_long_process(prompt, timeout, stream_callback=None):
             import asyncio
 
             # Simulate timeout by raising TimeoutError
@@ -216,7 +233,7 @@ class TestBaseAdapter:
 
         call_count = 0
 
-        async def mock_failing_execute(prompt, timeout):
+        async def mock_failing_execute(prompt, timeout, stream_callback=None):
             nonlocal call_count
             call_count += 1
             if call_count < 3:

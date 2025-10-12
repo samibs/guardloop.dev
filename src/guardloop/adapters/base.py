@@ -163,6 +163,11 @@ class BaseAdapter(ABC):
             raw_output="", execution_time_ms=0, error=last_error, exit_code=1, stdout="", stderr=""
         )
 
+    def _build_command(self, prompt: str) -> list[str]:
+        """Build the command list for subprocess execution."""
+        # Default implementation for claude-cli compatibility
+        return [self.cli_path, "--dangerously-skip-permissions", prompt]
+
     async def _execute_subprocess(
         self, prompt: str, timeout: int, stream_callback=None
     ) -> AIResponse:
@@ -180,11 +185,11 @@ class BaseAdapter(ABC):
 
         start_time = time.time()
 
-        # Create subprocess with dangerously-skip-permissions for file operations
+        command = self._build_command(prompt)
+
+        # Create subprocess
         process = await asyncio.create_subprocess_exec(
-            self.cli_path,
-            "--dangerously-skip-permissions",
-            prompt,
+            *command,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )

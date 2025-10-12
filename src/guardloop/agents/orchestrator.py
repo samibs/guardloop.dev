@@ -50,18 +50,18 @@ class OrchestratorAgent(BaseAgent):
         from guardloop.agents.ux_designer import UXDesignerAgent
 
         self.agents = {
-            "architect": ArchitectAgent(self.config),
+            "cold_blooded_architect": ArchitectAgent(self.config),
             "business_analyst": BusinessAnalystAgent(self.config),
-            "coder": CoderAgent(self.config),
+            "ruthless_coder": CoderAgent(self.config),
             "dba": DBAAgent(self.config),
-            "debug_hunter": DebugHunterAgent(self.config),
-            "documentation": DocumentationAgent(self.config),
-            "evaluator": EvaluatorAgent(self.config),
-            "secops": SecOpsAgent(self.config),
-            "sre": SREAgent(self.config),
+            "support_debug_hunter": DebugHunterAgent(self.config),
+            "documentation_codifier": DocumentationAgent(self.config),
+            "merciless_evaluator": EvaluatorAgent(self.config),
+            "secops_engineer": SecOpsAgent(self.config),
+            "sre_ops": SREAgent(self.config),
             "standards_oracle": StandardsOracleAgent(self.config),
-            "tester": TesterAgent(self.config),
-            "ux_designer": UXDesignerAgent(self.config),
+            "ruthless_tester": TesterAgent(self.config),
+            "ux_ui_designer": UXDesignerAgent(self.config),
         }
 
     async def route(self, prompt: str) -> str:
@@ -204,7 +204,7 @@ class OrchestratorAgent(BaseAgent):
         """
         # Get optimal chain from optimizer
         chain = self.chain_optimizer.select_chain(
-            task_type=task_type, mode=mode, user_specified_agent=user_agent
+            task_type=task_type, mode=context.mode, user_specified_agent=user_agent
         )
 
         # Log chain selection
@@ -213,7 +213,7 @@ class OrchestratorAgent(BaseAgent):
             f"Selected {len(chain)} agents for {complexity.value} task",
             agents=chain,
             task_type=task_type,
-            mode=mode,
+            mode=context.mode,
         )
 
         # Execute chain
@@ -230,13 +230,12 @@ class OrchestratorAgent(BaseAgent):
             decision = await agent.evaluate(context)
             decisions.append(decision)
 
-            # Stop if agent blocks
-            if not decision.approved:
-                logger.warning(f"Chain stopped by {agent_name}", reason=decision.reason)
+            # Stop if agent blocks in strict mode
+            if not decision.approved and context.mode == "strict":
+                logger.warning(f"Chain stopped by {agent_name} in strict mode", reason=decision.reason)
                 break
 
-            # Update context with findings
-            context.violations.extend(decision.violations)
+            # The context is updated by the agents themselves, so no action is needed here.
 
         return decisions
 

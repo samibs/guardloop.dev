@@ -204,11 +204,11 @@ class TestOrchestrator:
 
         # Verify all 12 agents loaded
         assert len(orchestrator.agents) == 12
-        assert "architect" in orchestrator.agents
-        assert "coder" in orchestrator.agents
-        assert "tester" in orchestrator.agents
-        assert "secops" in orchestrator.agents
-        assert "evaluator" in orchestrator.agents
+        assert "cold_blooded_architect" in orchestrator.agents
+        assert "ruthless_coder" in orchestrator.agents
+        assert "ruthless_tester" in orchestrator.agents
+        assert "secops_engineer" in orchestrator.agents
+        assert "merciless_evaluator" in orchestrator.agents
 
     @pytest.mark.asyncio
     async def test_routing_architecture(self, config):
@@ -264,7 +264,7 @@ class TestOrchestrator:
         orchestrator = OrchestratorAgent(config)
         await orchestrator.load_agents()
 
-        decisions = await orchestrator.orchestrate(architect_context, start_agent="architect")
+        decisions = await orchestrator.orchestrate(architect_context)
 
         # Should execute multiple agents in chain
         assert len(decisions) > 0
@@ -281,7 +281,7 @@ class TestOrchestrator:
             prompt="Vague request", mode="strict", raw_output="Some output"  # No clear requirements
         )
 
-        decisions = await orchestrator.orchestrate(failing_context, start_agent="architect")
+        decisions = await orchestrator.orchestrate(failing_context)
 
         # Should stop after first non-approval in strict mode
         assert len(decisions) == 1
@@ -294,7 +294,7 @@ class TestOrchestrator:
         await orchestrator.load_agents()
 
         decisions = await orchestrator.orchestrate(
-            AgentContext(prompt="Test", mode="standard", raw_output="Test"), start_agent="architect"
+            AgentContext(prompt="Test", mode="standard", raw_output="Test")
         )
 
         # Should not exceed max iterations
@@ -602,7 +602,7 @@ def test_authenticate():
             """,
         )
 
-        decisions = await orchestrator.orchestrate(context, start_agent="architect")
+        decisions = await orchestrator.orchestrate(context)
 
         # Verify chain execution
         agent_names = [d.agent_name for d in decisions]
