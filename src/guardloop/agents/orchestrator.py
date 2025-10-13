@@ -50,18 +50,18 @@ class OrchestratorAgent(BaseAgent):
         from guardloop.agents.ux_designer import UXDesignerAgent
 
         self.agents = {
-            "cold_blooded_architect": ArchitectAgent(self.config),
+            "architect": ArchitectAgent(self.config),
             "business_analyst": BusinessAnalystAgent(self.config),
-            "ruthless_coder": CoderAgent(self.config),
+            "coder": CoderAgent(self.config),
             "dba": DBAAgent(self.config),
-            "support_debug_hunter": DebugHunterAgent(self.config),
-            "documentation_codifier": DocumentationAgent(self.config),
-            "merciless_evaluator": EvaluatorAgent(self.config),
-            "secops_engineer": SecOpsAgent(self.config),
-            "sre_ops": SREAgent(self.config),
+            "debug_hunter": DebugHunterAgent(self.config),
+            "documentation": DocumentationAgent(self.config),
+            "evaluator": EvaluatorAgent(self.config),
+            "secops": SecOpsAgent(self.config),
+            "sre": SREAgent(self.config),
             "standards_oracle": StandardsOracleAgent(self.config),
-            "ruthless_tester": TesterAgent(self.config),
-            "ux_ui_designer": UXDesignerAgent(self.config),
+            "tester": TesterAgent(self.config),
+            "ux_designer": UXDesignerAgent(self.config),
         }
 
     async def route(self, prompt: str) -> str:

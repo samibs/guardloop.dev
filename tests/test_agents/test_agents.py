@@ -30,7 +30,17 @@ from guardloop.utils.config import Config
 @pytest.fixture
 def config():
     """Create test config"""
-    return Config(mode="standard", tool="implement", strict=False)
+    return Config(
+        mode="standard",
+        tool="implement",
+        strict=False,
+        tools={
+            "claude": {"cli_path": "claude", "enabled": True, "timeout": 120},
+            "gemini": {"cli_path": "gemini", "enabled": True, "timeout": 120},
+            "codex": {"cli_path": "codex", "enabled": True, "timeout": 120},
+            "ace": {"cli_path": "ace", "enabled": True, "timeout": 300},
+        },
+    )
 
 
 @pytest.fixture
@@ -183,9 +193,6 @@ class TestAgentBase:
         assert 0.5 <= confidence <= 0.8
 
 
-# Orchestrator Tests
-
-
 class TestOrchestrator:
     """Test orchestrator routing and orchestration"""
 
@@ -204,11 +211,11 @@ class TestOrchestrator:
 
         # Verify all 12 agents loaded
         assert len(orchestrator.agents) == 12
-        assert "cold_blooded_architect" in orchestrator.agents
-        assert "ruthless_coder" in orchestrator.agents
-        assert "ruthless_tester" in orchestrator.agents
-        assert "secops_engineer" in orchestrator.agents
-        assert "merciless_evaluator" in orchestrator.agents
+        assert "architect" in orchestrator.agents
+        assert "coder" in orchestrator.agents
+        assert "tester" in orchestrator.agents
+        assert "secops" in orchestrator.agents
+        assert "evaluator" in orchestrator.agents
 
     @pytest.mark.asyncio
     async def test_routing_architecture(self, config):

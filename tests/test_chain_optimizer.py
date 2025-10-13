@@ -22,26 +22,26 @@ class TestTaskChainSelection:
     def test_simple_task_docs(self, optimizer):
         chain = optimizer.select_chain("update_docs")
         assert len(chain) == 1
-        assert chain == ["documentation_codifier"]
+        assert chain == ["documentation"]
 
     def test_medium_task_focused_chain(self, optimizer):
         chain = optimizer.select_chain("implement_function")
         assert len(chain) == 3
-        assert "cold_blooded_architect" in chain
-        assert "ruthless_coder" in chain
-        assert "ruthless_tester" in chain
+        assert "architect" in chain
+        assert "coder" in chain
+        assert "tester" in chain
 
     def test_complex_task_extended_chain(self, optimizer):
         chain = optimizer.select_chain("implement_feature")
         assert len(chain) >= 4
         assert "business_analyst" in chain
-        assert "cold_blooded_architect" in chain
-        assert "merciless_evaluator" in chain
+        assert "architect" in chain
+        assert "evaluator" in chain
 
     def test_critical_task_full_chain(self, optimizer):
         chain = optimizer.select_chain("build_auth_system")
         assert len(chain) >= 8
-        assert "secops_engineer" in chain
+        assert "secops" in chain
         assert "dba" in chain
         assert "standards_oracle" in chain
 
@@ -49,9 +49,9 @@ class TestTaskChainSelection:
         chain = optimizer.select_chain("unknown_task_xyz")
         # Should return default medium chain
         assert len(chain) == 3
-        assert "cold_blooded_architect" in chain
-        assert "ruthless_coder" in chain
-        assert "ruthless_tester" in chain
+        assert "architect" in chain
+        assert "coder" in chain
+        assert "tester" in chain
 
 
 class TestStrictMode:
@@ -64,16 +64,16 @@ class TestStrictMode:
         strict_chain = optimizer.select_chain("implement_function", mode="strict")
 
         assert len(strict_chain) > len(standard_chain)
-        assert "secops_engineer" in strict_chain
+        assert "secops" in strict_chain
         assert "standards_oracle" in strict_chain
-        assert "merciless_evaluator" in strict_chain
+        assert "evaluator" in strict_chain
 
     def test_strict_mode_preserves_order(self, optimizer):
         chain = optimizer.select_chain("implement_function", mode="strict")
 
         # Security should be before coder
-        secops_idx = chain.index("secops_engineer")
-        coder_idx = chain.index("ruthless_coder")
+        secops_idx = chain.index("secops")
+        coder_idx = chain.index("coder")
         assert secops_idx < coder_idx
 
     def test_strict_mode_no_duplicates(self, optimizer):
@@ -89,20 +89,9 @@ class TestUserSpecifiedAgent:
 
     def test_user_agent_override(self, optimizer):
         chain = optimizer.select_chain(
-            task_type="implement_feature", user_specified_agent="ruthless_coder"
+            task_type="implement_feature", user_specified_agent="coder"
         )
-        assert chain == ["ruthless_coder"]
-
-    def test_user_agent_normalization(self, optimizer):
-        # Test with old agent name
-        chain = optimizer.select_chain(task_type="implement_feature", user_specified_agent="coder")
-        assert chain == ["ruthless_coder"]
-
-    def test_user_agent_hyphenated(self, optimizer):
-        chain = optimizer.select_chain(
-            task_type="implement_feature", user_specified_agent="cold-blooded-architect"
-        )
-        assert chain == ["cold_blooded_architect"]
+        assert chain == ["coder"]
 
 
 class TestComplexityDetection:
@@ -129,22 +118,6 @@ class TestComplexityDetection:
         assert complexity == TaskComplexity.MEDIUM
 
 
-class TestAgentNameNormalization:
-    """Test agent name normalization"""
-
-    def test_normalize_hyphenated(self, optimizer):
-        normalized = optimizer._normalize_agent_name("cold-blooded-architect")
-        assert normalized == "cold_blooded_architect"
-
-    def test_normalize_old_names(self, optimizer):
-        assert optimizer._normalize_agent_name("architect") == "cold_blooded_architect"
-        assert optimizer._normalize_agent_name("coder") == "ruthless_coder"
-        assert optimizer._normalize_agent_name("tester") == "ruthless_tester"
-        assert optimizer._normalize_agent_name("evaluator") == "merciless_evaluator"
-
-    def test_normalize_already_normalized(self, optimizer):
-        normalized = optimizer._normalize_agent_name("ruthless_coder")
-        assert normalized == "ruthless_coder"
 
 
 class TestSpecializedTasks:
@@ -152,23 +125,23 @@ class TestSpecializedTasks:
 
     def test_ui_task_chain(self, optimizer):
         chain = optimizer.select_chain("implement_ui")
-        assert "ux_ui_designer" in chain
-        assert "ruthless_coder" in chain
-        assert "ruthless_tester" in chain
+        assert "ux_designer" in chain
+        assert "coder" in chain
+        assert "tester" in chain
 
     def test_database_task_chain(self, optimizer):
         chain = optimizer.select_chain("database_design")
         assert "dba" in chain
-        assert "cold_blooded_architect" in chain
+        assert "architect" in chain
 
     def test_auth_task_chain(self, optimizer):
         chain = optimizer.select_chain("implement_auth")
-        assert "secops_engineer" in chain
-        assert "cold_blooded_architect" in chain
+        assert "secops" in chain
+        assert "architect" in chain
 
     def test_api_security_chain(self, optimizer):
         chain = optimizer.select_chain("api_security")
-        assert "secops_engineer" in chain
+        assert "secops" in chain
 
 
 class TestUtilityMethods:

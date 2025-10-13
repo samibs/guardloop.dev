@@ -20,49 +20,96 @@ class TaskComplexity(Enum):
 class AgentChainOptimizer:
     """Select minimal agent chain for task."""
 
-    # Task → Agent Chain Mapping (using simple names)
+    # Task → Agent Chain Mapping
     TASK_AGENT_CHAINS = {
-        # Simple tasks
+        # Simple tasks - single agent
         "fix_typo": ["standards_oracle"],
         "update_docs": ["documentation"],
         "format_code": ["standards_oracle"],
-        # Medium tasks
+        # Medium tasks - focused chain
         "implement_function": ["architect", "coder", "tester"],
         "add_tests": ["tester"],
         "fix_bug": ["debug_hunter", "tester"],
         "refactor": ["architect", "coder", "tester"],
-        # Complex tasks
-        "implement_feature": ["business_analyst", "architect", "coder", "tester", "evaluator"],
-        "implement_auth": ["architect", "secops", "coder", "tester", "evaluator"],
-        "database_design": ["architect", "dba", "coder", "tester"],
-        # Critical tasks
-        "build_auth_system": ["business_analyst", "architect", "secops", "dba", "coder", "tester", "sre", "standards_oracle", "evaluator"],
-        "implement_payment": ["business_analyst", "architect", "secops", "dba", "coder", "tester", "standards_oracle", "sre", "evaluator"],
-        "compliance_feature": ["business_analyst", "architect", "secops", "coder", "tester", "standards_oracle", "evaluator", "documentation"],
+        # Complex tasks - extended chain
+        "implement_feature": [
+            "business_analyst",
+            "architect",
+            "coder",
+            "tester",
+            "evaluator",
+        ],
+        "implement_auth": [
+            "architect",
+            "secops",
+            "coder",
+            "tester",
+            "evaluator",
+        ],
+        "database_design": [
+            "architect",
+            "dba",
+            "coder",
+            "tester",
+        ],
+        # Critical tasks - full chain + compliance
+        "build_auth_system": [
+            "business_analyst",
+            "architect",
+            "secops",
+            "dba",
+            "coder",
+            "tester",
+            "sre",
+            "standards_oracle",
+            "evaluator",
+        ],
+        "implement_payment": [
+            "business_analyst",
+            "architect",
+            "secops",
+            "dba",
+            "coder",
+            "tester",
+            "standards_oracle",
+            "sre",
+            "evaluator",
+        ],
+        "compliance_feature": [
+            "business_analyst",
+            "architect",
+            "secops",
+            "coder",
+            "tester",
+            "standards_oracle",
+            "evaluator",
+            "documentation",
+        ],
         # UI/UX tasks
-        "implement_ui": ["ux_designer", "coder", "tester"],
-        "improve_accessibility": ["ux_designer", "coder", "tester"],
+        "implement_ui": [
+            "ux_designer",
+            "coder",
+            "tester",
+        ],
+        "improve_accessibility": [
+            "ux_designer",
+            "coder",
+            "tester",
+        ],
         # API tasks
-        "implement_api": ["architect", "coder", "tester"],
-        "api_security": ["architect", "secops", "coder", "tester"],
+        "implement_api": [
+            "architect",
+            "coder",
+            "tester",
+        ],
+        "api_security": [
+            "architect",
+            "secops",
+            "coder",
+            "tester",
+        ],
     }
 
-    # Agent name normalization mapping (simple name → full class name)
-    AGENT_NAME_MAP = {
-        "architect": "cold_blooded_architect",
-        "coder": "ruthless_coder",
-        "tester": "ruthless_tester",
-        "debug_hunter": "support_debug_hunter",
-        "secops": "secops_engineer",
-        "sre": "sre_ops",
-        "evaluator": "merciless_evaluator",
-        "documentation": "documentation_codifier",
-        "ux_designer": "ux_ui_designer",
-        "business_analyst": "business_analyst",
-        "dba": "dba",
-        "standards_oracle": "standards_oracle",
-        # Add other simple names if they exist
-    }
 
     def __init__(self):
         """Initialize chain optimizer"""
@@ -86,27 +133,21 @@ class AgentChainOptimizer:
         """
         # User explicitly chose an agent
         if user_specified_agent:
-            # Normalize agent name
-            normalized_agent = self._normalize_agent_name(user_specified_agent)
             logger.info(
                 "Using user-specified agent",
-                original=user_specified_agent,
-                normalized=normalized_agent,
+                agent=user_specified_agent,
             )
-            return [normalized_agent]
+            return [user_specified_agent]
 
         # Get base chain for task
         chain = self.TASK_AGENT_CHAINS.get(
             task_type,
-            ["cold_blooded_architect", "ruthless_coder", "ruthless_tester"],  # Default medium chain
+            ["architect", "coder", "tester"],  # Default medium chain
         )
 
         # Strict mode: add compliance agents
         if mode == "strict":
             chain = self._add_strict_agents(chain, task_type)
-
-        # Normalize all agent names
-        chain = [self._normalize_agent_name(agent) for agent in chain]
 
         # Remove duplicates while preserving order
         seen = set()
@@ -139,25 +180,25 @@ class AgentChainOptimizer:
         strict_chain = chain.copy()
 
         # Always add security check in strict mode
-        if "secops_engineer" not in strict_chain and "secops" not in strict_chain:
+        if "secops" not in strict_chain:
             # Insert after architect, before coder
             insert_pos = next(
                 (
                     i
                     for i, agent in enumerate(strict_chain)
-                    if agent in ["ruthless_coder", "coder", "ruthless_tester", "tester"]
+                    if agent in ["coder", "tester"]
                 ),
                 len(strict_chain),
             )
-            strict_chain.insert(insert_pos, "secops_engineer")
+            strict_chain.insert(insert_pos, "secops")
 
         # Always add standards check
         if "standards_oracle" not in strict_chain:
             strict_chain.append("standards_oracle")
 
         # Always add final evaluation
-        if "merciless_evaluator" not in strict_chain and "evaluator" not in strict_chain:
-            strict_chain.append("merciless_evaluator")
+        if "evaluator" not in strict_chain:
+            strict_chain.append("evaluator")
 
         logger.debug(
             "Strict mode agents added",
@@ -179,7 +220,7 @@ class AgentChainOptimizer:
         """
         chain_length = len(
             self.TASK_AGENT_CHAINS.get(
-                task_type, ["cold_blooded_architect", "ruthless_coder", "ruthless_tester"]
+                task_type, ["architect", "coder", "tester"]
             )
         )
 
@@ -200,24 +241,6 @@ class AgentChainOptimizer:
         )
 
         return complexity
-
-    def _normalize_agent_name(self, agent_name: str) -> str:
-        """Normalize agent name to standard format.
-
-        Args:
-            agent_name: Original agent name
-
-        Returns:
-            Normalized agent name
-        """
-        # Remove hyphens and underscores, convert to lowercase
-        normalized = agent_name.lower().replace("-", "_")
-
-        # Apply mapping if exists
-        if normalized in self.AGENT_NAME_MAP:
-            return self.AGENT_NAME_MAP[normalized]
-
-        return normalized
 
     def get_task_types(self) -> List[str]:
         """Get all supported task types.

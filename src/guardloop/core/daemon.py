@@ -413,7 +413,7 @@ class GuardrailDaemon:
                 "raw_output": response.raw_output[:10000],  # Limit output size
                 "parsed_output": {
                     "code_blocks": [
-                        {"language": cb.language, "code": cb.code[:5000]}
+                        {"language": cb.language, "content": cb.content[:5000]}
                         for cb in parsed.code_blocks
                     ],
                     "file_paths": parsed.file_paths,

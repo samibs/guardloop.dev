@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import yaml
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 from pydantic_settings import BaseSettings
 
 
@@ -26,10 +26,11 @@ class GuardrailsConfig(BaseModel):
     )
     agents_path: str = "~/.guardloop/guardrails/agents"
 
-    def __init__(self, **data):
-        super().__init__(**data)
+    @model_validator(mode="after")
+    def expand_paths(self) -> "GuardrailsConfig":
         self.base_path = str(Path(self.base_path).expanduser().resolve())
         self.agents_path = str(Path(self.agents_path).expanduser().resolve())
+        return self
 
 
 class DatabaseConfig(BaseModel):
@@ -39,10 +40,11 @@ class DatabaseConfig(BaseModel):
     backup_enabled: bool = True
     backup_interval_hours: int = 24
 
-    def __init__(self, **data):
-        super().__init__(**data)
+    @model_validator(mode="after")
+    def expand_path(self) -> "DatabaseConfig":
         if self.path != ":memory:":
             self.path = str(Path(self.path).expanduser().resolve())
+        return self
 
 
 class LoggingConfig(BaseModel):
@@ -53,10 +55,6 @@ class LoggingConfig(BaseModel):
     max_size_mb: int = 100
     backup_count: int = 5
 
-    def __init__(self, **data):
-        super().__init__(**data)
-        self.file = str(Path(self.file).expanduser().resolve())
-
     @field_validator("level")
     @classmethod
     def validate_level(cls, v: str) -> str:
@@ -65,6 +63,11 @@ class LoggingConfig(BaseModel):
         if v_upper not in valid_levels:
             raise ValueError(f"Invalid log level. Must be one of: {valid_levels}")
         return v_upper
+
+    @model_validator(mode="after")
+    def expand_path(self) -> "LoggingConfig":
+        self.file = str(Path(self.file).expanduser().resolve())
+        return self
 
 
 class FeaturesConfig(BaseModel):
