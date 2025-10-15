@@ -84,6 +84,8 @@ class TaskClassifier:
         "paragraph": 0.9,
         "section": 0.6,
         "content": 0.6,
+        "poem": 0.9,
+        "story": 0.9,
     }
 
     CREATIVE_KEYWORDS = {
@@ -105,6 +107,8 @@ class TaskClassifier:
         "prototype": 0.6,
         "html page": 0.5,  # Could be either creative or code
         "landing page": 0.5,
+        "brainstorm": 0.9,
+        "ideation": 0.9,
     }
 
     # Code indicators (syntax patterns)
@@ -296,7 +300,7 @@ class TaskClassifier:
             )
 
         # Check for content tasks (skip guardrails)
-        if content_score >= 0.6:
+        if content_score >= 0.5:
             return (
                 "content",
                 content_score,

@@ -51,7 +51,7 @@ class TestSemanticMatcher:
         assert matcher.guardrail_embeddings == {}
         assert matcher._model_loaded is False
 
-    @patch("guardrail.core.semantic_matcher.SentenceTransformer")
+    @patch("guardloop.core.semantic_matcher.SentenceTransformer")
     def test_ensure_model_loaded(self, mock_transformer, matcher):
         """Test lazy model loading"""
         mock_model = MagicMock()
@@ -63,7 +63,7 @@ class TestSemanticMatcher:
         assert matcher.model == mock_model
         mock_transformer.assert_called_once_with("all-MiniLM-L6-v2")
 
-    @patch("guardrail.core.semantic_matcher.SentenceTransformer")
+    @patch("guardloop.core.semantic_matcher.SentenceTransformer")
     def test_ensure_model_loaded_import_error(self, mock_transformer, matcher):
         """Test error handling when sentence-transformers not installed"""
         mock_transformer.side_effect = ImportError("No module named 'sentence_transformers'")
@@ -72,7 +72,7 @@ class TestSemanticMatcher:
             matcher._ensure_model_loaded()
 
     @pytest.mark.asyncio
-    @patch("guardrail.core.semantic_matcher.SentenceTransformer")
+    @patch("guardloop.core.semantic_matcher.SentenceTransformer")
     async def test_index_guardrails(self, mock_transformer, matcher, mock_guardrails):
         """Test guardrail indexing"""
         # Mock model encode
@@ -96,7 +96,7 @@ class TestSemanticMatcher:
         assert 3 in matcher.guardrail_embeddings
 
     @pytest.mark.asyncio
-    @patch("guardrail.core.semantic_matcher.SentenceTransformer")
+    @patch("guardloop.core.semantic_matcher.SentenceTransformer")
     async def test_find_relevant(self, mock_transformer, matcher, mock_guardrails):
         """Test semantic similarity matching"""
         # Mock model
@@ -144,7 +144,7 @@ class TestSemanticMatcher:
         assert results == []
 
     @pytest.mark.asyncio
-    @patch("guardrail.core.semantic_matcher.SentenceTransformer")
+    @patch("guardloop.core.semantic_matcher.SentenceTransformer")
     async def test_find_relevant_threshold_filtering(
         self, mock_transformer, matcher, mock_guardrails
     ):

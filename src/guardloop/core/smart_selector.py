@@ -239,7 +239,7 @@ class SmartGuardrailSelector:
                 priority=priority,
             )
 
-        logger.debug("Loaded guardrail metadata", count=len(files))
+        logger.debug("Loaded GuardLoop metadata", count=len(files))
         return files
 
     def select_guardrails(
@@ -303,7 +303,7 @@ class SmartGuardrailSelector:
                     if total_tokens + tokens <= token_budget:
                         selected.add(filepath)
                         total_tokens += tokens
-                        logger.debug("Added task-specific guardrail", file=filepath, tokens=tokens)
+                        logger.debug("Added task-specific policy", file=filepath, tokens=tokens)
 
         # Step 3: Keyword-based selection from prompt
         prompt_lower = prompt.lower()
@@ -341,7 +341,7 @@ class SmartGuardrailSelector:
                     if total_tokens + tokens <= token_budget:
                         selected.add(filepath)
                         total_tokens += tokens
-                        logger.debug("Added core guardrail (strict mode)", file=filepath)
+                        logger.debug("Added core policy (strict mode)", file=filepath)
 
         # Step 5: Creative tasks - minimal guardrails
         creative_keywords = {"creative", "brainstorm", "ideation", "idea"}
@@ -358,11 +358,13 @@ class SmartGuardrailSelector:
         budget_usage_percent = (
             round(total_tokens / token_budget * 100, 1) if token_budget > 0 else 0
         )
+        budget_pct = round(total_tokens / token_budget * 100, 1) if token_budget > 0 else 0
         logger.info(
-            "Guardrail selection complete",
+            "GuardLoop selection complete",
             selected_count=len(selected_list),
             total_tokens=total_tokens,
             budget_usage_percent=budget_usage_percent,
+            budget_usage_percent=budget_pct,
         )
 
         return selected_list

@@ -23,14 +23,13 @@ class TestCLI:
         """Test CLI help output"""
         result = runner.invoke(cli, ["--help"])
         assert result.exit_code == 0
-        assert "Guardrail" in result.output
-        assert "Guardrails for AI Development" in result.output
+        assert "GuardLoop" in result.output
 
     def test_cli_version(self, runner):
         """Test CLI version output"""
         result = runner.invoke(cli, ["--version"])
         assert result.exit_code == 0
-        assert "1.0.0" in result.output
+        assert "2.2.0" in result.output
 
 
 class TestRunCommand:
@@ -44,7 +43,7 @@ class TestRunCommand:
     @pytest.fixture
     def mock_daemon(self):
         """Mock daemon for testing"""
-        with patch("guardrail.cli.commands.GuardrailDaemon") as mock:
+        with patch("guardloop.cli.commands.GuardrailDaemon") as mock:
             daemon_instance = MagicMock()
             mock.return_value = daemon_instance
 
@@ -66,7 +65,7 @@ class TestRunCommand:
     @pytest.fixture
     def mock_config(self):
         """Mock config"""
-        with patch("guardrail.cli.commands.get_config") as mock:
+        with patch("guardloop.cli.commands.get_config") as mock:
             mock.return_value = Config()
             yield mock
 
@@ -74,7 +73,7 @@ class TestRunCommand:
         """Test run command help"""
         result = runner.invoke(cli, ["run", "--help"])
         assert result.exit_code == 0
-        assert "Execute AI tool with guardrails" in result.output
+        assert "Execute AI tool with policies" in result.output
 
     def test_run_basic(self, runner, mock_config, mock_daemon):
         """Test basic run command"""
@@ -118,13 +117,13 @@ class TestInitCommand:
         """Test init command help"""
         result = runner.invoke(cli, ["init", "--help"])
         assert result.exit_code == 0
-        assert "Initialize guardrail configuration" in result.output
+        assert "Initialize GuardLoop configuration" in result.output
 
     def test_init_command(self, runner):
         """Test init command execution"""
         with runner.isolated_filesystem():
-            with patch("guardrail.cli.commands.ConfigManager") as mock_config:
-                with patch("guardrail.cli.commands.DatabaseManager") as mock_db:
+            with patch("guardloop.cli.commands.ConfigManager") as mock_config:
+                with patch("guardloop.cli.commands.DatabaseManager") as mock_db:
                     mock_config_instance = MagicMock()
                     mock_config.return_value = mock_config_instance
                     mock_config_instance.config_path = Path("~/.guardrail/config.yaml")
@@ -133,7 +132,7 @@ class TestInitCommand:
                     result = runner.invoke(cli, ["init"])
 
                     assert result.exit_code == 0
-                    assert "Initializing Guardrail" in result.output
+                    assert "Initializing GuardLoop" in result.output
                     mock_config_instance.init_directories.assert_called_once()
 
 
@@ -149,12 +148,12 @@ class TestStatusCommand:
         """Test status command help"""
         result = runner.invoke(cli, ["status", "--help"])
         assert result.exit_code == 0
-        assert "Show guardrail system status" in result.output
+        assert "Show GuardLoop system status" in result.output
 
     def test_status_command(self, runner):
         """Test status command execution"""
-        with patch("guardrail.cli.commands.get_config") as mock_config:
-            with patch("guardrail.cli.commands.DatabaseManager") as mock_db:
+        with patch("guardloop.cli.commands.get_config") as mock_config:
+            with patch("guardloop.cli.commands.DatabaseManager") as mock_db:
                 mock_config.return_value = Config()
                 mock_db_instance = MagicMock()
                 mock_db.return_value = mock_db_instance
@@ -188,7 +187,7 @@ class TestConfigCommand:
 
     def test_config_command(self, runner):
         """Test config command execution"""
-        with patch("guardrail.cli.commands.ConfigManager") as mock_config:
+        with patch("guardloop.cli.commands.ConfigManager") as mock_config:
             mock_config_instance = MagicMock()
             mock_config.return_value = mock_config_instance
             mock_config_instance.config_path = Path("~/.guardrail/config.yaml")
@@ -216,8 +215,8 @@ class TestAnalyzeCommand:
 
     def test_analyze_basic(self, runner):
         """Test basic analyze command"""
-        with patch("guardrail.cli.commands.get_config") as mock_config:
-            with patch("guardrail.cli.commands.DatabaseManager") as mock_db:
+        with patch("guardloop.cli.commands.get_config") as mock_config:
+            with patch("guardloop.cli.commands.DatabaseManager") as mock_db:
                 mock_config.return_value = Config()
                 mock_db_instance = MagicMock()
                 mock_db.return_value = mock_db_instance
@@ -236,8 +235,8 @@ class TestAnalyzeCommand:
 
     def test_analyze_with_days(self, runner):
         """Test analyze with custom days"""
-        with patch("guardrail.cli.commands.get_config") as mock_config:
-            with patch("guardrail.cli.commands.DatabaseManager") as mock_db:
+        with patch("guardloop.cli.commands.get_config") as mock_config:
+            with patch("guardloop.cli.commands.DatabaseManager") as mock_db:
                 mock_config.return_value = Config()
                 mock_db_instance = MagicMock()
                 mock_db.return_value = mock_db_instance
@@ -272,8 +271,8 @@ class TestExportCommand:
     def test_export_basic(self, runner):
         """Test basic export command"""
         with runner.isolated_filesystem():
-            with patch("guardrail.cli.commands.get_config") as mock_config:
-                with patch("guardrail.cli.commands.DatabaseManager") as mock_db:
+            with patch("guardloop.cli.commands.get_config") as mock_config:
+                with patch("guardloop.cli.commands.DatabaseManager") as mock_db:
                     mock_config.return_value = Config()
 
                     result = runner.invoke(cli, ["export"])
@@ -285,8 +284,8 @@ class TestExportCommand:
     def test_export_custom_output(self, runner):
         """Test export with custom output file"""
         with runner.isolated_filesystem():
-            with patch("guardrail.cli.commands.get_config") as mock_config:
-                with patch("guardrail.cli.commands.DatabaseManager") as mock_db:
+            with patch("guardloop.cli.commands.get_config") as mock_config:
+                with patch("guardloop.cli.commands.DatabaseManager") as mock_db:
                     mock_config.return_value = Config()
 
                     result = runner.invoke(cli, ["export", "-o", "custom.md"])
@@ -307,7 +306,7 @@ class TestDaemonCommand:
         """Test daemon command help"""
         result = runner.invoke(cli, ["daemon", "--help"])
         assert result.exit_code == 0
-        assert "Start guardrail daemon" in result.output
+        assert "Start GuardLoop daemon" in result.output
 
 
 class TestInteractiveCommand:
@@ -322,4 +321,4 @@ class TestInteractiveCommand:
         """Test interactive command help"""
         result = runner.invoke(cli, ["interactive", "--help"])
         assert result.exit_code == 0
-        assert "Interactive guardrail session" in result.output
+        assert "Interactive GuardLoop session" in result.output

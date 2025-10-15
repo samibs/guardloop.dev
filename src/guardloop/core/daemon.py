@@ -61,13 +61,13 @@ class AIResult:
 
 
 class GuardrailDaemon:
-    """Main Guardrail daemon - orchestrates AI safety flow"""
+    """Main GuardLoop daemon - orchestrates AI safety flow"""
 
     def __init__(self, config: Config):
         """Initialize daemon with configuration
 
         Args:
-            config: Guardrail configuration
+            config: GuardLoop configuration
         """
         self.config = config
         self.context_manager = ContextManager()
@@ -96,7 +96,7 @@ class GuardrailDaemon:
         self._prewarm_cache()
 
         logger.info(
-            "GuardrailDaemon initialized",
+            "GuardLoop daemon initialized",
             mode=config.mode,
             enabled_tools=list(config.tools.keys()),
             v2_enabled=self.v2_enabled,

@@ -180,7 +180,7 @@ class GuardrailValidator:
             mode: Operating mode (standard or strict)
         """
         self.mode = mode
-        logger.info("GuardrailValidator initialized", mode=mode)
+        logger.info("Policy validator initialized", mode=mode)
 
     async def validate(self, parsed: ParsedResponse, raw_text: str) -> List[Violation]:
         """Validate parsed response against all guardrails
@@ -316,7 +316,7 @@ class GuardrailValidator:
                     )
                 )
 
-        logger.debug("AI guardrails check complete", violations=len(violations))
+        logger.debug("AI policy check complete", violations=len(violations))
         return violations
 
     async def _check_ux_ui(self, parsed: ParsedResponse, text: str) -> List[Violation]:
