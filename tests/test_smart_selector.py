@@ -39,6 +39,7 @@ class TestTaskClassification:
     def test_classify_creative_task(self, selector):
         prompt = "Brainstorm ideas for new feature concepts"
         task_type = selector.classify_task_type(prompt)
+        assert task_type == "brainstorm"
         # Should classify as brainstorm (which is a creative task type)
         assert task_type in ["creative", "brainstorm", "ideation"]
 
@@ -168,3 +169,4 @@ class TestEdgeCases:
         selected = selector.select_guardrails(prompt="Do something", token_budget=0)
         # Should gracefully handle or include core/always.md
         assert len(selected) >= 1
+        assert "core/always.md" in selected

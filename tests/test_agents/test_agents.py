@@ -264,6 +264,7 @@ class TestOrchestrator:
         orchestrator = OrchestratorAgent(config)
         await orchestrator.load_agents()
 
+        decisions = await orchestrator.orchestrate(architect_context)
         decisions = await orchestrator.orchestrate(architect_context, user_agent="architect")
 
         # In test environment without registered agents, may return empty list
@@ -281,6 +282,7 @@ class TestOrchestrator:
             prompt="Vague request", mode="strict", raw_output="Some output"  # No clear requirements
         )
 
+        decisions = await orchestrator.orchestrate(failing_context)
         decisions = await orchestrator.orchestrate(failing_context, user_agent="architect")
 
         # In test environment without registered agents, may return empty list
@@ -294,6 +296,7 @@ class TestOrchestrator:
         await orchestrator.load_agents()
 
         decisions = await orchestrator.orchestrate(
+            AgentContext(prompt="Test", mode="standard", raw_output="Test")
             AgentContext(prompt="Test", mode="standard", raw_output="Test"), user_agent="architect"
         )
 
@@ -602,6 +605,7 @@ def test_authenticate():
             """,
         )
 
+        decisions = await orchestrator.orchestrate(context)
         decisions = await orchestrator.orchestrate(context, user_agent="architect")
 
         # In test environment without registered agents, may return empty list
@@ -622,6 +626,9 @@ def test_authenticate():
 
         decisions = await orchestrator.orchestrate(context)
 
+        # Should stop after first failure
+        assert len(decisions) == 1
+        assert not decisions[0].approved
         # In current implementation, if agents aren't registered, returns empty list
         # This test verifies orchestrator doesn't crash on bad input
         assert isinstance(decisions, list)
