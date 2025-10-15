@@ -4,6 +4,7 @@ from typing import Dict, List, Optional
 
 import structlog
 
+from guardloop.ace.adapter import ACEAdapter
 from guardloop.agents.base import AgentContext, AgentDecision, BaseAgent
 from guardloop.agents.chain_optimizer import AgentChainOptimizer
 from guardloop.utils.config import Config
@@ -24,6 +25,7 @@ class OrchestratorAgent(BaseAgent):
         self.config = config
         self.agents: Dict[str, BaseAgent] = {}
         self.chain_optimizer = AgentChainOptimizer()
+        self.ace_adapter = ACEAdapter()
 
     def register_agent(self, name: str, agent: BaseAgent) -> None:
         """Register an agent with the orchestrator
@@ -204,7 +206,7 @@ class OrchestratorAgent(BaseAgent):
         """
         # Get optimal chain from optimizer
         chain = self.chain_optimizer.select_chain(
-            task_type=task_type, mode=context.mode, user_specified_agent=user_agent
+            task_type=task_type, mode=mode, user_specified_agent=user_agent
         )
 
         # Log chain selection
@@ -213,7 +215,7 @@ class OrchestratorAgent(BaseAgent):
             f"Selected {len(chain)} agents for {complexity.value} task",
             agents=chain,
             task_type=task_type,
-            mode=context.mode,
+            mode=mode,
         )
 
         # Execute chain
@@ -301,3 +303,32 @@ class OrchestratorAgent(BaseAgent):
             "registered_agents": len(self.agents),
             "agent_names": list(self.agents.keys()),
         }
+
+    async def run_ace(self, context: AgentContext) -> AgentDecision:
+        """Run the ACE lifecycle.
+
+        Args:
+            context: Agent context
+
+        Returns:
+            Agent decision
+        """
+        goals = self.ace_adapter.get_goals()
+        if not goals:
+            return AgentDecision(
+                agent_name=self.name,
+                approved=True,
+                reason="No goals for ACE to accomplish.",
+            )
+
+        plan = self.ace_adapter.get_plan(goals[0])
+        next_action = self.ace_adapter.get_next_action(plan)
+
+        # This is where the guardrails would be applied to the plan and actions.
+        # For now, we'll just return a decision.
+        return AgentDecision(
+            agent_name=self.name,
+            approved=True,
+            reason=f"ACE is executing plan for goal: {plan.goal.description}",
+            suggestions=[f"Next action: {next_action.name}"],
+        )

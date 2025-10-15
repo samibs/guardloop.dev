@@ -13,61 +13,45 @@ class SREAgent(BaseAgent):
 
     async def evaluate(self, context: AgentContext) -> AgentDecision:
         suggestions = []
-        issues_count = 0
+        approved = True
         total_checks = 3
+        issues_count = 0
 
         if not self._has_monitoring(context):
             issues_count += 1
-            suggestions.append("Add monitoring, logging, and alerting to ensure system visibility.")
+            suggestions.append("Add monitoring and alerting")
 
         if not self._has_error_recovery(context):
             issues_count += 1
-            suggestions.append("Implement robust error recovery mechanisms like retries, circuit breakers, or fallbacks.")
+            suggestions.append("Implement error recovery and circuit breakers")
 
         if not self._has_deployment_config(context):
             issues_count += 1
-            suggestions.append("Include deployment configurations (e.g., Dockerfile, Kubernetes YAML) and health checks.")
+            suggestions.append("Include deployment configuration and health checks")
 
-        approved = issues_count == 0
         next_agent = "evaluator" if approved else None
         confidence = self._calculate_confidence(approved, issues_count, total_checks)
-
-        reason = "SRE principles (monitoring, recovery, deployment) are well-defined."
-        if not approved:
-            reason = f"Found {issues_count} SRE issues that need addressing."
 
         return AgentDecision(
             agent_name=self.name,
             approved=approved,
-            reason=reason,
+            reason="SRE validated" if approved else "SRE incomplete",
             suggestions=suggestions,
             next_agent=next_agent,
             confidence=confidence,
         )
 
-    def _has_monitoring(self, context: AgentContext) -> bool:
-        text_to_check = context.raw_output
-        if context.parsed_response:
-            for block in context.parsed_response.code_blocks:
-                text_to_check += block.content
+    def _has_monitoring(self, context):
         return self._contains_keywords(
-            text_to_check, ["metric", "monitor", "prometheus", "alert", "log", "grafana", "datadog"]
+            context.raw_output, ["metric", "monitor", "prometheus", "alert", "log"]
         )
 
-    def _has_error_recovery(self, context: AgentContext) -> bool:
-        text_to_check = context.raw_output
-        if context.parsed_response:
-            for block in context.parsed_response.code_blocks:
-                text_to_check += block.content
+    def _has_error_recovery(self, context):
         return self._contains_keywords(
-            text_to_check, ["retry", "circuit breaker", "fallback", "timeout", "resilience", "recovery"]
+            context.raw_output, ["retry", "circuit breaker", "fallback", "timeout"]
         )
 
-    def _has_deployment_config(self, context: AgentContext) -> bool:
-        text_to_check = context.raw_output
-        if context.parsed_response:
-            for block in context.parsed_response.code_blocks:
-                text_to_check += block.content
+    def _has_deployment_config(self, context):
         return self._contains_keywords(
-            text_to_check, ["docker", "kubernetes", "deploy", "health", "readiness", "liveness"]
+            context.raw_output, ["docker", "kubernetes", "deploy", "health", "readiness"]
         )

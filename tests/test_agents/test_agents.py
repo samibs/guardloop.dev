@@ -30,17 +30,7 @@ from guardloop.utils.config import Config
 @pytest.fixture
 def config():
     """Create test config"""
-    return Config(
-        mode="standard",
-        tool="implement",
-        strict=False,
-        tools={
-            "claude": {"cli_path": "claude", "enabled": True, "timeout": 120},
-            "gemini": {"cli_path": "gemini", "enabled": True, "timeout": 120},
-            "codex": {"cli_path": "codex", "enabled": True, "timeout": 120},
-            "ace": {"cli_path": "ace", "enabled": True, "timeout": 300},
-        },
-    )
+    return Config(mode="standard", tool="implement", strict=False)
 
 
 @pytest.fixture
@@ -191,6 +181,9 @@ class TestAgentBase:
         # Blocked with issues
         confidence = agent._calculate_confidence(False, 3, 5)
         assert 0.5 <= confidence <= 0.8
+
+
+# Orchestrator Tests
 
 
 class TestOrchestrator:

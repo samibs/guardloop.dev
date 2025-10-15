@@ -31,8 +31,7 @@
 **Core Features (Validated & Working)**:
 - ✅ AI interaction logging and pattern detection
 - ✅ Dynamic guardloop generation from failures
-- ✅ Task classification and keyword-based guardrail selection
-- ✅ Semantic guardrail matching using embeddings
+- ✅ Task classification (skip guardloops for creative work)
 - ✅ Basic enforcement with Claude CLI
 - ✅ Pre-warm cache for instant guardloop loading (99.9% faster first request)
 - ✅ File safety validation and auto-save
@@ -41,7 +40,7 @@
 **Tested & Reliable**:
 - ✅ Claude CLI integration (primary adapter)
 - ✅ SQLite failure logging with analytics
-- ✅ 6+ core agents (Architect, Coder, Tester, SecOps, DBA, Evaluator)
+- ✅ 3 core agents (architect, coder, tester)
 - ✅ Context optimization (pre-warm cache: 0.22ms vs 300ms cold start)
 
 ---
@@ -49,14 +48,15 @@
 ## 🚧 What's Theoretical/In Progress
 
 **Features Under Development**:
-- 🚧 Full 13-agent orchestration (several agents are still basic stubs)
+- 🚧 Full 13-agent orchestration (10 agents are basic stubs)
 - 🚧 Multi-tool support (Gemini/Codex adapters incomplete)
+- 🚧 Semantic guardloop matching (embeddings not yet implemented)
 - 🚧 Advanced compliance validation (GDPR/ISO rules exist but not legally validated)
 - 🚧 Performance metrics (some claims are projections, not benchmarked)
 
 **Known Limitations**:
 - ⚠️ Only Claude adapter is fully functional
-- ⚠️ Advanced agent chain optimization is still under development
+- ⚠️ Agent chain optimization is hardcoded, not dynamic yet
 - ⚠️ Large contexts (>10K tokens) may timeout
 - ⚠️ File auto-save has edge cases with binary/system files
 
@@ -190,9 +190,9 @@ Validates and auto-saves LLM-generated files:
 
 ## 📊 Current Project Status
 
-**Tests**: 289 passed
-**Coverage**: ~70%
-**Agents**: 6+ working (Architect, Coder, Tester, etc.) + remaining stubs
+**Tests**: 223 passing (includes core + optimization tests)
+**Coverage**: 75%
+**Agents**: 3 working (architect, coder, tester) + 10 basic stubs
 **Adapters**: 1 complete (Claude), 2 incomplete (Gemini, Codex)
 **v2 Features**: 5 adaptive learning capabilities (validated)
 **Performance**: Pre-warm cache optimized (99.9% faster)
@@ -205,7 +205,7 @@ See [ROADMAP.md](ROADMAP.md) for detailed development plan.
 
 **Next Milestones**:
 - **v2.1** (4 weeks): Complete all 13 agents, finish adapters
-- **v2.2** (8 weeks): Performance benchmarking
+- **v2.2** (8 weeks): Semantic matching, performance benchmarking
 - **v3.0** (Future): Enterprise features, VS Code extension
 
 **Want to influence priorities?** [Open an issue](https://github.com/samibs/guardloop.dev/issues) or [start a discussion](https://github.com/samibs/guardloop.dev/discussions)!
@@ -250,7 +250,7 @@ guardloop.dev/
 │   ├── core/           # Core orchestration engine
 │   ├── adapters/       # LLM tool adapters (Claude, Gemini, etc.)
 │   └── utils/          # Shared utilities
-├── tests/              # Test suite (289 tests)
+├── tests/              # Test suite (223 tests)
 ├── docs/               # Documentation
 └── ~/.guardloop/       # User configuration & data
     ├── config.yaml
@@ -266,15 +266,16 @@ guardloop.dev/
 
 **High-Impact Areas**:
 1. 🚧 Complete Gemini/Codex adapters
-2. 🚧 Implement remaining agents
-3. 🧪 Write more tests and edge case coverage
-4. 📚 Improve documentation and examples
+2. 🚧 Implement remaining 10 agents
+3. 🚧 Add semantic matching with embeddings
+4. 🧪 Write more tests and edge case coverage
+5. 📚 Improve documentation and examples
 
 **How to Contribute**:
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes and add tests
-4. Commit with clear messages (`git commit -m 'Implement Gemini adapter'`)
+4. Commit with clear messages (`git commit -m 'Add semantic matching'`)
 5. Push and open a Pull Request
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.

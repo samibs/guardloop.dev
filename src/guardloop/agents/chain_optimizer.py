@@ -110,7 +110,6 @@ class AgentChainOptimizer:
         ],
     }
 
-
     def __init__(self):
         """Initialize chain optimizer"""
         logger.debug("AgentChainOptimizer initialized")

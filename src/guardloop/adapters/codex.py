@@ -17,15 +17,12 @@ class CodexAdapter(BaseAdapter):
         super().__init__(cli_path, timeout)
         self.tool_name = "Codex"
 
-    async def execute(
-        self, prompt: str, timeout: Optional[int] = None, stream_callback=None
-    ) -> AIResponse:
+    async def execute(self, prompt: str, timeout: Optional[int] = None) -> AIResponse:
         """Execute Codex with the given prompt
 
         Args:
             prompt: Enhanced prompt to send to Codex
             timeout: Optional timeout override
-            stream_callback: Optional async callback for real-time output streaming
 
         Returns:
             AIResponse with Codex's output
@@ -36,13 +33,7 @@ class CodexAdapter(BaseAdapter):
             timeout=timeout or self.timeout,
         )
 
-        return await self._execute_with_retry(prompt, timeout, stream_callback)
-
-    def _build_command(self, prompt: str) -> list[str]:
-        """Build the command list for the Codex CLI."""
-        # Assuming a command structure like: codex complete "prompt"
-        # This can be easily adjusted to the actual CLI syntax.
-        return [self.cli_path, "complete", prompt]
+        return await self._execute_with_retry(prompt, timeout)
 
     def validate_installation(self) -> bool:
         """Validate that Codex CLI is installed

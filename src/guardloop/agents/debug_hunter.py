@@ -13,58 +13,55 @@ class DebugHunterAgent(BaseAgent):
 
     async def evaluate(self, context: AgentContext) -> AgentDecision:
         suggestions = []
-        issues_count = 0
+        approved = True
         total_checks = 3
+        issues_count = 0
 
         # Check for root cause analysis
         if not self._has_root_cause_analysis(context):
             issues_count += 1
-            suggestions.append("Provide a clear root cause analysis for the bug. Explain why it occurred.")
+            suggestions.append("Document root cause analysis before applying fix")
 
         # Check for regression tests
         if not self._has_regression_tests(context):
+            approved = False
             issues_count += 1
-            suggestions.append("Include a regression test to confirm the fix and prevent recurrence.")
+            suggestions.append("Add regression tests to prevent bug from recurring")
 
         # Check for logging added
         if not self._has_debug_logging(context):
             issues_count += 1
-            suggestions.append("Add relevant logging statements to help with future debugging of this code path.")
+            suggestions.append("Add logging for future debugging")
 
-        approved = issues_count == 0
         next_agent = "tester" if approved else None
         confidence = self._calculate_confidence(approved, issues_count, total_checks)
-
-        reason = "Bug fix is well-documented and includes a regression test."
-        if not approved:
-            reason = f"Found {issues_count} issues with the proposed bug fix."
 
         return AgentDecision(
             agent_name=self.name,
             approved=approved,
-            reason=reason,
+            reason="Bug fix validated" if approved else "Bug fix incomplete",
             suggestions=suggestions,
             next_agent=next_agent,
             confidence=confidence,
         )
 
-    def _has_root_cause_analysis(self, context: AgentContext) -> bool:
+    def _has_root_cause_analysis(self, context):
         return self._contains_keywords(
-            context.raw_output, ["root cause", "because", "caused by", "reason", "why", "the issue was"]
+            context.raw_output, ["root cause", "because", "caused by", "reason", "why"]
         )
 
-    def _has_regression_tests(self, context: AgentContext) -> bool:
-        if context.parsed_response and context.parsed_response.code_blocks:
+    def _has_regression_tests(self, context):
+        if context.parsed_response:
             return self._contains_keywords(
-                " ".join([b.content for b in context.parsed_response.code_blocks]),
-                ["test_", "it(", "describe(", "regression", "reproduce", "assert", "expect"],
+                " ".join([b.code for b in context.parsed_response.code_blocks]),
+                ["test_", "it(", "regression", "reproduce"],
             )
         return False
 
-    def _has_debug_logging(self, context: AgentContext) -> bool:
-        if context.parsed_response and context.parsed_response.code_blocks:
+    def _has_debug_logging(self, context):
+        if context.parsed_response:
             return self._contains_keywords(
-                " ".join([b.content for b in context.parsed_response.code_blocks]),
+                " ".join([b.code for b in context.parsed_response.code_blocks]),
                 ["logger", "logging", "log.", "console.log", "print("],
             )
         return False

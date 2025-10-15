@@ -167,3 +167,4 @@ class TestEdgeCases:
         selected = selector.select_guardrails(prompt="Do something", token_budget=0)
         # Should gracefully handle or include core/always.md
         assert len(selected) >= 1
+        assert "core/always.md" in selected

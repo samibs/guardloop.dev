@@ -93,6 +93,17 @@ class TestUserSpecifiedAgent:
         )
         assert chain == ["coder"]
 
+    def test_user_agent_normalization(self, optimizer):
+        # Test with old agent name
+        chain = optimizer.select_chain(task_type="implement_feature", user_specified_agent="coder")
+        assert chain == ["coder"]
+
+    def test_user_agent_hyphenated(self, optimizer):
+        chain = optimizer.select_chain(
+            task_type="implement_feature", user_specified_agent="architect"
+        )
+        assert chain == ["architect"]
+
 
 class TestComplexityDetection:
     """Test task complexity detection"""
@@ -118,6 +129,20 @@ class TestComplexityDetection:
         assert complexity == TaskComplexity.MEDIUM
 
 
+class TestAgentNameNormalization:
+    """Test agent name normalization"""
+
+    def test_normalize_hyphenated(self, optimizer):
+        chain = optimizer.select_chain("implement_api")
+        assert chain == ["architect", "coder", "tester"]
+
+    def test_normalize_old_names(self, optimizer):
+        chain = optimizer.select_chain("implement_ui")
+        assert chain == ["ux_designer", "coder", "tester"]
+
+    def test_normalize_already_normalized(self, optimizer):
+        chain = optimizer.select_chain("implement_function")
+        assert chain == ["architect", "coder", "tester"]
 
 
 class TestSpecializedTasks:
